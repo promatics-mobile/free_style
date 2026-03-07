@@ -37,6 +37,7 @@ class Assets {
   static const String iconsIcChangePassword = 'assets/icons/ic_change_password.png';
   static const String iconsIcChat = 'assets/icons/ic_chat.png';
   static const String iconsIcCheck = 'assets/icons/ic_check.png';
+  static const String iconsIcCheckNew = 'assets/icons/ic_check_new.png';
   static const String iconsIcClock = 'assets/icons/ic_clock.png';
   static const String iconsIcClockNew = 'assets/icons/ic_clock_new.png';
   static const String iconsIcClose = 'assets/icons/ic_close.png';

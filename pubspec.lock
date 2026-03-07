@@ -890,6 +890,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
+  universal_stepper:
+    dependency: "direct main"
+    description:
+      name: universal_stepper
+      sha256: "213bdd011073aa439f671a3b398c0b77115410d48a4d6e54019a272d450714e5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0+1"
   url_launcher:
     dependency: "direct main"
     description:
