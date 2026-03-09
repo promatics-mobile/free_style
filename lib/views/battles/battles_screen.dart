@@ -5,6 +5,7 @@ import 'package:free_style/utils/common_widgets/common_button/common_gradient_bu
 import 'package:free_style/utils/common_widgets/common_text/common_text.dart';
 
 import '../../generated/assets.dart';
+import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
 import '../../utils/common_decorations/common_decorations.dart';
 import '../../utils/common_widgets/common_image/common_image.dart';
@@ -89,12 +90,14 @@ class BattlesScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: size(context).width * numD1),
-            CommonButton(onTap: (){}, text: 'Go to Missions'),
+            CommonButton(onTap: (){
+              router.push(AppRouter.missionScreen);
+            }, text: 'Go to Missions'),
             SizedBox(height: size(context).width * numD02),
             CommonGradientButton(
               text: "Start Training Mode",
               onTap: () {
-                // your action
+                router.push(AppRouter.trainingScreen);
               },
             ),
           ],

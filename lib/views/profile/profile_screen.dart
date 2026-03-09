@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_button.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_short_button.dart';
 import 'package:free_style/utils/common_widgets/linear_progress_indicator/custom_linear_progress.dart';
 import 'package:free_style/utils/common_widgets/text_form_field/common_text_form_field.dart';
+import 'package:free_style/views/profile/profile_cubit.dart';
 
 import '../../generated/assets.dart';
 import '../../routes/route.dart';
@@ -22,9 +24,13 @@ class ProfileScreen extends StatefulWidget{
 }
 
 class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateMixin{
+
   @override
   Widget build(BuildContext context) {
 
+    return BlocBuilder<ProfileCubit, ProfileState>(
+  builder: (context, state) {
+    var cubit = context.read<ProfileCubit>();
     return CommonSliverTabBar(
       tabs: const [
         "Battles",
@@ -177,7 +183,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                               padding: EdgeInsets.all(size(context).width * numD01),
                               child: Icon(Icons.electric_bolt,color: CommonColors.secondaryColor,)),
                           SizedBox(width:  size(context).width * numD02,),
-                          CommonText(text: "340 SP Available",),
+                          CommonText(text: "340 XP Available",),
                           Spacer(),
                           Icon(Icons.keyboard_arrow_right_outlined,
                             color: Colors.white,)
@@ -194,16 +200,24 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
           ],
         ),
       ),
+      onTap: (value){
+        cubit.onChangeTab(value);
+      },
+      onChanged: (value){
+        cubit.onChangeTab(value);
+      },
       views: [
-        battleWidget(context),
-        battleWidget(context),
-        battleWidget(context),
-        battleWidget(context),
+        battleWidget(context,cubit),
+        battleWidget(context,cubit),
+        battleWidget(context,cubit),
+        battleWidget(context,cubit),
       ],
     );
+  },
+);
   }
 
-  Widget battleWidget(BuildContext context) {
+  Widget battleWidget(BuildContext context, ProfileCubit cubit) {
   return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -220,15 +234,22 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
           CircleAvatar(
               backgroundColor: CommonColors.secondaryLightColor,
               radius: size(context).width *numD05,
-              child: CommonImage(imagePath: Assets.iconsIcBattle,
+              child: CommonImage(imagePath:
+              cubit.selectedTabIndex == 0 ?
+              Assets.iconsIcBattle :
+              cubit.selectedTabIndex == 1 ?
+              Assets.iconsIcTrophy :
+              cubit.selectedTabIndex == 2 ?
+              Assets.iconsIcBadge : Assets.iconsIcHistory,
                 width: size(context).width * numD05,
                 height: size(context).width * numD05,
+                color: Colors.black,
                 isNetwork: false,)),
           SizedBox(width: size(context).width * numD02,),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CommonText(text:"Battle Arena",
+              CommonText(text:"Lorem ipsum lorem title",
                 color: Colors.black,
                 fontSize: size(context).width * numD035,),
               CommonText(text:"Unlocked on Oct 12 2025",

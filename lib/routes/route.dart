@@ -1,16 +1,29 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:free_style/views/battle_victory/battle_victory_cubit.dart';
+import 'package:free_style/views/battle_victory/battle_victory_screen.dart';
 import 'package:free_style/views/battles/battles_cubit.dart';
 import 'package:free_style/views/battles/battles_screen.dart';
+import 'package:free_style/views/challenge_approved/challenge_approved_screen.dart';
+import 'package:free_style/views/challenge_history/challenge_history_screen.dart';
 import 'package:free_style/views/contact_us/contact_us_cubit.dart';
 import 'package:free_style/views/create_account/create_account_cubit.dart';
 import 'package:free_style/views/dashboard/dashboard_cubit.dart';
 import 'package:free_style/views/dashboard/dashboard_screen.dart';
+import 'package:free_style/views/dialy_challenge/daily_challenge_cubit.dart';
+import 'package:free_style/views/dialy_challenge/daily_challenge_screen.dart';
 import 'package:free_style/views/faqs/faqs_cubit.dart';
 import 'package:free_style/views/faqs/faqs_screen.dart';
+import 'package:free_style/views/global_lead_board/global_lead_board_cubit.dart';
+import 'package:free_style/views/global_lead_board/global_lead_board_screen.dart';
+import 'package:free_style/views/league_ranking/league_ranking_cubit.dart';
+import 'package:free_style/views/league_ranking/league_ranking_screen.dart';
 import 'package:free_style/views/login/login_cubit.dart';
 import 'package:free_style/views/login/login_screen.dart';
 import 'package:free_style/views/match_making/match_making_screen.dart';
 import 'package:free_style/views/mission/mission_cubit.dart';
+import 'package:free_style/views/mission/preview_submission_screen.dart';
+import 'package:free_style/views/mission/record_video_screen.dart';
+import 'package:free_style/views/mission/submit_proof_screen.dart';
 import 'package:free_style/views/notifications/notification_cubit.dart';
 import 'package:free_style/views/notifications/notification_screen.dart';
 import 'package:free_style/views/otp_verification/otp_verification_cubit.dart';
@@ -34,6 +47,9 @@ import 'package:free_style/views/social/social_screen.dart';
 import 'package:free_style/views/splash/splash_cubit.dart';
 import 'package:free_style/views/training/training_cubit.dart';
 import 'package:free_style/views/tutorial/tutorial_cubit.dart';
+import 'package:free_style/views/tutorial/tutorial_details.dart';
+import 'package:free_style/views/victory/victory_cubit.dart';
+import 'package:free_style/views/victory/victory_screen.dart';
 import 'package:free_style/views/walkthrough/walkthrough_cubit.dart';
 import 'package:free_style/views/walkthrough/walkthrough_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -59,6 +75,7 @@ import '../views/skill_tree/skill_tree_screen.dart';
 import '../views/splash/splash_screen.dart';
 import '../views/training/training_screen.dart';
 import '../views/tutorial/tutorial_screen.dart';
+import '../views/tutorial/tutorial_video_details.dart';
 
 class AppRouter {
   static const String splashScreen = "/splash_screen";
@@ -94,6 +111,20 @@ class AppRouter {
   static const String skillTreeScreen = "/skill_tree_screen";
   static const String skillStateScreen = "/skill_state_screen";
   static const String missionScreen = "/mission_screen";
+  static const String dailyChallenge = "/daily_challenge";
+  static const String tutorialDetailScreen = "/tutorial_detail_screen";
+  static const String tutorialVideoDetailScreen = "/tutorial_video_detail_screen";
+
+  static const String challengeHistoryScreen = "/challenge_history_screen";
+  static const String challengeApprovedScreen = "/challenge_approved_screen";
+  static const String recordVideoScreen = "/record_video_screen";
+  static const String submitProofScreen = "/submit_proof_screen";
+  static const String previewSubmissionScreen = "/preview_submission_screen";
+
+  static const String victoryScreen = "/victory_screen";
+  static const String battleVictoryScreen = "/battle_victory_screen";
+  static const String leagueRankingScreen = "/league_ranking_screen";
+  static const String globalLeadBoardScreen = "/global_lead_board_screen";
 }
 
 final GoRouter router = GoRouter(
@@ -186,6 +217,9 @@ final GoRouter router = GoRouter(
            providers: [
             BlocProvider(create: (_) => DashboardCubit(0)),
             BlocProvider(create: (_) => HomeCubit()),
+            BlocProvider(create: (_) => ProfileCubit()),
+            BlocProvider(create: (_) => BattlesCubit()),
+            BlocProvider(create: (_) => SocialCubit()),
         ], child: const DashboardScreen(selectedIndex: 0),
         );
       },
@@ -314,10 +348,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.profileScreen,
       name: AppRouter.profileScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => ProfileCubit(),
-          child: ProfileScreen(),
-        );
+        return ProfileScreen();
       },
     ),
 
@@ -339,10 +370,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.battleScreen,
       name: AppRouter.battleScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => BattlesCubit(),
-          child: BattlesScreen(),
-        );
+        return BattlesScreen();
       },
     ),
 
@@ -351,10 +379,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.socialScreen,
       name: AppRouter.socialScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => SocialCubit(),
-          child: SocialScreen(),
-        );
+        return SocialScreen();
       },
     ),
 
@@ -437,7 +462,9 @@ final GoRouter router = GoRouter(
           child: SkillStateScreen(),
         );
       },
-    ),GoRoute(
+    ),
+
+    GoRoute(
       parentNavigatorKey: navigatorKey,
       path: AppRouter.missionScreen,
       name: AppRouter.missionScreen,
@@ -445,6 +472,118 @@ final GoRouter router = GoRouter(
         return BlocProvider(
           create: (_) => MissionCubit(),
           child: MissionScreen(),
+        );
+      },
+    ),
+
+    GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: AppRouter.dailyChallenge,
+      name: AppRouter.dailyChallenge,
+      builder: (context, state) {
+        return BlocProvider(
+          create: (_) => DailyChallengeCubit(),
+          child: DailyChallengeScreen(),
+        );
+      },
+    ), GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: AppRouter.tutorialDetailScreen,
+      name: AppRouter.tutorialDetailScreen,
+      builder: (context, state) {
+        return TutorialDetailScreen();
+      },
+    ),GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: AppRouter.tutorialVideoDetailScreen,
+      name: AppRouter.tutorialVideoDetailScreen,
+      builder: (context, state) {
+        return TutorialVideoDetailScreen();
+      },
+    ),
+
+    GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: AppRouter.challengeHistoryScreen,
+      name: AppRouter.challengeHistoryScreen,
+      builder: (context, state) {
+        return ChallengeHistoryScreen();
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: AppRouter.challengeApprovedScreen,
+      name: AppRouter.challengeApprovedScreen,
+      builder: (context, state) {
+        return ChallengeApprovedScreen();
+      },
+    ),GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: AppRouter.recordVideoScreen,
+      name: AppRouter.recordVideoScreen,
+      builder: (context, state) {
+        return RecordVideoScreen();
+      },
+    ),GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: AppRouter.submitProofScreen,
+      name: AppRouter.submitProofScreen,
+      builder: (context, state) {
+        return SubmitProofScreen();
+      },
+    ),GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: AppRouter.previewSubmissionScreen,
+      name: AppRouter.previewSubmissionScreen,
+      builder: (context, state) {
+        return PreviewSubmissionScreen();
+      },
+    ),
+
+    GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: AppRouter.victoryScreen,
+      name: AppRouter.victoryScreen,
+      builder: (context, state) {
+        return BlocProvider(
+          create: (_) => VictoryCubit(),
+          child: const VictoryScreen(),
+        );
+      },
+    ),
+
+    GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: AppRouter.battleVictoryScreen,
+      name: AppRouter.battleVictoryScreen,
+      builder: (context, state) {
+        return BlocProvider(
+          create: (_) => BattleVictoryCubit(),
+          child: const BattleVictoryScreen(),
+        );
+      },
+    ),
+
+    GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: AppRouter.leagueRankingScreen,
+      name: AppRouter.leagueRankingScreen,
+      builder: (context, state) {
+        return BlocProvider(
+          create: (_) => LeagueRankingCubit(),
+          child: const LeagueRankingScreen(),
+        );
+      },
+    ),
+
+    GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: AppRouter.globalLeadBoardScreen,
+      name: AppRouter.globalLeadBoardScreen,
+      builder: (context, state) {
+        return BlocProvider(
+          create: (_) => GlobalLeadBoardCubit(),
+          child: const GlobalLeadBoardScreen(),
         );
       },
     ),

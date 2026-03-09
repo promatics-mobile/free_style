@@ -2,6 +2,8 @@
 class Assets {
   Assets._();
 
+  static const String assetsDummyPlay1 = 'assets/dummy_play1.png';
+  static const String assetsDummyPlay2 = 'assets/dummy_play2.png';
   static const String assetsIcDummyUser1 = 'assets/ic_dummy_user1.webp';
   static const String assetsIcDummyUser2 = 'assets/ic_dummy_user2.webp';
   static const String fontsLexendBlack = 'assets/fonts/Lexend-Black.ttf';
@@ -58,11 +60,13 @@ class Assets {
   static const String iconsIcEyeEnabled = 'assets/icons/ic_eye_enabled.png';
   static const String iconsIcFaq = 'assets/icons/ic_faq.png';
   static const String iconsIcFilter = 'assets/icons/ic_filter.png';
+  static const String iconsIcFilterHori = 'assets/icons/ic_filter_hori.png';
   static const String iconsIcFlame = 'assets/icons/ic_flame.png';
   static const String iconsIcFootballBlack = 'assets/icons/ic_football_black.png';
   static const String iconsIcFootballWhite = 'assets/icons/ic_football_white.png';
   static const String iconsIcGoldCoin = 'assets/icons/ic_gold_coin.png';
   static const String iconsIcGoogleLogo = 'assets/icons/ic_google_logo.png';
+  static const String iconsIcHistory = 'assets/icons/ic_history.png';
   static const String iconsIcHome = 'assets/icons/ic_home.png';
   static const String iconsIcIdea = 'assets/icons/ic_idea.png';
   static const String iconsIcInfo = 'assets/icons/ic_info.png';
@@ -83,6 +87,7 @@ class Assets {
   static const String iconsIcPen = 'assets/icons/ic_pen.png';
   static const String iconsIcPenIcon = 'assets/icons/ic_pen_icon.png';
   static const String iconsIcPlant = 'assets/icons/ic_plant.jpg';
+  static const String iconsIcPlay = 'assets/icons/ic_play.png';
   static const String iconsIcPlayFootball = 'assets/icons/ic_play-football.png';
   static const String iconsIcPrivacy = 'assets/icons/ic_privacy.png';
   static const String iconsIcProfile = 'assets/icons/ic_profile.png';

@@ -20,7 +20,7 @@ class SettingsScreen extends StatelessWidget {
             ListTile(
               dense: true,
               contentPadding: EdgeInsets.zero,
-              title: CommonText(text: "FAQs"),
+              title: CommonText(text: "FAQs",fontSize: size(context).width * numD04,fontWeight: .w500,),
               leading: Icon(
                 Icons.question_answer_outlined,
                 color: Colors.white,
@@ -44,7 +44,7 @@ class SettingsScreen extends StatelessWidget {
             ListTile(
               dense: true,
               contentPadding: EdgeInsets.zero,
-              title: CommonText(text: "Contact Us"),
+              title: CommonText(text: "Contact Us",fontSize: size(context).width * numD04,fontWeight: .w500,),
               leading: Icon(Icons.help_outline, color: Colors.white),
               trailing: Icon(
                 Icons.keyboard_arrow_right_rounded,
@@ -64,7 +64,7 @@ class SettingsScreen extends StatelessWidget {
             ListTile(
               dense: true,
               contentPadding: EdgeInsets.zero,
-              title: CommonText(text: "About Us"),
+              title: CommonText(text: "About Us",fontSize: size(context).width * numD04,fontWeight: .w500,),
               leading: Icon(Icons.info_outlined, color: Colors.white),
               trailing: Icon(
                 Icons.keyboard_arrow_right_rounded,
@@ -84,7 +84,7 @@ class SettingsScreen extends StatelessWidget {
             ListTile(
               dense: true,
               contentPadding: EdgeInsets.zero,
-              title: CommonText(text: "Terms & Conditions"),
+              title: CommonText(text: "Terms & Conditions",fontSize: size(context).width * numD04,fontWeight: .w500,),
               leading: Icon(Icons.description_outlined, color: Colors.white),
               trailing: Icon(
                 Icons.keyboard_arrow_right_rounded,
@@ -104,7 +104,7 @@ class SettingsScreen extends StatelessWidget {
             ListTile(
               dense: true,
               contentPadding: EdgeInsets.zero,
-              title: CommonText(text: "Privacy Policy"),
+              title: CommonText(text: "Privacy Policy",fontSize: size(context).width * numD04,fontWeight: .w500,),
               leading: Icon(Icons.privacy_tip_outlined, color: Colors.white),
               trailing: Icon(
                 Icons.keyboard_arrow_right_rounded,
@@ -125,7 +125,7 @@ class SettingsScreen extends StatelessWidget {
             ListTile(
               dense: true,
               contentPadding: EdgeInsets.zero,
-              title: CommonText(text: "Logout"),
+              title: CommonText(text: "Logout",fontSize: size(context).width * numD04,fontWeight: .w500,),
               leading: Icon(Icons.logout_outlined, color: Colors.white),
               trailing: Icon(
                 Icons.keyboard_arrow_right_rounded,
@@ -158,7 +158,7 @@ class SettingsScreen extends StatelessWidget {
             ListTile(
               dense: true,
               contentPadding: EdgeInsets.zero,
-              title: CommonText(text: "Delete Account", color: Colors.red),
+              title: CommonText(text: "Delete Account",fontSize: size(context).width * numD04,fontWeight: .w500, color: Colors.red),
               leading: Icon(Icons.delete_outline, color: Colors.red),
               trailing: Icon(
                 Icons.keyboard_arrow_right_rounded,

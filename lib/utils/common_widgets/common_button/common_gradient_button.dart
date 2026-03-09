@@ -4,10 +4,12 @@ import 'package:free_style/utils/common_widgets/common_text/common_text.dart';
 
 class CommonGradientButton extends StatelessWidget {
   final String text;
+  final Widget? widget;
   final VoidCallback onTap;
 
   const CommonGradientButton({
     super.key,
+    this.widget,
     required this.text,
     required this.onTap,
   });
@@ -47,7 +49,7 @@ class CommonGradientButton extends StatelessWidget {
             ),
           ],
         ),
-        child: CommonText(
+        child: widget ?? CommonText(
           text: text,
             fontSize: size(context).width * numD04,
             fontWeight: FontWeight.w600,

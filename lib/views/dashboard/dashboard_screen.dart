@@ -121,7 +121,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                   actions: [
                     IconButton(
                       onPressed: () {
-                        router.push(AppRouter.shopScreen);
+                       // router.push(AppRouter.shopScreen);
+                        router.push(AppRouter.leagueRankingScreen);
                       },
                       icon: CommonImage(
                         imagePath: Assets.iconsIcShop,
@@ -158,7 +159,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                     if (state.selectedIndex == 1)
                       IconButton(
                         onPressed: () {
-                          router.push(AppRouter.settingsScreen);
+                          router.push(AppRouter.challengeHistoryScreen);
                         },
                         icon: Icon(
                           Icons.history,

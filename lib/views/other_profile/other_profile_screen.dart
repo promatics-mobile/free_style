@@ -63,7 +63,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> with TickerProv
                         horizontal: size(context).width * numD02,
                         vertical: size(context).width * numD005,
                       ),
-                      child: CommonText(text:"Gold League",
+                      child: CommonText(text:"#1 Global",
                         fontWeight: FontWeight.bold,
                         fontSize: size(context).width * numD03,
                         color: Colors.black,),),

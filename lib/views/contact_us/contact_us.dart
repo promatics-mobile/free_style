@@ -3,6 +3,7 @@ import 'package:free_style/utils/common_decorations/common_decorations.dart';
 import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
 import 'package:free_style/utils/common_widgets/text_form_field/common_text_form_field.dart';
 
+import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
 import '../../utils/common_widgets/common_button/common_button.dart';
 import '../../utils/common_widgets/common_text/common_text.dart';
@@ -169,7 +170,10 @@ class ContactUs extends StatelessWidget {
                       ),
                       Divider(),
                       SizedBox(height: size(context).width * numD15),
-                      CommonButton(text: "Submit", onTap: () {}),
+                      CommonButton(text: "Submit", onTap: () {
+                        router.pop();
+
+                      }),
 
                       SizedBox(height: size(context).width * numD04),
                     ],

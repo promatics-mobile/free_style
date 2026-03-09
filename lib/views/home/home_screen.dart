@@ -90,48 +90,53 @@ class HomeScreen extends StatelessWidget {
               fontSize: size(context).width * numD04,),
             SizedBox(height: size(context).width * numD04,),
             SizedBox(
-              height: size(context).width * numD30,
+              height: size(context).width * numD28,
               width: size(context).width,
               child: ListView.builder(
                   itemCount: 3,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context,idx){
 
-                return Container(
-                  decoration: commonBgColorDecoration(size(context).width * numD03, Colors.orange.shade50,),
-                  width: size(context).width/1.5,
-                  padding: EdgeInsets.all(size(context).width * numD04),
-                  margin: EdgeInsets.symmetric(horizontal: size(context).width * numD02),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: .spaceBetween,
-                        children: [
-                          CommonText(text:"Daily Goal",
-                            color: Colors.grey,
-                            fontSize: size(context).width * numD035,),
-                          CommonImage(imagePath: Assets.iconsIcSuitcase,
-                            width: size(context).width * numD05,
-                            height: size(context).width * numD05,
-                            isNetwork: false,),
-                        ],
-                      ),
-                      Spacer(),
-                      CommonText(text:"Ends in 4h 20m",
-                        color:Colors.black,
-                        fontWeight: FontWeight.w500,
-                        fontSize: size(context).width * numD04,),
-                      SizedBox(height: size(context).width * numD01),
-                      commonNormalLinearProgress(
-                          context: context,
-                          value: 0.8,
-                          bgColor: Colors.grey,
-                          valueColor: CommonColors.buttonColor),
+                return InkWell(
+                  onTap: (){
+                    router.push(AppRouter.dailyChallenge);
+                  },
+                  child: Container(
+                    decoration: commonBgColorDecoration(size(context).width * numD03, Colors.orange.shade50,),
+                    width: size(context).width/1.5,
+                    padding: EdgeInsets.all(size(context).width * numD04),
+                    margin: EdgeInsets.symmetric(horizontal: size(context).width * numD02),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: .spaceBetween,
+                          children: [
+                            CommonText(text:"Daily Goal",
+                              color: Colors.grey,
+                              fontSize: size(context).width * numD035,),
+                            CommonImage(imagePath: Assets.iconsIcSuitcase,
+                              width: size(context).width * numD05,
+                              height: size(context).width * numD05,
+                              isNetwork: false,),
+                          ],
+                        ),
+                        Spacer(),
+                        CommonText(text:"Ends in 4h 20m",
+                          color:Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: size(context).width * numD04,),
+                        SizedBox(height: size(context).width * numD01),
+                        commonNormalLinearProgress(
+                            context: context,
+                            value: 0.8,
+                            bgColor: Colors.grey,
+                            valueColor: CommonColors.buttonColor),
 
-                    ],
+                      ],
+                    ),
+
                   ),
-
                 );
               }),
             ),
