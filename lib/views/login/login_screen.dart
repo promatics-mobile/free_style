@@ -257,7 +257,7 @@ class LogInScreen extends StatelessWidget {
                                     hint: "Enter Password",
                                     isPassword: true,
 
-                                    prefixIcon: Icon(Icons.lock,color: CommonColors.buttonColor,),
+                                    prefixIcon: Icon(Icons.lock_outline,color: CommonColors.buttonColor,),
                                     contentPadding: EdgeInsets.symmetric(
                                         horizontal: size(context).width * numD03,
                                         vertical: size(context).width * numD04),
@@ -295,7 +295,12 @@ class LogInScreen extends StatelessWidget {
 
                           CommonButton(
                             onTap: () {
-                              router.go(AppRouter.dashboardScreen);
+                              if(cubit.loginType == LoginType.phone){
+                                router.push(AppRouter.otpVerificationScreen);
+                              }else{
+                                router.go(AppRouter.dashboardScreen, extra: 0);
+                              }
+
                             },
                             text: cubit.loginType == LoginType.email
                                 ? "Login"

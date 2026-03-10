@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:free_style/utils/common_methods.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_gradient_button.dart';
 
 import '../../generated/assets.dart';
@@ -11,9 +12,14 @@ import '../../utils/common_widgets/common_image/common_image.dart';
 import '../../utils/common_widgets/common_text/common_text.dart';
 
 
-class TutorialVideoDetailScreen extends StatelessWidget {
+class TutorialVideoDetailScreen extends StatefulWidget {
   const TutorialVideoDetailScreen({super.key});
 
+  @override
+  State<TutorialVideoDetailScreen> createState() => _TutorialVideoDetailScreenState();
+}
+
+class _TutorialVideoDetailScreenState extends State<TutorialVideoDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,10 +87,10 @@ class TutorialVideoDetailScreen extends StatelessWidget {
                         isNetwork: false,
                       )
                     ),
-                
 
-                
-                
+
+
+
                   ],
                 ),
                 SizedBox(height: size(context).width * numD04),
@@ -104,7 +110,7 @@ class TutorialVideoDetailScreen extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                             color: Colors.grey,
                           ),
-                      
+
                         ],
                       ),
                     ),
@@ -122,14 +128,20 @@ class TutorialVideoDetailScreen extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                             color: Colors.grey,
                           ),
-                      
+
                         ],
                       ),
                     ),
-                    Icon(Icons.bookmark_outline,
-                        color: Colors.grey,size: size(context).width * numD05),
+                    InkWell(
+                      onTap: (){
+                        showToast(isError: false, message: "Saved successfully");
+                        setState(() {});
+                      },
+                      child: Icon(Icons.bookmark_outline,
+                          color: Colors.grey,size: size(context).width * numD05),
+                    ),
                     SizedBox(width: size(context).width * numD04),
-                   
+
                   ],
                 ),
                 SizedBox(height: size(context).width * numD04),
@@ -224,7 +236,11 @@ class TutorialVideoDetailScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(child: CommonGradientButton(
-                        text: "Mark watched", onTap: (){})),
+                        text: "Mark watched", onTap: (){
+                          showToast(isError: false, message: "Mark watched successfully");
+                          setState(() {});
+
+                    })),
                     SizedBox(width: size(context).width * numD04),
                     Expanded(
                       child: CommonButton(onTap: (){

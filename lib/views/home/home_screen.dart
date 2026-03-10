@@ -160,7 +160,7 @@ class HomeScreen extends StatelessWidget {
                     onTap: (){
                       switch (item.title){
                         case "Battle Arena":
-                          router.push(AppRouter.battleScreen);
+                          router.push(AppRouter.matchMakingScreen);
                           break;
                           case "Training":
                             router.push(AppRouter.trainingScreen);

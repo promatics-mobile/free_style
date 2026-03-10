@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:free_style/routes/route.dart';
 import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_button.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_short_button.dart';
@@ -17,7 +18,11 @@ class ProfileSetupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(title: "",actions: [
-        commonTextButton(onTap: (){}, size: size(context),
+        commonTextButton(onTap: (){
+
+          router.go(AppRouter.dashboardScreen,extra: 0);
+
+        }, size: size(context),
             buttonText: "Skip")
       ],),
       body: SingleChildScrollView(
@@ -102,7 +107,9 @@ class ProfileSetupScreen extends StatelessWidget {
               }, ),
             SizedBox(height: size(context).width * numD1,),
             
-            CommonButton(onTap: (){}, text: "Complete Setup"),
+            CommonButton(onTap: (){
+              router.go(AppRouter.dashboardScreen,extra: 0);
+            }, text: "Complete Setup"),
             SizedBox(height: size(context).width * numD1,),
           ],
         ),

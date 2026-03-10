@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:label="free_style"
+        android:label="Free Style"
         android:name="${applicationName}"
         android:appCategory="productivity"
         android:icon="@mipmap/ic_launcher">

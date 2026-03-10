@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:free_style/utils/common_constants.dart';
 import 'package:free_style/utils/common_decorations/common_decorations.dart';
+import 'package:free_style/utils/common_methods.dart';
+import 'package:free_style/utils/common_widgets/common_button/common_button.dart';
 import 'package:free_style/utils/common_widgets/common_text/common_text.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_gradient_button.dart';
 import 'package:free_style/utils/common_widgets/app_bars/custom_app_bar.dart';
 import '../../generated/assets.dart';
+import '../../routes/route.dart';
 
 class VictoryScreen extends StatelessWidget {
   const VictoryScreen({super.key});
@@ -124,13 +127,18 @@ class VictoryScreen extends StatelessWidget {
               ),
               const Spacer(flex: 2),
 
-              // Buttons
-              CommonGradientButton(
-                text: "Claim Rewards",
-                onTap: () {},
-              ),
+              CommonButton(onTap: (){
+                showToast(isError: false, message: "Reward Claimed successfully!");
+
+              }, text: "Claim Rewards"),
               SizedBox(height: size(context).width * numD04),
-              _buildOutlineButton(context, "View Battle History", () {}),
+              CommonGradientButton(
+                text: "View Battle History",
+                onTap: () {
+                  router.push(AppRouter.challengeHistoryScreen);
+
+                },
+              ),
               SizedBox(height: size(context).width * numD06),
             ],
           ),

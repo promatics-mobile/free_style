@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:free_style/generated/assets.dart';
+import 'package:free_style/routes/route.dart';
 import 'package:free_style/utils/common_decorations/common_decorations.dart';
 import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_button.dart';
@@ -173,9 +174,13 @@ class MatchMakingScreen extends StatelessWidget {
 
 
             SizedBox(height: size(context).width * numD1),
-            CommonButton(onTap: (){}, text: "Start Battle"),
+            CommonButton(onTap: (){
+              router.push(AppRouter.victoryScreen);
+            }, text: "Start Battle"),
             SizedBox(height: size(context).width * numD02,),
-            CommonGradientButton(onTap: (){}, text: "Cancel Match"),
+            CommonGradientButton(onTap: (){
+              router.pop();
+            }, text: "Cancel Match"),
             SizedBox(height: size(context).width * numD1),
 
 

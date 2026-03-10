@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:free_style/utils/common_methods.dart';
 import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_button.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_short_button.dart';
@@ -22,6 +23,7 @@ class OtherProfileScreen extends StatefulWidget{
 }
 
 class _OtherProfileScreenState extends State<OtherProfileScreen> with TickerProviderStateMixin{
+
   @override
   Widget build(BuildContext context) {
 
@@ -101,7 +103,8 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> with TickerProv
                   child: CommonButton(
                     text: "Challenge",
                     onTap: () {
-
+                      showToast(isError: false, message: "Challenge sent successfully!");
+                      setState(() {});
                     },),
                 ),
                 SizedBox(width: size(context).width * numD04),
@@ -109,7 +112,8 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> with TickerProv
                   child: CommonGradientButton(
                     text: "Follow",
                     onTap: () {
-
+                      showToast(isError: false, message: "Request sent successfully!");
+                      setState(() {});
                     },
                   ),
                 ),

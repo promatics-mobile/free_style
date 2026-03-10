@@ -4,7 +4,9 @@ import 'package:free_style/utils/common_decorations/common_decorations.dart';
 import 'package:free_style/utils/common_widgets/common_text/common_text.dart';
 import 'package:free_style/utils/common_widgets/app_bars/custom_app_bar.dart';
 import 'package:free_style/utils/common_widgets/text_form_field/common_text_form_field.dart';
+import 'package:free_style/utils/common_widgets/common_button/common_gradient_button.dart';
 import '../../generated/assets.dart';
+import '../../routes/route.dart';
 
 class GlobalLeadBoardScreen extends StatefulWidget {
   const GlobalLeadBoardScreen({super.key});
@@ -16,6 +18,9 @@ class GlobalLeadBoardScreen extends StatefulWidget {
 class _GlobalLeadBoardScreenState extends State<GlobalLeadBoardScreen> {
   int selectedTabIndex = 1; // "Gold" is index 1
   final List<String> tabs = ["Bronze", "Gold", "Silver", "Platinum"];
+  
+  String selectedTimeRange = "Weekly";
+  String selectedRegion = "Global";
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +31,9 @@ class _GlobalLeadBoardScreenState extends State<GlobalLeadBoardScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              router.push(AppRouter.leagueRankingScreen);
+            },
           ),
         ],
       ),
@@ -58,14 +65,18 @@ class _GlobalLeadBoardScreenState extends State<GlobalLeadBoardScreen> {
                   ),
                 ),
                 SizedBox(width: size(context).width * numD03),
-                Container(
-                  padding: EdgeInsets.all(size(context).width * numD02),
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    border: Border.all(color: Colors.blue.shade800, width: 1.5),
-                    borderRadius: BorderRadius.circular(size(context).width * numD02),
+                InkWell(
+                  onTap: () => _showFilterBottomSheet(context),
+                  borderRadius: BorderRadius.circular(size(context).width * numD02),
+                  child: Container(
+                    padding: EdgeInsets.all(size(context).width * numD02),
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      border: Border.all(color: Colors.blue.shade800, width: 1.5),
+                      borderRadius: BorderRadius.circular(size(context).width * numD02),
+                    ),
+                    child: Icon(Icons.tune, color: Colors.white, size: size(context).width * numD06),
                   ),
-                  child: Icon(Icons.tune, color: Colors.white, size: size(context).width * numD06),
                 ),
               ],
             ),
@@ -77,6 +88,121 @@ class _GlobalLeadBoardScreenState extends State<GlobalLeadBoardScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  void _showFilterBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              padding: EdgeInsets.all(size(context).width * numD06),
+              decoration: commonWhiteDecorationTopOnly(size(context), numD08),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CommonText(
+                        text: "Filters",
+                        color: Colors.black,
+                        fontSize: size(context).width * numD055,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.close, color: Colors.black),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: size(context).width * numD04),
+
+                  // Time Range Section
+                  CommonText(
+                    text: "Time Range",
+                    color: Colors.black,
+                    fontSize: size(context).width * numD04,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  SizedBox(height: size(context).width * numD03),
+                  _buildFilterOptions(
+                    ["Daily", "Weekly", "Monthly", "All Time"],
+                    selectedTimeRange,
+                    (val) => setModalState(() => selectedTimeRange = val),
+                  ),
+
+                  SizedBox(height: size(context).width * numD06),
+
+                  // Region Section
+                  CommonText(
+                    text: "Region",
+                    color: Colors.black,
+                    fontSize: size(context).width * numD04,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  SizedBox(height: size(context).width * numD03),
+                  _buildFilterOptions(
+                    ["Global", "My Region"],
+                    selectedRegion,
+                    (val) => setModalState(() => selectedRegion = val),
+                  ),
+
+                  SizedBox(height: size(context).width * numD08),
+
+                  // Apply Button
+                  CommonGradientButton(
+                    text: "Apply Filters",
+                    onTap: () {
+                      // Apply filters logic here
+                      Navigator.pop(context);
+                      setState(() {}); // Trigger refresh on screen
+                    },
+                  ),
+                  SizedBox(height: size(context).width * numD04),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildFilterOptions(List<String> options, String selectedOption, Function(String) onSelect) {
+    return Wrap(
+      spacing: size(context).width * numD03,
+      runSpacing: size(context).width * numD02,
+      children: options.map((option) {
+        final isSelected = option == selectedOption;
+        return GestureDetector(
+          onTap: () => onSelect(option),
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: size(context).width * numD04,
+              vertical: size(context).width * numD02,
+            ),
+            decoration: BoxDecoration(
+              color: isSelected ? CommonColors.themeColor : Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(size(context).width * numD02),
+              border: Border.all(
+                color: isSelected ? CommonColors.themeColor : Colors.grey.shade300,
+              ),
+            ),
+            child: CommonText(
+              text: option,
+              color: isSelected ? Colors.white : Colors.black,
+              fontSize: size(context).width * numD035,
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -127,65 +253,70 @@ class _GlobalLeadBoardScreenState extends State<GlobalLeadBoardScreen> {
       separatorBuilder: (context, index) => SizedBox(height: size(context).width * numD03),
       itemBuilder: (context, index) {
         final player = players[index];
-        return Container(
-          padding: EdgeInsets.all(size(context).width * numD04),
-          decoration: commonBgColorDecoration(
-            size(context).width * numD04,
-            Colors.white,
-          ),
-          child: Row(
-            children: [
-              SizedBox(
-                width: size(context).width * numD08,
-                child: CommonText(
-                  text: player["rank"] as String,
+        return InkWell(
+          onTap: (){
+            router.push(AppRouter.otherProfileScreen);
+          },
+          child: Container(
+            padding: EdgeInsets.all(size(context).width * numD04),
+            decoration: commonBgColorDecoration(
+              size(context).width * numD04,
+              Colors.white,
+            ),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: size(context).width * numD08,
+                  child: CommonText(
+                    text: player["rank"] as String,
+                    color: Colors.black,
+                    fontSize: size(context).width * numD045,
+                    fontWeight: FontWeight.bold,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(width: size(context).width * numD02),
+                CircleAvatar(
+                  radius: size(context).width * numD07,
+                  backgroundColor: player["color"] as Color,
+                  child: CircleAvatar(
+                    radius: size(context).width * numD065,
+                    backgroundImage: const AssetImage(Assets.assetsIcDummyUser1),
+                  ),
+                ),
+                SizedBox(width: size(context).width * numD04),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CommonText(
+                        text: player["name"] as String,
+                        color: Colors.black,
+                        fontSize: size(context).width * numD04,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.emoji_events_outlined, color: Colors.orange.shade300, size: size(context).width * numD035),
+                          SizedBox(width: size(context).width * numD01),
+                          CommonText(
+                            text: player["division"] as String,
+                            color: Colors.grey.shade500,
+                            fontSize: size(context).width * numD03,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                CommonText(
+                  text: player["rp"] as String,
                   color: Colors.black,
                   fontSize: size(context).width * numD045,
                   fontWeight: FontWeight.bold,
-                  textAlign: TextAlign.center,
                 ),
-              ),
-              SizedBox(width: size(context).width * numD02),
-              CircleAvatar(
-                radius: size(context).width * numD07,
-                backgroundColor: player["color"] as Color,
-                child: CircleAvatar(
-                  radius: size(context).width * numD065,
-                  backgroundImage: const AssetImage(Assets.assetsIcDummyUser1),
-                ),
-              ),
-              SizedBox(width: size(context).width * numD04),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CommonText(
-                      text: player["name"] as String,
-                      color: Colors.black,
-                      fontSize: size(context).width * numD04,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    Row(
-                      children: [
-                        Icon(Icons.emoji_events_outlined, color: Colors.orange.shade300, size: size(context).width * numD035),
-                        SizedBox(width: size(context).width * numD01),
-                        CommonText(
-                          text: player["division"] as String,
-                          color: Colors.grey.shade500,
-                          fontSize: size(context).width * numD03,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              CommonText(
-                text: player["rp"] as String,
-                color: Colors.black,
-                fontSize: size(context).width * numD045,
-                fontWeight: FontWeight.bold,
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

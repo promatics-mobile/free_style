@@ -2,13 +2,12 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:free_style/utils/common_widgets/radio_button/custom_radio.dart';
+
 import '../../generated/assets.dart';
 import '../../main.dart';
 import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
 import '../../utils/common_decorations/common_decorations.dart';
-import '../../utils/common_widgets.dart';
 import '../../utils/common_widgets/common_button/common_button.dart';
 import '../../utils/common_widgets/common_image/common_image.dart';
 import '../../utils/common_widgets/common_text/common_text.dart';
@@ -18,7 +17,6 @@ import 'create_account_cubit.dart';
 import 'create_account_state.dart';
 
 class CreateAccountScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CreateAccountCubit, CreateAccountState>(
@@ -28,40 +26,45 @@ class CreateAccountScreen extends StatelessWidget {
           extendBodyBehindAppBar: true,
           backgroundColor: CommonColors.themeColor,
           body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
+            padding: EdgeInsets.symmetric(
+              horizontal: size(context).width * numD04,
+            ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: size(context).width * numD20,
-                ),
+                SizedBox(height: size(context).width * numD20),
 
-                CommonText(
-                  text: "Create Account",
-                  fontSize: size(context).width * numD07,
-                  fontWeight: FontWeight.bold,
+                Center(
+                  child: CommonText(
+                    text: "Create Account",
+                    fontSize: size(context).width * numD07,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
 
                 SizedBox(height: size(context).width * numD03),
-                CommonText(
-                  textSpan: TextSpan(
-                    text: "Already have an account? ",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: size(context).width * numD035,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: "Login",
-                        style: TextStyle(
-                            color: CommonColors.buttonColor,
-                            fontWeight: FontWeight.bold),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            router.pop();
-                          },
+                Center(
+                  child: CommonText(
+                    textSpan: TextSpan(
+                      text: "Already have an account? ",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: size(context).width * numD035,
                       ),
-                    ],
+                      children: [
+                        TextSpan(
+                          text: "Login",
+                          style: TextStyle(
+                            color: CommonColors.buttonColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              router.pop();
+                            },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
 
@@ -72,9 +75,7 @@ class CreateAccountScreen extends StatelessWidget {
                     size(context).width * numD02,
                     Colors.grey.shade200,
                   ),
-                  padding: EdgeInsets.all(
-                    size(context).width * numD02,
-                  ),
+                  padding: EdgeInsets.all(size(context).width * numD02),
                   child: Row(
                     children: [
                       Expanded(
@@ -88,8 +89,7 @@ class CreateAccountScreen extends StatelessWidget {
                             ),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color:
-                              cubit.loginType == LoginType.email
+                              color: cubit.loginType == LoginType.email
                                   ? Colors.white
                                   : Colors.transparent,
                               borderRadius: BorderRadius.circular(
@@ -100,8 +100,7 @@ class CreateAccountScreen extends StatelessWidget {
                               text: "Email",
                               fontSize: size(context).width * numD045,
                               fontWeight: FontWeight.w600,
-                              color:
-                              cubit.loginType == LoginType.email
+                              color: cubit.loginType == LoginType.email
                                   ? CommonColors.themeColor
                                   : Colors.grey,
                             ),
@@ -122,8 +121,7 @@ class CreateAccountScreen extends StatelessWidget {
                             ),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color:
-                              cubit.loginType == LoginType.phone
+                              color: cubit.loginType == LoginType.phone
                                   ? Colors.white
                                   : Colors.transparent,
                               borderRadius: BorderRadius.circular(
@@ -134,8 +132,7 @@ class CreateAccountScreen extends StatelessWidget {
                               text: "Phone",
                               fontSize: size(context).width * numD045,
                               fontWeight: FontWeight.w600,
-                              color:
-                              cubit.loginType == LoginType.phone
+                              color: cubit.loginType == LoginType.phone
                                   ? Colors.black
                                   : Colors.grey,
                             ),
@@ -153,12 +150,9 @@ class CreateAccountScreen extends StatelessWidget {
                     size(context).width * numD02,
                     Colors.white,
                   ),
-                  padding: EdgeInsets.all(
-                    size(context).width * numD02,
-                  ),
+                  padding: EdgeInsets.all(size(context).width * numD02),
                   child: Column(
                     children: [
-
                       if (cubit.loginType == LoginType.email) ...[
                         CommonTextFormField(
                           controller: cubit.fullNameController,
@@ -166,7 +160,10 @@ class CreateAccountScreen extends StatelessWidget {
                           enableShadow: true,
                           hint: "Full Name (optional)",
                           keyboardType: TextInputType.text,
-                          prefixIcon: Icon(Icons.account_circle_outlined,color: CommonColors.buttonColor,),
+                          prefixIcon: Icon(
+                            Icons.account_circle_outlined,
+                            color: CommonColors.buttonColor,
+                          ),
                         ),
                         Divider(),
                         CommonTextFormField(
@@ -176,10 +173,12 @@ class CreateAccountScreen extends StatelessWidget {
                           hint: "Username",
                           keyboardType: TextInputType.text,
 
-                          prefixIcon: Icon(Icons.account_circle_outlined,color: CommonColors.buttonColor,),
+                          prefixIcon: Icon(
+                            Icons.account_circle_outlined,
+                            color: CommonColors.buttonColor,
+                          ),
                           validator: (value) {
-                            if (value == null ||
-                                value.trim().isEmpty) {
+                            if (value == null || value.trim().isEmpty) {
                               return "Required*";
                             }
                             return null;
@@ -193,10 +192,12 @@ class CreateAccountScreen extends StatelessWidget {
                           hint: "Email Address",
                           keyboardType: TextInputType.emailAddress,
 
-                          prefixIcon: Icon(Icons.email_outlined,color: CommonColors.buttonColor,),
+                          prefixIcon: Icon(
+                            Icons.email_outlined,
+                            color: CommonColors.buttonColor,
+                          ),
                           validator: (value) {
-                            if (value == null ||
-                                value.trim().isEmpty) {
+                            if (value == null || value.trim().isEmpty) {
                               return "Required*";
                             }
                             /*if (!emailRegex.hasMatch(value.trim())) {
@@ -215,13 +216,16 @@ class CreateAccountScreen extends StatelessWidget {
                           maxLength: 15,
                           counterText: "",
 
-                          prefixIcon: Icon(Icons.lock_outline,color: CommonColors.buttonColor,),
+                          prefixIcon: Icon(
+                            Icons.lock_outline,
+                            color: CommonColors.buttonColor,
+                          ),
                           contentPadding: EdgeInsets.symmetric(
-                              horizontal: size(context).width * numD03,
-                              vertical: size(context).width * numD04),
+                            horizontal: size(context).width * numD03,
+                            vertical: size(context).width * numD04,
+                          ),
                           validator: (value) {
-                            if (value == null ||
-                                value.trim().isEmpty) {
+                            if (value == null || value.trim().isEmpty) {
                               return "Required*";
                             }
                             return null;
@@ -237,22 +241,22 @@ class CreateAccountScreen extends StatelessWidget {
                           maxLength: 15,
                           counterText: "",
 
-                          prefixIcon: Icon(Icons.lock_outline,color: CommonColors.buttonColor,),
+                          prefixIcon: Icon(
+                            Icons.lock_outline,
+                            color: CommonColors.buttonColor,
+                          ),
                           contentPadding: EdgeInsets.symmetric(
-                              horizontal: size(context).width * numD03,
-                              vertical: size(context).width * numD04),
+                            horizontal: size(context).width * numD03,
+                            vertical: size(context).width * numD04,
+                          ),
                           validator: (value) {
-                            if (value == null ||
-                                value.trim().isEmpty) {
+                            if (value == null || value.trim().isEmpty) {
                               return "Required*";
                             }
                             return null;
                           },
                         ),
                       ],
-
-
-
 
                       if (cubit.loginType == LoginType.phone)
                         CommonTextFormField(
@@ -266,21 +270,17 @@ class CreateAccountScreen extends StatelessWidget {
                           maxLines: 1,
 
                           validator: (value) {
-                            if (value == null ||
-                                value.trim().isEmpty) {
+                            if (value == null || value.trim().isEmpty) {
                               return "Required*";
                             }
 
                             final phone = value.trim();
 
-                            if (!RegExp(
-                              r'^[0-9]+$',
-                            ).hasMatch(phone)) {
+                            if (!RegExp(r'^[0-9]+$').hasMatch(phone)) {
                               return "Please enter a valid mobile number";
                             }
 
-                            if (phone.length < 6 ||
-                                phone.length > 15) {
+                            if (phone.length < 6 || phone.length > 15) {
                               return "Please enter a valid mobile number";
                             }
 
@@ -304,144 +304,136 @@ class CreateAccountScreen extends StatelessWidget {
                                 text: cubit.countryCode.isEmpty
                                     ? '+--'
                                     : cubit.countryCode,
-                                fontSize:
-                                size(context).width * numD035,
+                                fontSize: size(context).width * numD035,
                                 color: CommonColors.themeColor,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
                           ),
                         ),
-
-
                     ],
                   ),
                 ),
 
-
-                SizedBox(
-                  height: size(context).width * numD04,
-                ),
-                Row(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            cubit.keepSignFn();
-                          },
-                          child: SizedBox(
-                            height: size(context).width * numD05,
-                            width: size(context).width * numD05,
-                            child: Container(
-                              decoration: commonOutlineDecoration(
-                                  size(context).width * numD01, 2, Colors.grey),
-                              child: Icon(Icons.check,
-                                color: Colors.white,
-                                size: size(context).width * numD04,),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: size(context).width * numD02,
-                        ),
-                        CommonText(
-                          text: "I am at least 13 years old.",
-                          fontSize: size(context).width * numD035,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
-                SizedBox(
-                  height: size(context).width * numD02,
-                ),
-                Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              cubit.keepSignFn();
-                            },
-                            child: SizedBox(
-                              height: size(context).width * numD05,
-                              width: size(context).width * numD05,
-                              child: Container(
-                                decoration: commonOutlineDecoration(
-                                    size(context).width * numD01, 2, Colors.grey),
-                                child: Icon(Icons.check,
-                                  color: Colors.white,
-                                  size: size(context).width * numD04,),
-                              ),
-                            ),
-                          ),
-
-                          SizedBox(
-                            width: size(context).width * numD02,
-                          ),
-                          CommonText(
-                            textSpan: TextSpan(
-                              text: "I agree to the ",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: size(context).width * numD035,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: "Terms",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      router.push(
-                                        AppRouter.cmsScreen,extra: "Terms & Conditions"
-                                      );
-                                    },
-                                ),  TextSpan(
-                                  text: " and ",
-                                  style: TextStyle(fontWeight: FontWeight.bold,color: Colors.grey,),
-                                ), TextSpan(
-                                  text: "Privacy.",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      router.push(
-                                        AppRouter.cmsScreen,extra: "Privacy Policy"
-                                      );
-                                    },
-                                ),
-                              ],
-                            ),
-                            fontSize: size(context).width * numD035,
-                            color: Colors.white,
-                          ),
-                        ],
+                SizedBox(height: size(context).width * numD04),
+                InkWell(
+                  onTap: (){
+                    cubit.onAgeSelected();
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: .start,
+                    children: [
+                      Icon(
+                        cubit.isAgeSelected
+                            ? Icons.check_box_outlined
+                            : Icons.check_box_outline_blank,
+                        color: Colors.white,
+                        size: size(context).width * numD06,
                       ),
-                SizedBox(
-                  height: size(context).width * numD05,
+                      SizedBox(width: size(context).width * numD02),
+                      CommonText(
+                        text: "I am at least 13 years old.",
+                        fontSize: size(context).width * numD035,
+                        color: Colors.grey,
+                      ),
+                    ],
+                  ),
                 ),
+                SizedBox(height: size(context).width * numD02),
+                InkWell(
+                  onTap: () {
+                    cubit.onAgreeTerms();
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: .start,
+                    children: [
+                      Icon(
+                        cubit.isTermsSelected
+                            ? Icons.check_box_outlined
+                            : Icons.check_box_outline_blank,
+                        color: Colors.white,
+                        size: size(context).width * numD06,
+                      ),
+
+                      SizedBox(width: size(context).width * numD02),
+                      CommonText(
+                        textSpan: TextSpan(
+                          text: "I agree to the ",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: size(context).width * numD035,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: "Terms",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  router.push(
+                                    AppRouter.cmsScreen,
+                                    extra: "Terms & Conditions",
+                                  );
+                                },
+                            ),
+                            TextSpan(
+                              text: " and ",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "Privacy.",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  router.push(
+                                    AppRouter.cmsScreen,
+                                    extra: "Privacy Policy",
+                                  );
+                                },
+                            ),
+                          ],
+                        ),
+                        fontSize: size(context).width * numD035,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: size(context).width * numD05),
                 CommonButton(
                   onTap: () {
-                    router.go(AppRouter.dashboardScreen, extra: 0);
-                    sharedPreferences.setBool(
-                        PreferenceKeys.isAiConsent, false);
-                    sharedPreferences.setBool(
-                        PreferenceKeys.isAiInsightConsent, false);
+                    if(cubit.loginType == LoginType.phone){
+                      router.push(AppRouter.otpVerificationScreen);
+                    }else{
+                      router.go(AppRouter.dashboardScreen, extra: 0);
+                    }
+
                   },
                   text: "Register",
                 ),
-                SizedBox(
-                  height: size(context).width * numD1,
-                ),
+                SizedBox(height: size(context).width * numD1),
                 Row(
                   children: [
                     Expanded(
-                        child: Container(
-                      height: size(context).width * numD005,
-                      decoration: BoxDecoration(color: Colors.white),
-                    )),
+                      child: Container(
+                        height: size(context).width * numD005,
+                        decoration: BoxDecoration(color: Colors.white),
+                      ),
+                    ),
                     Container(
                       padding: EdgeInsets.symmetric(
-                          horizontal: size(context).width * numD03),
+                        horizontal: size(context).width * numD03,
+                      ),
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(
-                              size(context).width * numD04)),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(
+                          size(context).width * numD04,
+                        ),
+                      ),
                       child: CommonText(
                         text: "OR CONTINUE WITH",
                         fontSize: size(context).width * numD03,
@@ -450,15 +442,14 @@ class CreateAccountScreen extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                        child: Container(
-                      height: size(context).width * numD005,
-                      decoration: BoxDecoration(color: Colors.white),
-                    ))
+                      child: Container(
+                        height: size(context).width * numD005,
+                        decoration: BoxDecoration(color: Colors.white),
+                      ),
+                    ),
                   ],
                 ),
-                SizedBox(
-                  height: size(context).width * numD05,
-                ),
+                SizedBox(height: size(context).width * numD05),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -470,9 +461,7 @@ class CreateAccountScreen extends StatelessWidget {
                           borderColor: Colors.white,
                           borderWidth: 1,
                         ),
-                        padding: EdgeInsets.all(
-                          size(context).width * numD01,
-                        ),
+                        padding: EdgeInsets.all(size(context).width * numD01),
                         child: CommonImage(
                           height: size(context).width * numD1,
                           width: size(context).width * numD1,
@@ -488,9 +477,7 @@ class CreateAccountScreen extends StatelessWidget {
                           borderColor: Colors.white,
                           borderWidth: 1,
                         ),
-                        padding: EdgeInsets.all(
-                          size(context).width * numD01,
-                        ),
+                        padding: EdgeInsets.all(size(context).width * numD01),
                         child: CommonImage(
                           height: size(context).width * numD1,
                           width: size(context).width * numD1,
@@ -512,25 +499,24 @@ class CreateAccountScreen extends StatelessWidget {
   }
 
   void showCountryCodePickerDialog(
-      BuildContext context, {
-        required Function(Country) onChanged,
-      }) {
+    BuildContext context, {
+    required Function(Country) onChanged,
+  }) {
     showCountryPicker(
       context: context,
       showPhoneCode: true,
       useSafeArea: true,
       countryListTheme: CountryListThemeData(
-        margin: EdgeInsets.symmetric(horizontal:  size(context).width * numD04),
+        margin: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(size(context).width * numD04),
-          topRight:
-          Radius.circular(size(context).width * numD04),
+          topRight: Radius.circular(size(context).width * numD04),
         ),
       ),
       onSelect: (Country country) {
         debugPrint('Select country: ${country.displayName}');
         onChanged(country);
-      },);
+      },
+    );
   }
-
 }

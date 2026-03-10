@@ -59,7 +59,6 @@ class InventoryScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: size(context).width * numD04),
-
             Expanded(
               child: GridView.builder(
                 itemCount: 8,
@@ -72,9 +71,7 @@ class InventoryScreen extends StatelessWidget {
                 itemBuilder: (context, idx) {
                   return InkWell(
                     onTap: (){
-
-                      //router.push(AppRouter.itemDetailScreen);
-
+                      router.pop();
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(
@@ -122,20 +119,22 @@ class InventoryScreen extends StatelessWidget {
                                     ),
                                     alignment: Alignment.center,
                                     child: CommonGradientButton(
-                                      onTap: () {},
+                                      onTap: () {
+                                        router.pop();
+                                      },
                                       text: "Equipped",
                                     ),
                                   ),
 
                                 if (idx != 0)
-                                  Container(
+                                Container(
                                     height: size(context).width * numD1,
                                     margin: EdgeInsets.symmetric(
                                       horizontal: size(context).width * numD04,
                                     ),
                                     alignment: Alignment.center,
                                     child: CommonGradientButton(onTap: () {
-
+                                      router.pop();
                                     }, text: "Equip"),
                                   ),
                                 SizedBox(height: size(context).width * numD02),

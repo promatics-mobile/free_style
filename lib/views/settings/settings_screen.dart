@@ -20,6 +20,30 @@ class SettingsScreen extends StatelessWidget {
             ListTile(
               dense: true,
               contentPadding: EdgeInsets.zero,
+              title: CommonText(text: "Profile Setup",fontSize: size(context).width * numD04,fontWeight: .w500,),
+              leading: Icon(
+                Icons.account_circle_outlined,
+                color: Colors.white,
+              ),
+              trailing: Icon(
+                Icons.keyboard_arrow_right_rounded,
+                color: Colors.white,
+              ),
+              tileColor: CommonColors.themeColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(
+                  size(context).width * numD02,
+                ),
+              ),
+              onTap: () {
+                router.push(AppRouter.profileSetupScreen);
+              },
+            ),
+            SizedBox(height: size(context).width * numD04),
+
+            ListTile(
+              dense: true,
+              contentPadding: EdgeInsets.zero,
               title: CommonText(text: "FAQs",fontSize: size(context).width * numD04,fontWeight: .w500,),
               leading: Icon(
                 Icons.question_answer_outlined,

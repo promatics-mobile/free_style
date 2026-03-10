@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:free_style/generated/assets.dart';
+import 'package:free_style/routes/route.dart';
 import 'package:free_style/utils/common_constants.dart';
 import 'package:free_style/utils/common_decorations/common_decorations.dart';
 import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
@@ -12,6 +13,7 @@ import 'package:free_style/utils/common_widgets/common_text/common_text.dart';
 import 'package:free_style/views/skill_tree/skill_tree_cubit.dart';
 import 'package:universal_stepper/universal_stepper.dart';
 
+import '../../utils/common_methods.dart';
 import '../../utils/common_widgets/common_image/common_image.dart';
 
 class SkillTreeScreen extends StatelessWidget {
@@ -215,7 +217,9 @@ class SkillTreeScreen extends StatelessWidget {
           SizedBox(height: size(context).width * numD1),
 
           if (cubit.currentTabIndex == 0)
-            CommonButton(onTap: () {}, text: "Start Tutorial"),
+            CommonButton(onTap: () {
+              router.push(AppRouter.tutorialScreen);
+            }, text: "Start Tutorial"),
         ],
       ),
     );
@@ -499,7 +503,9 @@ class SkillTreeScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: .spaceBetween,
                       children: [
-                        Expanded(child: CommonGradientButton(text: "Mark watched", onTap: (){})),
+                        Expanded(child: CommonGradientButton(text: "Mark watched", onTap: (){
+                          showToast(isError: false, message: "Mark watched successfully");
+                        })),
                         SizedBox(width:  size(context).width * numD05),
                         Expanded(child: CommonButton(text: "Go to mission", onTap: (){})),
 

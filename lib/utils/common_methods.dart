@@ -544,7 +544,7 @@ void showToast({required bool isError, required String message}) async {
           text: message,
           color: Colors.black,
           fontWeight: FontWeight.w500,
-          fontSize: MediaQuery.sizeOf(context).width * numD03),
+          fontSize: MediaQuery.sizeOf(context).width * numD035),
     ),
   ).show(navigatorKey.currentContext!);
 }
@@ -569,7 +569,7 @@ void showToastLongDelay({required bool isError, required String message}) async 
           text: message,
           color: Colors.black,
           fontWeight: FontWeight.w500,
-          fontSize: MediaQuery.sizeOf(context).width * numD03),
+          fontSize: MediaQuery.sizeOf(context).width * numD035),
     ),
   ).show(navigatorKey.currentContext!);
 }

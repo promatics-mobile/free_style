@@ -6,6 +6,8 @@ import 'create_account_state.dart';
 class CreateAccountCubit extends Cubit<CreateAccountState> {
   bool isObscure = false;
   bool keepSigned = false;
+  bool isAgeSelected = false;
+  bool isTermsSelected = false;
 
   CreateAccountCubit() : super(CreateAccountState());
 
@@ -71,8 +73,12 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
     emit(state.copyWith());
   }
 
-  void keepSignFn() {
-    keepSigned = !keepSigned;
+  void onAgeSelected() {
+    isAgeSelected = !isAgeSelected;
+    emit(state.copyWith());
+  }
+  void onAgreeTerms() {
+    isTermsSelected = !isTermsSelected;
     emit(state.copyWith());
   }
 

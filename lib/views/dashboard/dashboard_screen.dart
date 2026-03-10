@@ -119,13 +119,27 @@ class _DashboardScreenState extends State<DashboardScreen>
                     ],
                   ),
                   actions: [
+
+
                     IconButton(
                       onPressed: () {
-                       // router.push(AppRouter.shopScreen);
-                        router.push(AppRouter.leagueRankingScreen);
+                       router.push(AppRouter.shopScreen);
+
                       },
                       icon: CommonImage(
                         imagePath: Assets.iconsIcShop,
+                        height: size(context).width * numD06,
+                        width: size(context).width * numD06,
+                        color: Colors.white,
+                        isNetwork: false,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        router.push(AppRouter.globalLeadBoardScreen);
+                      },
+                      icon: CommonImage(
+                        imagePath: Assets.iconsIcLeadboard,
                         height: size(context).width * numD06,
                         width: size(context).width * numD06,
                         color: Colors.white,

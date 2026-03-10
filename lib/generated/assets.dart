@@ -71,6 +71,7 @@ class Assets {
   static const String iconsIcIdea = 'assets/icons/ic_idea.png';
   static const String iconsIcInfo = 'assets/icons/ic_info.png';
   static const String iconsIcInternet = 'assets/icons/ic_internet.png';
+  static const String iconsIcLeadboard = 'assets/icons/ic_leadboard.png';
   static const String iconsIcLikes = 'assets/icons/ic_likes.png';
   static const String iconsIcLocation = 'assets/icons/ic_location.png';
   static const String iconsIcLogout = 'assets/icons/ic_logout.png';
@@ -113,6 +114,7 @@ class Assets {
   static const String iconsIcTrophy = 'assets/icons/ic_trophy.png';
   static const String iconsIcUpArrow = 'assets/icons/ic_up_arrow.png';
   static const String iconsIcUserPlaceholder = 'assets/icons/ic_user_placeholder.png';
+  static const String iconsIcVictoryTrophy = 'assets/icons/ic_victory_trophy.png';
   static const String iconsIcVideoRecord = 'assets/icons/ic_video_record.png';
   static const String iconsIsDummyBall2 = 'assets/icons/is_dummy_ball2.png';
   static const String iconsQuestion = 'assets/icons/question.png';

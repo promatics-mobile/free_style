@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:free_style/routes/route.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_button.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_gradient_button.dart';
 import 'package:universal_stepper/universal_stepper.dart';
@@ -98,13 +99,13 @@ class DailyChallengeScreen extends StatelessWidget {
                       ),
                       Container(
                         decoration: commonCircularFill(
-                          color: Colors.grey.shade200,
+                          color: Colors.grey.withValues(alpha: 0.4),
                         ),
-                        padding: EdgeInsets.all(size(context).width * numD05),
+                        padding: EdgeInsets.all(size(context).width * numD02),
                         child: Icon(
                           Icons.watch_later_outlined,
                           color: Colors.black,
-                          size: size(context).width * numD08,
+                          size: size(context).width * numD1,
                         ),
                       ),
                     ],
@@ -159,7 +160,9 @@ class DailyChallengeScreen extends StatelessWidget {
                             ),
 
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                router.push(AppRouter.tutorialVideoDetailScreen);
+                              },
                               icon: Container(
                                 decoration: commonCircularFill(
                                   color: Colors.grey.shade800,
@@ -255,10 +258,13 @@ class DailyChallengeScreen extends StatelessWidget {
                 Row(
                   children: [
 
-                   Expanded(child: CommonButton(onTap: (){}, text: "Attempt Challenge")),
+                   Expanded(child: CommonButton(onTap: (){
+                     router.push(AppRouter.matchMakingScreen);
+
+                   }, text: "Attempt Challenge")),
                     SizedBox(width: size(context).width * numD02),
                    CommonGradientButton(text: "",
-                       widget: Container(
+                       widget: SizedBox(
                            height: size(context).width * numD1,
                            width: size(context).width * numD15,
                            child: Icon(Icons.share_outlined,color: CommonColors.buttonColor,)),
