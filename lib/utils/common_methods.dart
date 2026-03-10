@@ -529,6 +529,7 @@ void showToast({required bool isError, required String message}) async {
     animationDuration: const Duration(milliseconds: 500),
     position: DelightSnackbarPosition.top,
     builder: (context) => ToastCard(
+      color: Colors.white,
       leading: isError
           ? Icon(
         Icons.warning_rounded,
@@ -554,6 +555,7 @@ void showToastLongDelay({required bool isError, required String message}) async 
     snackbarDuration: const Duration(milliseconds: 5000),
     animationDuration: const Duration(milliseconds: 500),
     builder: (context) => ToastCard(
+      color: Colors.white,
       leading: isError
           ? Icon(
         Icons.warning_rounded,
@@ -580,6 +582,7 @@ void showToastWithTitle({required bool isError, required String title, required 
     animationDuration: const Duration(milliseconds: 500),
     position: DelightSnackbarPosition.top,
     builder: (context) => ToastCard(
+      color: Colors.white,
       leading: isError
           ? Icon(
         Icons.warning_rounded,

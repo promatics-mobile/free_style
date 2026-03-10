@@ -16,7 +16,7 @@ import 'common_widgets.dart';
 /// APP-NAME, FONTS
 /// ==============================================
 const String appName = "Free Style";
-const String fontFamily = "Lexend";
+const String fontFamily = "Ubuntu";
 
 
 /// ==============================================

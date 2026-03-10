@@ -178,7 +178,7 @@ class OtpVerificationScreen extends StatelessWidget {
                   text: "Continue",
                   onTap: () {
                      //router.push(AppRouter.resetPasswordScreen);
-                     router.go(AppRouter.dashboardScreen, extra: 0);
+                    router.go(AppRouter.homeScreen);
 
                     /*if (cubit.isFromSignIn) {
                       cubit.callVerifyPhoneOtpAPI();

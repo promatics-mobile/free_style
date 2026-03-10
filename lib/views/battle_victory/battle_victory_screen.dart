@@ -84,7 +84,7 @@ class BattleVictoryScreen extends StatelessWidget {
               CommonGradientButton(
                 text: "Return the Base",
                 onTap: () {
-                  router.go(AppRouter.dashboardScreen,extra: 0);
+                  router.go(AppRouter.homeScreen);
                 },
               ),
 

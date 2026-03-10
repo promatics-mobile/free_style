@@ -98,7 +98,7 @@ class ChallengeApprovedScreen extends StatelessWidget {
               CommonButton(
                 text: "Continue",
                 onTap: () {
-                 router.go(AppRouter.dashboardScreen);
+                  router.go(AppRouter.homeScreen);
                 },
               ),
               SizedBox(height: size(context).width * numD06),

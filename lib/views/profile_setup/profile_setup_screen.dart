@@ -20,7 +20,7 @@ class ProfileSetupScreen extends StatelessWidget {
       appBar: CommonAppBar(title: "",actions: [
         commonTextButton(onTap: (){
 
-          router.go(AppRouter.dashboardScreen,extra: 0);
+          router.go(AppRouter.homeScreen);
 
         }, size: size(context),
             buttonText: "Skip")
@@ -108,7 +108,7 @@ class ProfileSetupScreen extends StatelessWidget {
             SizedBox(height: size(context).width * numD1,),
             
             CommonButton(onTap: (){
-              router.go(AppRouter.dashboardScreen,extra: 0);
+              router.go(AppRouter.homeScreen);
             }, text: "Complete Setup"),
             SizedBox(height: size(context).width * numD1,),
           ],

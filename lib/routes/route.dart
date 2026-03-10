@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:free_style/views/battle_victory/battle_victory_cubit.dart';
 import 'package:free_style/views/battle_victory/battle_victory_screen.dart';
@@ -208,32 +209,90 @@ final GoRouter router = GoRouter(
 
 
     /// Dashboard
-    GoRoute(
-      parentNavigatorKey: navigatorKey,
-      path: AppRouter.dashboardScreen,
-      name: AppRouter.dashboardScreen,
-      builder: (context, state) {
-        return MultiBlocProvider(
-           providers: [
-            BlocProvider(create: (_) => DashboardCubit(0)),
-            BlocProvider(create: (_) => HomeCubit()),
-            BlocProvider(create: (_) => ProfileCubit()),
-            BlocProvider(create: (_) => BattlesCubit()),
-            BlocProvider(create: (_) => SocialCubit()),
-        ], child: const DashboardScreen(selectedIndex: 0),
-        );
-      },
-    ),
+    ShellRoute(
+        navigatorKey: shellNavigatorKey,
+        builder: (context, state, child) {
+          return DashboardScreen(child: child);
+        },
+        routes: [
+          GoRoute(
+            parentNavigatorKey: shellNavigatorKey,
+            path: AppRouter.homeScreen,
+            name: AppRouter.homeScreen,
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: BlocProvider(
+                create: (context) => HomeCubit(),
+                child: HomeScreen(),
+              ),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+            ),
+          ),
+          GoRoute(
+            parentNavigatorKey: shellNavigatorKey,
+            path: AppRouter.battleScreen,
+            name: AppRouter.battleScreen,
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: BlocProvider(
+                create: (context) => BattlesCubit(),
+                child: BattlesScreen(),
+              ),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+            ),
+          ),
+          GoRoute(
+            parentNavigatorKey: shellNavigatorKey,
+            path: AppRouter.socialScreen,
+            name: AppRouter.socialScreen,
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: BlocProvider(
+                create: (context) => SocialCubit(),
+                child: SocialScreen(),
+              ),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+            ),
+          ),
+          GoRoute(
+            parentNavigatorKey: shellNavigatorKey,
+            path: AppRouter.profileScreen,
+            name: AppRouter.profileScreen,
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: BlocProvider(
+                create: (context) => ProfileCubit(),
+                child: ProfileScreen(),
+              ),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+            ),
+          ),
+        ]),
 
-    /// Home Screen
-    GoRoute(
-      parentNavigatorKey: navigatorKey,
-      path: AppRouter.homeScreen,
-      name: AppRouter.homeScreen,
-      builder: (context, state) {
-        return const HomeScreen();
-      },
-    ),
 
     /// CMS Screen (Terms, Privacy, etc.)
     GoRoute(
@@ -343,14 +402,6 @@ final GoRouter router = GoRouter(
       },
     ),
 
-    GoRoute(
-      parentNavigatorKey: navigatorKey,
-      path: AppRouter.profileScreen,
-      name: AppRouter.profileScreen,
-      builder: (context, state) {
-        return ProfileScreen();
-      },
-    ),
 
 
     GoRoute(
@@ -365,23 +416,6 @@ final GoRouter router = GoRouter(
       },
     ),
 
-    GoRoute(
-      parentNavigatorKey: navigatorKey,
-      path: AppRouter.battleScreen,
-      name: AppRouter.battleScreen,
-      builder: (context, state) {
-        return BattlesScreen();
-      },
-    ),
-
-    GoRoute(
-      parentNavigatorKey: navigatorKey,
-      path: AppRouter.socialScreen,
-      name: AppRouter.socialScreen,
-      builder: (context, state) {
-        return SocialScreen();
-      },
-    ),
 
 
     GoRoute(
@@ -402,14 +436,16 @@ final GoRouter router = GoRouter(
       builder: (context, state) {
         return ItemDetailScreen();
       },
-    ),GoRoute(
+    ),
+    GoRoute(
       parentNavigatorKey: navigatorKey,
       path: AppRouter.inventoryScreen,
       name: AppRouter.inventoryScreen,
       builder: (context, state) {
         return InventoryScreen();
       },
-    ),GoRoute(
+    ),
+    GoRoute(
       parentNavigatorKey: navigatorKey,
       path: AppRouter.matchMakingScreen,
       name: AppRouter.matchMakingScreen,
@@ -452,7 +488,8 @@ final GoRouter router = GoRouter(
           child: SkillTreeScreen(),
         );
       },
-    ), GoRoute(
+    ),
+    GoRoute(
       parentNavigatorKey: navigatorKey,
       path: AppRouter.skillStateScreen,
       name: AppRouter.skillStateScreen,
@@ -486,14 +523,16 @@ final GoRouter router = GoRouter(
           child: DailyChallengeScreen(),
         );
       },
-    ), GoRoute(
+    ),
+    GoRoute(
       parentNavigatorKey: navigatorKey,
       path: AppRouter.tutorialDetailScreen,
       name: AppRouter.tutorialDetailScreen,
       builder: (context, state) {
         return TutorialDetailScreen();
       },
-    ),GoRoute(
+    ),
+    GoRoute(
       parentNavigatorKey: navigatorKey,
       path: AppRouter.tutorialVideoDetailScreen,
       name: AppRouter.tutorialVideoDetailScreen,
@@ -517,21 +556,24 @@ final GoRouter router = GoRouter(
       builder: (context, state) {
         return ChallengeApprovedScreen();
       },
-    ),GoRoute(
+    ),
+    GoRoute(
       parentNavigatorKey: navigatorKey,
       path: AppRouter.recordVideoScreen,
       name: AppRouter.recordVideoScreen,
       builder: (context, state) {
         return RecordVideoScreen();
       },
-    ),GoRoute(
+    ),
+    GoRoute(
       parentNavigatorKey: navigatorKey,
       path: AppRouter.submitProofScreen,
       name: AppRouter.submitProofScreen,
       builder: (context, state) {
         return SubmitProofScreen();
       },
-    ),GoRoute(
+    ),
+    GoRoute(
       parentNavigatorKey: navigatorKey,
       path: AppRouter.previewSubmissionScreen,
       name: AppRouter.previewSubmissionScreen,

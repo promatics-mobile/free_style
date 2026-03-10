@@ -334,7 +334,7 @@ class ItemDetailScreen extends StatelessWidget {
                         child: CommonButton(
                           text: "Confirm",
                           onTap: () {
-                            router.go(AppRouter.dashboardScreen);
+                            router.go(AppRouter.homeScreen);
                           },),
                       ),
                     ],

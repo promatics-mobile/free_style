@@ -298,7 +298,7 @@ class LogInScreen extends StatelessWidget {
                               if(cubit.loginType == LoginType.phone){
                                 router.push(AppRouter.otpVerificationScreen);
                               }else{
-                                router.go(AppRouter.dashboardScreen, extra: 0);
+                                router.go(AppRouter.homeScreen);
                               }
 
                             },

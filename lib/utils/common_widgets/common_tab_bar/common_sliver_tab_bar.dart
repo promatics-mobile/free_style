@@ -63,6 +63,7 @@ class _CommonSliverTabBarState extends State<CommonSliverTabBar>
             SliverAppBar(
               pinned: widget.pinned,
               floating: widget.floating,
+              toolbarHeight: 0,
               expandedHeight: size(context).width / 0.86,
               flexibleSpace: widget.flexibleSpace,
               backgroundColor: CommonColors.themeColor,
