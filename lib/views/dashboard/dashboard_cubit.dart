@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:free_style/main.dart';
+import 'package:free_style/utils/common_constants.dart';
 import 'package:free_style/views/social/social_screen.dart';
 import '../../routes/route.dart';
 import '../battles/battles_screen.dart';
 import '../home/home_screen.dart';
 import '../profile/profile_screen.dart';
 
-
 class DashboardCubit extends Cubit<DashboardState> {
-
   final List<Widget> dashboardScreens = [
     HomeScreen(),
     BattlesScreen(),
@@ -16,16 +16,17 @@ class DashboardCubit extends Cubit<DashboardState> {
     ProfileScreen(),
   ];
 
-  DashboardCubit(int value)
-      : super(DashboardState(
+  DashboardCubit(int value) : super(DashboardState(
           selectedIndex: 0,
           selectedTabIndex: 0,
-          selectedTitle: "Home",
-  )) {
-    onTapBottomBar(value);
+          selectedTitle: "Home")) {
+    sharedPreferences.setBool(PreferenceKeys.isRememberedKey, true);
+
+    Future.delayed(Duration(milliseconds: 500),(){
+      onTapBottomBar(value);
+    });
+
   }
-
-
 
   void onTapBottomBar(int index) {
     String name = "";
@@ -56,7 +57,6 @@ class DashboardCubit extends Cubit<DashboardState> {
         selectedTitle : state.selectedTitle));
 
   }
-
 
   void onChangeHelpSupportTab(int index){
     emit(state.copyWith(selectedTabIndex: index));

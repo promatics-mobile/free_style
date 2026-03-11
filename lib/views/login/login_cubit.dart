@@ -1,16 +1,19 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:free_style/network_class/api_service.dart';
+import 'package:free_style/network_class/web_urls.dart';
 
 import '../../../main.dart';
-import '../../network_class/dio_network_class.dart';
-import '../../network_class/network_response.dart';
+import '../../network_class/api_response.dart';
+import '../../routes/route.dart';
+import '../../utils/common_constants.dart';
 import 'login_state.dart';
 
 
 enum LoginType { email, phone }
 
-class LogInCubit extends Cubit<LogInState>  {
+class LogInCubit extends Cubit<LogInState>  implements NetworkResponse{
   LogInCubit() : super(LogInState(agree: false));
 
   var formKey = GlobalKey<FormState>();
@@ -66,26 +69,58 @@ class LogInCubit extends Cubit<LogInState>  {
     phoneController.clear();
   }
 
-  void callSignInAPI() {
-    final Map<String, dynamic> param = {
-      "type": loginType == LoginType.email ? "email" : "phone",
-      //"role": selectedRole.name,
-    };
+  void callLoginApi() {
+    final Map<String, dynamic> param = {};
 
     if (loginType == LoginType.email) {
-      param["email"] = emailController.text.trim().toLowerCase();
-      param["password"] = passwordController.text.trim();
+      param["email"] = emailController.text;
+      param["password"] = passwordController.text;
     } else {
-      param["mobile"] = phoneController.text.trim();
+      param["mobile"] = {"country_code": countryCode, "number": phoneController.text};
     }
 
-   /* DioNetworkClass.fromNetworkClass(
+    DioNetworkCall().callApiRequest(
       networkResponse: this,
-      endUrl: signInUrl,
-      requestCode: signInReq,
-      jsonBody: param,
-    ).callRequestServiceHeader(true, "post");*/
+      endUrl: loginUrl,
+      requestCode: loginReq,
+      json: param, method: 'POST',
+    );
   }
 
+  @override
+  void onApiError({required int requestCode, required String response}) {
+    switch (requestCode) {
+      case loginReq:
+        var data = jsonDecode(response);
+        break;
+    }
+  }
+
+  @override
+  void onResponse({required int requestCode, required String response}) {
+    switch (requestCode) {
+      case loginReq:
+        var map = jsonDecode(response);
+
+        if(loginType == LoginType.email){
+          sharedPreferences.setString(PreferenceKeys.tokenKey, map["token"]);
+          sharedPreferences.setString(PreferenceKeys.userIdKey, map['user']["_id"] ?? "");
+          sharedPreferences.setString(PreferenceKeys.fullNameKey, map['user']["name"] ?? "");
+          sharedPreferences.setString(PreferenceKeys.emailKey, map['user']["email"] ?? "");
+          router.go(AppRouter.homeScreen);
+        }else{
+          router.push(
+            AppRouter.otpVerificationScreen,
+            extra: {
+              "number": loginType == LoginType.phone ? phoneController.text : "",
+              "country_code": loginType == LoginType.phone ? countryCode : "",
+              "verification_type": "login",
+            },
+          );
+        }
+
+        break;
+    }
+  }
 
 }

@@ -45,7 +45,7 @@ class WalkthroughScreen extends StatelessWidget {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Expanded(child: Image.asset(item.image)),
+                        Expanded(child: Image.asset(item.image,fit: BoxFit.cover,)),
                         SizedBox(height: size(context).width * numD06),
                         Padding(
                           padding: EdgeInsets.only(

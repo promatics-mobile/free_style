@@ -84,22 +84,13 @@ class CommonSymbol {
 /// SHARED-PREFERENCE KEYS
 /// ==============================================
 class PreferenceKeys {
-  static String isLoginKey = "isLoginKey";
+  static String isRememberedKey = "isRememberedKey";
   static String userIdKey = "userIdKey";
   static String tokenKey = "tokenKey";
-  static String firstNameKey = "firstNameKey";
-  static String lastNameKey = "lastNameKey";
+  static String fullNameKey = "firstNameKey";
   static String emailKey = "emailKey";
   static String mobileKey = "mobileKey";
   static String profileImageKey = "profileImageKey";
-  static String bankAddedKey = "bankAddedKey";
-  static String isAtHome = "isAtHomeKey";
-  static String wingId = "wingIdKey";
-  static String wingName = "wingNameKey";
-  static String apartmentId = "apartmentIdKey";
-  static String apartmentName = "apartmentNameKey";
-  static String isAiConsent = "isAiConsent";
-  static String isAiInsightConsent = "isAiInsightConsent";
 }
 
 

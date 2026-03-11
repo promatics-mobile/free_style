@@ -517,6 +517,14 @@ Future<int> getSdkVersion() async {
 
 
 /// ==============================================
+/// EMAIL REGEXP
+/// ==============================================
+
+final emailRegex = RegExp(
+    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+
+
+/// ==============================================
 /// METHODS
 /// ==============================================
 void hideKeyboard(BuildContext context) {FocusScope.of(context).requestFocus(FocusNode()); }
@@ -534,18 +542,19 @@ void showToast({required bool isError, required String message}) async {
           ? Icon(
         Icons.warning_rounded,
         color: Colors.red,
-        size: MediaQuery.sizeOf(context).width * numD1,
+        size: size(context).width * numD1,
       )
           : Icon(
         Icons.check_circle_rounded,
         color: Colors.green,
-        size: MediaQuery.sizeOf(context).width * numD1,
+        size: size(context).width * numD1,
       ),
       title: CommonText(
           text: message,
           color: Colors.black,
+          textAlign: TextAlign.start,
           fontWeight: FontWeight.w500,
-          fontSize: MediaQuery.sizeOf(context).width * numD035),
+          fontSize: size(context).width * numD035),
     ),
   ).show(navigatorKey.currentContext!);
 }
@@ -560,18 +569,19 @@ void showToastLongDelay({required bool isError, required String message}) async 
           ? Icon(
         Icons.warning_rounded,
         color: Colors.red,
-        size: MediaQuery.sizeOf(context).width * numD1,
+        size:size(context).width * numD1,
       )
           : Icon(
         Icons.check_circle_rounded,
         color: Colors.green,
-        size: MediaQuery.sizeOf(context).width * numD1,
+        size:size(context).width * numD1,
       ),
       title: CommonText(
           text: message,
           color: Colors.black,
+          textAlign: TextAlign.start,
           fontWeight: FontWeight.w500,
-          fontSize: MediaQuery.sizeOf(context).width * numD035),
+          fontSize:size(context).width * numD035),
     ),
   ).show(navigatorKey.currentContext!);
 }
@@ -587,23 +597,25 @@ void showToastWithTitle({required bool isError, required String title, required 
           ? Icon(
         Icons.warning_rounded,
         color: Colors.red,
-        size: MediaQuery.sizeOf(context).width * numD1,
+        size:size(context).width * numD1,
       )
           : Icon(
         Icons.check_circle_rounded,
         color: Colors.green,
-        size: MediaQuery.sizeOf(context).width * numD1,
+        size:size(context).width * numD1,
       ),
       title: CommonText(
           text: title,
           color: Colors.black,
+          textAlign: TextAlign.start,
           fontWeight: FontWeight.bold,
-          fontSize: MediaQuery.sizeOf(context).width * numD04),
+          fontSize:size(context).width * numD04),
       subtitle: CommonText(
           text: message,
           color: Colors.black,
           fontWeight: FontWeight.w500,
-          fontSize: MediaQuery.sizeOf(context).width * numD03),
+          textAlign: TextAlign.start,
+          fontSize:size(context).width * numD03),
     ),
   ).show(navigatorKey.currentContext!);
 }
@@ -740,7 +752,6 @@ extension Currency on double {
     return NumberFormat.currency(locale: 'en_IN', symbol: '₹ ',decimalDigits: 0).format(this);
   }
 }
-
 
 extension StringExtenstions on String {
   String toCapitalize() {

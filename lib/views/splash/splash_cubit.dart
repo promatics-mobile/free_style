@@ -10,11 +10,11 @@ class SplashCubit extends Cubit<bool> {
   }
 
   void checkLogin() {
-    bool isLogin = sharedPreferences.getBool(PreferenceKeys.isLoginKey) ?? false;
-    debugPrint("isLogin $isLogin");
+    bool isRemembered = sharedPreferences.getBool(PreferenceKeys.isRememberedKey) ?? false;
+    debugPrint("isRemembered $isRemembered");
     Future.delayed(const Duration(seconds: 3), () {
       hideKeyboard(navigatorKey.currentContext!);
-      emit(isLogin);
+      emit(isRemembered);
     });
   }
 }

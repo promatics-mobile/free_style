@@ -3,25 +3,28 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:free_style/network_class/api_response.dart';
+import 'package:free_style/network_class/web_urls.dart';
+import 'package:free_style/utils/common_methods.dart';
 
 import '../../../main.dart';
-
+import '../../network_class/api_service.dart';
+import '../../routes/route.dart';
+import '../../utils/common_constants.dart';
 import 'otp_verification_state.dart';
 
-class OtpVerificationCubit extends Cubit<OtpVerificationState> {
+class OtpVerificationCubit extends Cubit<OtpVerificationState> implements NetworkResponse {
   final String email;
   final String phone;
   final String countryCode;
-  final bool isFromSignIn;
-  final bool isFromForgotPassword;
+  final String verificationType;
 
   OtpVerificationCubit({
     required this.email,
     required this.phone,
     required this.countryCode,
-    this.isFromSignIn = false,
-    this.isFromForgotPassword = false,
-  }) : super(OtpVerificationState(remainingTime: 0, timer: null,btnLoader: false,agree: false));
+    required this.verificationType,
+  }) : super(OtpVerificationState(remainingTime: 0, timer: null, btnLoader: false, agree: false));
 
   var formKey = GlobalKey<FormState>();
   TextEditingController otpController = TextEditingController();
@@ -32,14 +35,14 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> {
     emit(state.copyWith(agree: !state.agree));
   }
 
-  void onCompleteOtpFunc(){
+  void onCompleteOtpFunc() {
     if (onComplete) {
       _otpCode = otpController.text;
-
     }
   }
 
   void startTimer() {
+    emit(state.copyWith(remainingTime: 119));
     state.timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (isClosed) {
         timer.cancel();
@@ -56,98 +59,67 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> {
   }
 
   void callVerifyEmailPhoneOtpAPI() {
-    final param = {
-      "email": email,
-      "otp": otpController.text.trim(),
-      "mobile": {"number": phone},
-    };
+    Map<String, dynamic> param = {"otp": otpController.text.trim()};
+    if (email.isNotEmpty) {
+      param['email'] = email;
+    }
+    if (phone.isNotEmpty) {
+      param['mobile'] = {"country_code": countryCode, "number": phone};
+    }
 
-    /*DioNetworkClass.fromNetworkClass(
+    DioNetworkCall().callApiRequest(
       networkResponse: this,
-      endUrl: verifyEmailPhoneOTPUrl,
-      requestCode: verifyEmailPhoneOTPReq,
-      jsonBody: param,
-    ).callRequestServiceHeader(true, "post");*/
+      endUrl: verifyOtpUrl,
+      requestCode: verifyOtpReq,
+      json: param,
+      showLoader: true,
+      method: 'POST',
+    );
   }
-
-  void callVerifyPhoneOtpAPI() {
-    final param = {
-      "mobile": phone,
-      "otp": otpController.text.trim(),
-    };
-
-    /*DioNetworkClass.fromNetworkClass(
-      networkResponse: this,
-      endUrl: verifyPhoneOTPUrl,
-      requestCode: verifyPhoneOTPReq,
-      jsonBody: param,
-    ).callRequestServiceHeader(true, "post");*/
-  }
-
 
   void callForgotPasswordOtpVerifyAPI() {
-    final param = {
-      "email": email,
-      "otp": otpController.text.trim(),
-    };
+    final param = {"email": email, "otp": otpController.text.trim()};
 
-   /* DioNetworkClass.fromNetworkClass(
+    DioNetworkCall().callApiRequest(
       networkResponse: this,
-      endUrl: forgotPasswordVerifyOtpUrl,
-      requestCode: forgotPasswordVerifyOtpReq,
-      jsonBody: param,
-    ).callRequestServiceHeader(true, "post");*/
+      endUrl: verifyOtpUrl,
+      requestCode: verifyOtpReq,
+      json: param,
+      method: 'POST',
+    );
   }
 
-  void callResendEmailOtpAPI() {
+  void callResendOtpApi() {
     otpController.clear();
 
-    final param = {"email": email};
+    Map<String, dynamic> param = {};
+    if (email.isNotEmpty) {
+      param['email'] = email;
+    }
+    if (phone.isNotEmpty) {
+      param['mobile'] = {"country_code": countryCode, "number": phone};
+    }
 
-    /*DioNetworkClass.fromNetworkClass(
+    DioNetworkCall().callApiRequest(
       networkResponse: this,
-      endUrl: resendMailOtpUrl,
-      requestCode: resendMailOtpReq,
-      jsonBody: param,
-    ).callRequestServiceHeader(true, "post");*/
+      endUrl: resendOtpUrl,
+      requestCode: resendOtpReq,
+      json: param,
+      showLoader: true,
+      method: 'POST',
+    );
   }
 
-/*  @override
+  @override
   void onApiError({required int requestCode, required String response}) {
     try {
       switch (requestCode) {
-        case verifyEmailPhoneOTPReq:
-          final map = jsonDecode(response) as Map<String, dynamic>;
-          CommonToast.show(
-            map.getFormattedMessage(),
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-          );
-          break;
-          case resendMailOtpReq:
-          final map = jsonDecode(response) as Map<String, dynamic>;
-          CommonToast.show(
-            map.getFormattedMessage(),
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-          );
+        case verifyOtpReq:
+          final map = jsonDecode(response);
           break;
 
-          case verifyPhoneOTPReq:
-          final map = jsonDecode(response) as Map<String, dynamic>;
-          CommonToast.show(
-            map.getFormattedMessage(),
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-          );
-          break;
-          case forgotPasswordVerifyOtpReq:
-          final map = jsonDecode(response) as Map<String, dynamic>;
-          CommonToast.show(
-            map.getFormattedMessage(),
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-          );
+          case resendOtpReq:
+          final map = jsonDecode(response);
           break;
       }
     } on Exception catch (e, st) {
@@ -159,205 +131,26 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> {
   void onResponse({required int requestCode, required String response}) {
     try {
       switch (requestCode) {
-        case verifyEmailPhoneOTPReq:
+        case verifyOtpReq:
           final map = jsonDecode(response);
 
-          sharedPreferences.setString(PreferenceKeys.tokenKey, map["data"]["token"]??"");
-          final data = map["data"];
-          if (data == null) return;
+          sharedPreferences.setString(PreferenceKeys.tokenKey, map["token"]);
+          sharedPreferences.setString(PreferenceKeys.userIdKey, map["_id"] ?? "");
+          sharedPreferences.setString(PreferenceKeys.fullNameKey, map["full_name"] ?? "");
+          sharedPreferences.setString(PreferenceKeys.emailKey, map["email"] ?? "");
 
-          final userMap = data["user"];
-          if (userMap == null) return;
-
-          // Basic user data
-          sharedPreferences.setString(
-            PreferenceKeys.userIdKey,
-            userMap["_id"] ?? "",
-          );
-          sharedPreferences.setString(
-            PreferenceKeys.firstNameKey,
-            userMap["first_name"] ?? "",
-          );
-          sharedPreferences.setString(
-            PreferenceKeys.lastNameKey,
-            userMap["last_name"] ?? "",
-          );
-          sharedPreferences.setString(
-            PreferenceKeys.emailKey,
-            userMap["email"] ?? "",
-          );
-          debugPrint("The token is ::::${map["data"]["token"]}");
-          CommonToast.show(
-            map["message"] ?? "Verified successfully",
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
-          );
-          switch (selectedRole) {
-            case Role.customer:
-              router.go(AppRouter.homeScreen);
-              break;
-            case Role.company:
-              router.push(AppRouter.companyCompleteProfileScreen,extra:  {"type": selectedRole.name},);
-              // router.go(AppRouter.companyHomeScreen);
-              break;
-            case Role.delivery_partner:
-              router.push(AppRouter.companyCompleteProfileScreen,extra:  {"type": selectedRole.name},);
-              break;
-          }
-
-          // router.push(AppRouter.companyCompleteProfileScreen,extra:  {"type": selectedRole.name},);
-          break;
-
-          case resendMailOtpReq:
-          final map = jsonDecode(response);
-
-          CommonToast.show(
-            map["message"] ,
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
-          );
-          break;
-
-          case verifyPhoneOTPReq:
-          final map = jsonDecode(response);
-          var data = map['data'];
-
-          // Save token
-          sharedPreferences.setString(
-            PreferenceKeys.tokenKey,
-            data["token"] ?? "",
-          );
-
-          final userMap = data["user"];
-          if (userMap == null) return;
-
-          // Basic user data
-          sharedPreferences.setString(
-            PreferenceKeys.userIdKey,
-            userMap["_id"] ?? "",
-          );
-          sharedPreferences.setString(
-            PreferenceKeys.firstNameKey,
-            userMap["first_name"] ?? "",
-          );
-          sharedPreferences.setString(
-            PreferenceKeys.lastNameKey,
-            userMap["last_name"] ?? "",
-          );
-          sharedPreferences.setString(
-            PreferenceKeys.emailKey,
-            userMap["email"] ?? "",
-          );
-
-          if (userMap["mobile"] != null) {
-            final mobile = userMap["mobile"];
-            sharedPreferences.setString(
-              PreferenceKeys.mobileKey,
-              "${mobile["country_code"] ?? ""}${mobile["number"] ?? ""}",
-            );
-          }
-
-          sharedPreferences.setString(
-            PreferenceKeys.approvalStatusKey,
-            userMap["approval_status"] ?? "",
-          );
-          sharedPreferences.setBool(
-            PreferenceKeys.isActiveKey,
-            userMap["is_active"] ?? false,
-          );
-
-          // Onboarding data
-          final onboarding = userMap["onboarding"];
-          final bool isOnboardingCompleted =
-              onboarding?["is_completed"] ?? false;
-          final int currentStep = onboarding?["current_step"] ?? 0;
-
-          sharedPreferences.setBool(
-            PreferenceKeys.isOnBoardingCompleteKey,
-            isOnboardingCompleted,
-          );
-          sharedPreferences.setString(
-            PreferenceKeys.onboardingStepKey,
-            currentStep.toString(),
-          );
-
-
-          if(selectedRole!=Role.customer){
-            if (!isOnboardingCompleted) {
-              CommonToast.show(
-                "Onboarding is not completed. Please complete your onboarding first.",
-              );
-              router.go(
-                AppRouter.companyCompleteProfileScreen,
-                extra: {"type": selectedRole.name},
-              );
-              return;
-            }
-
-          }
-          debugPrint("We are here ::::1");
-
-          if (sharedPreferences.getString(PreferenceKeys.approvalStatusKey) ==
-              "approved") {
-
-            switch (selectedRole) {
-              case Role.customer:
-                router.go(AppRouter.homeScreen);
-                break;
-              case Role.company:
-                router.go(AppRouter.companyHomeScreen);
-                break;
-              case Role.delivery_partner:
-                router.go(AppRouter.deliveryHomeScreen);
-                break;
-            }
-          } else if(sharedPreferences.getString(PreferenceKeys.approvalStatusKey) ==
-              "rejected"){
-
-            CommonToast.show(
-              "Your request was rejected by the admin",
-            );
-
-            // router.go(AppRouter.profileSuccessScreen,
-            //   extra: {"approval": sharedPreferences.getString(PreferenceKeys.approvalStatusKey)});
-          }else{
-            CommonToast.show(
-              "Your request is pending. Please wait for approval.",
-            );
-
-          }
-
+          router.go(AppRouter.homeScreen);
 
           break;
 
-        case forgotPasswordVerifyOtpReq:
+
+        case resendOtpReq:
           final map = jsonDecode(response);
-
-          if (map["success"] == true) {
-
-            final resetToken = map["data"]?["reset_token"] ?? "";
-
-            sharedPreferences.setString(
-              PreferenceKeys.tokenKey,
-              resetToken,
-            );
-
-            CommonToast.show(
-              map["message"] ?? "OTP verified successfully",
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-            );
-
-            router.push(
-              AppRouter.resetPasswordScreen,
-            );
-          }
-
+          showToast(isError: false, message: "OTP resend successfully");
           break;
-
       }
     } on Exception catch (e, st) {
       debugPrint("Exception: $st");
     }
-  }*/
+  }
 }

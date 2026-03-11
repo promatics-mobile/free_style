@@ -1,16 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:free_style/network_class/api_response.dart';
+import 'package:free_style/network_class/web_urls.dart';
+
+import '../../network_class/api_service.dart';
+import '../../routes/route.dart';
 import '../login/login_cubit.dart';
 import 'create_account_state.dart';
 
-class CreateAccountCubit extends Cubit<CreateAccountState> {
+class CreateAccountCubit extends Cubit<CreateAccountState> implements NetworkResponse {
   bool isObscure = false;
   bool keepSigned = false;
   bool isAgeSelected = false;
   bool isTermsSelected = false;
 
   CreateAccountCubit() : super(CreateAccountState());
-
 
   var formKey = GlobalKey<FormState>();
   TextEditingController fullNameController = TextEditingController();
@@ -77,12 +83,59 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
     isAgeSelected = !isAgeSelected;
     emit(state.copyWith());
   }
+
   void onAgreeTerms() {
     isTermsSelected = !isTermsSelected;
     emit(state.copyWith());
   }
 
+  void callCreateAccountApi() {
+    Map<String, dynamic> jsonData = {
+      "name": fullNameController.text,
+    };
 
+    if (loginType == LoginType.email) {
+      jsonData["email"] = emailController.text;
+      jsonData["password"] = passwordController.text;
+    } else {
+      jsonData["mobile"] = {"country_code": countryCode, "number": phoneController.text};
+    }
 
+    DioNetworkCall().callApiRequest(
+      endUrl: createAccountUrl,
+      method: "POST",
+      requestCode: createAccountReq,
+      json: jsonData,
+      showLoader: true,
+      networkResponse: this,
+    );
+  }
 
+  @override
+  void onApiError({required int requestCode, required String response}) {
+    switch (requestCode) {
+      case createAccountReq:
+        var data = jsonDecode(response);
+        break;
+    }
+  }
+
+  @override
+  void onResponse({required int requestCode, required String response}) {
+    switch (requestCode) {
+      case createAccountReq:
+        var data = jsonDecode(response);
+        router.push(
+          AppRouter.otpVerificationScreen,
+          extra: {
+            "email": loginType == LoginType.email ? emailController.text : "",
+            "number": loginType == LoginType.phone ? phoneController.text : "",
+            "country_code": loginType == LoginType.phone ? countryCode : "",
+            "verification_type": "create_account",
+          },
+        );
+
+        break;
+    }
+  }
 }

@@ -312,14 +312,13 @@ final GoRouter router = GoRouter(
       path: AppRouter.otpVerificationScreen,
       name: AppRouter.otpVerificationScreen,
       builder: (context, state) {
-        //final type = state.extra as String;
+        final data = state.extra as Map;
         return BlocProvider(
           create: (_) => OtpVerificationCubit(
-            email: 'rajan@gmail.com',
-            phone: '7888888888',
-            countryCode: '+91',
-            isFromForgotPassword: true,
-            isFromSignIn: false,
+            email: data["email"]??"",
+            phone: data["number"]??"",
+            countryCode: data["country_code"]??"",
+            verificationType: data["verification_type"]??""
           ),
           child: OtpVerificationScreen(),
         );

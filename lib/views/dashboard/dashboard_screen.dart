@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:free_style/main.dart';
 import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
 import 'package:free_style/utils/common_widgets/app_bars/custom_app_bar.dart';
 import 'package:free_style/utils/common_widgets/common_image/common_image.dart';
@@ -25,6 +26,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen>
     with TickerProviderStateMixin {
+
   @override
   void initState() {
     super.initState();
@@ -63,7 +65,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CommonText(
-                              text: "FreeStyle Pro",
+                              text: sharedPreferences.getString(PreferenceKeys.fullNameKey)??"DummyUser",
                               fontSize: size(context).width * numD04,
                               fontWeight: FontWeight.bold,
                             ),
@@ -225,7 +227,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   width: size(context).width * numD06,
                 ),
                 Image.asset(
-                  Assets.iconsIcMessage,
+                  Assets.iconsIcSocial,
                   height: size(context).width * numD06,
                   width: size(context).width * numD06,
                 ),

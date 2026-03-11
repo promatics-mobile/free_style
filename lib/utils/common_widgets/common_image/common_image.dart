@@ -50,8 +50,8 @@ class CommonImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget imageWidget;
-    debugPrint("Path: $imagePath");
     if (isNetwork) {
+      debugPrint("Path: $imagePath");
       imageWidget = Image.network(
         imagePath,
         width: width,

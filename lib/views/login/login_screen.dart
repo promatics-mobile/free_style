@@ -8,6 +8,7 @@ import '../../../generated/assets.dart';
 import '../../../main.dart';
 import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
+import '../../utils/common_methods.dart';
 import '../../utils/common_widgets.dart';
 import '../../utils/common_widgets/common_button/common_button.dart';
 import '../../utils/common_widgets/common_image/common_image.dart';
@@ -182,9 +183,9 @@ class LogInScreen extends StatelessWidget {
                                           value.trim().isEmpty) {
                                         return "Required*";
                                       }
-                                      /*if (!emailRegex.hasMatch(value.trim())) {
-                                  return t.valid_email_address;
-                                }*/
+                                      if (!emailRegex.hasMatch(value.trim())) {
+                                  return "Please enter a valid email address";
+                                }
                                       return null;
                                     },
                                   ),
@@ -295,12 +296,9 @@ class LogInScreen extends StatelessWidget {
 
                           CommonButton(
                             onTap: () {
-                              if(cubit.loginType == LoginType.phone){
-                                router.push(AppRouter.otpVerificationScreen);
-                              }else{
-                                router.go(AppRouter.homeScreen);
+                              if(cubit.formKey.currentState!.validate()){
+                                cubit.callLoginApi();
                               }
-
                             },
                             text: cubit.loginType == LoginType.email
                                 ? "Login"

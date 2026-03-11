@@ -38,7 +38,6 @@ void main() async {
         highlightColor: Colors.transparent,
         colorScheme: ColorScheme.fromSeed(
           seedColor: CommonColors.themeColor,
-          surface: CommonColors.themeColor
         ),
         pageTransitionsTheme: const PageTransitionsTheme(
         builders: {

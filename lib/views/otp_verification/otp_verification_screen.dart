@@ -57,18 +57,18 @@ class OtpVerificationScreen extends StatelessWidget {
 
 
 
-                if(!cubit.isFromSignIn || cubit.isFromForgotPassword)
+                if(cubit.email.isNotEmpty)
                 CommonText(
-                  text: "Enter the OTP code sent to your email \n(${cubit.email})",
+                  text: "Enter the OTP code sent to your email \n( ${cubit.email} )",
                   fontSize: size(context).width * numD035,
                   color: Colors.white,
                   textAlign: TextAlign.center,
                 ),
 
 
-                if(!cubit.isFromForgotPassword)
+                if(cubit.phone.isNotEmpty)
                 CommonText(
-                  text: "Enter the OTP code sent to your phone \n(${cubit.phone})",
+                  text: "Enter the OTP code sent to your phone \n( ${cubit.countryCode} ${cubit.phone} )",
                   fontSize: size(context).width * numD035,
                   color: Colors.white,
                   textAlign: TextAlign.center,
@@ -101,7 +101,11 @@ class OtpVerificationScreen extends StatelessWidget {
                         //onCompleteOtpFunc();
                       },
                       validator: (pin) {
-                        if (pin.toString().isEmpty || pin!.length != 4) {
+                        if (pin == null || pin.isEmpty) {
+                          return null;
+                        }
+
+                        if (pin.toString().isEmpty || pin.length != 4) {
                           return "Please enter valid OTP";
                         }
                         return null;
@@ -155,6 +159,7 @@ class OtpVerificationScreen extends StatelessWidget {
                       onTap: (){
                         if (state.remainingTime == 0) {
                           cubit.startTimer();
+                          cubit.callResendOtpApi();
                         }
                       },
                       child: CommonText(
@@ -162,8 +167,8 @@ class OtpVerificationScreen extends StatelessWidget {
                             ? formatTime(state.remainingTime)
                             : "Resend code",
                         fontSize: size(context).width * numD04,
-                        color:Colors.grey,
-                        fontWeight: FontWeight.w400,
+                        color:Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
 
@@ -177,16 +182,10 @@ class OtpVerificationScreen extends StatelessWidget {
                 CommonButton(
                   text: "Continue",
                   onTap: () {
-                     //router.push(AppRouter.resetPasswordScreen);
-                    router.go(AppRouter.homeScreen);
-
-                    /*if (cubit.isFromSignIn) {
-                      cubit.callVerifyPhoneOtpAPI();
-                    } else if (cubit.isFromForgotPassword) {
-                      cubit.callForgotPasswordOtpVerifyAPI();
-                    } else {
+                    hideKeyboard(context);
+                    if(cubit.verificationType == "create_account"){
                       cubit.callVerifyEmailPhoneOtpAPI();
-                    }*/
+                    }
                   },
                 ),
                 SizedBox(height: size(context).width * numD06),

@@ -105,6 +105,7 @@ class Assets {
   static const String iconsIcShop = 'assets/icons/ic_shop.png';
   static const String iconsIcSkillState = 'assets/icons/ic_skill_state.png';
   static const String iconsIcSkillTree = 'assets/icons/ic_skill_tree.png';
+  static const String iconsIcSocial = 'assets/icons/ic_social.png';
   static const String iconsIcStarFilled = 'assets/icons/ic_star_filled.png';
   static const String iconsIcStarUnfilled = 'assets/icons/ic_star_unfilled.png';
   static const String iconsIcSteps = 'assets/icons/ic_steps.png';
