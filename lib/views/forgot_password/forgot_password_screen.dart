@@ -4,19 +4,22 @@ import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
 
 import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
+import '../../utils/common_methods.dart';
 import '../../utils/common_widgets.dart';
 import '../../utils/common_widgets/common_button/common_button.dart';
 import '../../utils/common_widgets/common_text/common_text.dart';
 import '../../utils/common_widgets/text_form_field/common_text_form_field.dart';
 import 'forgot_password_cubit.dart';
-import 'forgot_password_state.dart';
 
 
 class ForgotPasswordScreen extends StatelessWidget {
+  const ForgotPasswordScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ForgotPasswordCubit, ForgotPasswordState>(
       builder: (context, state) {
+        var cubit = context.read<ForgotPasswordCubit>();
         return Scaffold(
           extendBodyBehindAppBar: true,
           backgroundColor: CommonColors.themeColor,
@@ -54,6 +57,7 @@ class ForgotPasswordScreen extends StatelessWidget {
 
 
                 CommonTextFormField(
+                  controller: cubit.emailController,
                   hint: "you@example.com",
                   filled: true,
                   borderRadius: BorderRadius.all(
@@ -72,6 +76,9 @@ class ForgotPasswordScreen extends StatelessWidget {
                         value.trim().isEmpty) {
                       return "Required*";
                     }
+                    if (!emailRegex.hasMatch(value.trim())) {
+                      return "Please enter a valid email address";
+                    }
                     return null;
                   },
                 ),
@@ -87,8 +94,9 @@ class ForgotPasswordScreen extends StatelessWidget {
                 ),
 
                 CommonButton(onTap: (){
-                 router.push(AppRouter.otpVerificationScreen);
-
+                  if(cubit.emailController.text.isNotEmpty){
+                    cubit.callForgotPasswordApi();
+                  }
                 },  text: "Send Code",
 
                 ),

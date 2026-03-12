@@ -25,3 +25,21 @@ const getProfileReq = 7;
 
 const cmsApiUrl = "admin/getpolicy";
 const cmsApiReq = 8;
+
+const getFaqsUrl = "user/getfaqs";
+const getFaqsReq = 9;
+
+const changePasswordUrl = "user/changepassword";
+const changePasswordReq = 10;
+
+const contactUsUrl = "user/contactus";
+const contactUsReq = 11;
+
+const availableUsernameUrl = "user/avaliableusernames";
+const availableUsernameReq = 12;
+
+const profileCosmeticsUrl = "user/profilecosmetics";
+const profileCosmeticsReq = 13;
+
+const profileSetupUrl = "user/profilesetup";
+const profileSetupReq = 14;

@@ -36,7 +36,7 @@ class DioClient {
           /// Add Token
           final token = sharedPreferences.getString(PreferenceKeys.tokenKey);
           if (token != null && token.isNotEmpty) {
-            options.headers[headerKey] = token;
+            options.headers[headerKey] = "Bearer $token";
           }
 
           /// Logging Request

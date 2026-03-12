@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_short_button.dart';
 import 'package:free_style/utils/common_widgets/linear_progress_indicator/custom_linear_progress.dart';
 import 'package:free_style/views/profile/profile_cubit.dart';
+import 'package:free_style/views/profile/profile_shimmer.dart';
 
 import '../../generated/assets.dart';
+import '../../main.dart';
 import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
 import '../../utils/common_decorations/common_decorations.dart';
@@ -25,6 +27,11 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
         var cubit = context.read<ProfileCubit>();
+
+        if (cubit.userModel == null) {
+          return const ProfileShimmer();
+        }
+
         return CommonSliverTabBar(
           tabs: const [
             "Battles",
@@ -48,10 +55,10 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                             padding: EdgeInsets.all(size(context).width * numD005),
                             child: ClipOval(
                               child: CommonImage(
-                                imagePath: Assets.assetsIcDummyUser1,
+                                imagePath: sharedPreferences.getString(PreferenceKeys.avatarImageKey)??"",
                                 height: size(context).width * numD25,
                                 width: size(context).width * numD25,
-                                isNetwork: false,
+                                isNetwork: true,
                               ),
                             ),
                           ),
@@ -82,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                 ),
                 SizedBox(height: size(context).width * numD02),
                 CommonText(
-                  text: "Jess Bailey",
+                  text: cubit.userModel!.name ?? "",
                   fontWeight: FontWeight.bold,
                   fontSize: size(context).width * numD05,
                 ),
@@ -149,8 +156,6 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                         commonNormalLinearProgress(context: context, value: 0.6,
                             bgColor: Colors.white.withValues(alpha: 0.3),
                             valueColor: CommonColors.buttonColor),
-
-
                         SizedBox(height: size(context).width * numD02),
                         Container(
                           decoration:
@@ -241,8 +246,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
           return Container(
             decoration: commonBgColorDecoration(size(context).width * numD04, Colors.white),
             padding: EdgeInsets.all(size(context).width * numD04),
-            margin: EdgeInsets.symmetric(
-                vertical: size(context).width * numD01),
+            margin: EdgeInsets.symmetric(vertical: size(context).width * numD01),
             child: Row(
               children: [
                 CircleAvatar(

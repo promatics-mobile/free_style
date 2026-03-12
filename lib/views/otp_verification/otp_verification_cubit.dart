@@ -118,7 +118,7 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> implements Networ
           final map = jsonDecode(response);
           break;
 
-          case resendOtpReq:
+        case resendOtpReq:
           final map = jsonDecode(response);
           break;
       }
@@ -134,18 +134,28 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> implements Networ
         case verifyOtpReq:
           final map = jsonDecode(response);
 
-          sharedPreferences.setString(PreferenceKeys.tokenKey, map["token"]);
-          sharedPreferences.setString(PreferenceKeys.userIdKey, map["_id"] ?? "");
-          sharedPreferences.setString(PreferenceKeys.fullNameKey, map["full_name"] ?? "");
-          sharedPreferences.setString(PreferenceKeys.emailKey, map["email"] ?? "");
+            sharedPreferences.setString(PreferenceKeys.tokenKey, map["token"]);
+            sharedPreferences.setString(PreferenceKeys.userIdKey, map['user']["_id"] ?? "");
+            sharedPreferences.setString(PreferenceKeys.fullNameKey, map['user']["name"] ?? "");
+            sharedPreferences.setString(PreferenceKeys.emailKey, map['user']["email"] ?? "");
 
-          router.go(AppRouter.homeScreen);
+            if (map['user']['mobile'] != null) {
+              sharedPreferences.setString(
+                PreferenceKeys.countryCodeKey,
+                map['user']['mobile']["country_code"] ?? "",
+              );
+              sharedPreferences.setString(
+                PreferenceKeys.mobileKey,
+                map['user']['mobile']["number"] ?? "",
+              );
+            }
+
+            router.go(AppRouter.homeScreen);
+
 
           break;
 
-
         case resendOtpReq:
-          final map = jsonDecode(response);
           showToast(isError: false, message: "OTP resend successfully");
           break;
       }

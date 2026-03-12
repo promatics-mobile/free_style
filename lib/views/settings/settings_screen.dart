@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:free_style/main.dart';
 
 import '../../routes/route.dart';
 import '../../utils/common_alerts/common_alert_dialog.dart';
@@ -37,6 +38,30 @@ class SettingsScreen extends StatelessWidget {
               ),
               onTap: () {
                 router.push(AppRouter.profileSetupScreen);
+              },
+            ),
+            SizedBox(height: size(context).width * numD04),
+
+            ListTile(
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              title: CommonText(text: "Change Password",fontSize: size(context).width * numD04,fontWeight: .w500,),
+              leading: Icon(
+                Icons.lock_outline,
+                color: Colors.white,
+              ),
+              trailing: Icon(
+                Icons.keyboard_arrow_right_rounded,
+                color: Colors.white,
+              ),
+              tileColor: CommonColors.themeColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(
+                  size(context).width * numD02,
+                ),
+              ),
+              onTap: () {
+                router.push(AppRouter.changePasswordScreen);
               },
             ),
             SizedBox(height: size(context).width * numD04),
@@ -167,7 +192,7 @@ class SettingsScreen extends StatelessWidget {
                   heading: "Logout",
                   subTitle: "Are you sure you want to logout?",
                   onFirstButtonTap: () {
-
+                    sharedPreferences.clear();
                     router.go(AppRouter.walkThroughScreen);
 
                   },
@@ -200,6 +225,7 @@ class SettingsScreen extends StatelessWidget {
                   heading: "Delete Account",
                   subTitle: "Are you sure you want to delete your account?",
                   onFirstButtonTap: () {
+                    sharedPreferences.clear();
                     router.go(AppRouter.walkThroughScreen);
                   },
                   onSecondButtonTap: () {

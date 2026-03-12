@@ -56,8 +56,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                           child: CommonImage(
                             width: size(context).width * numD13,
                             height: size(context).width * numD13,
-                            imagePath: Assets.assetsIcDummyUser1,
-                            isNetwork: false,
+                            imagePath: sharedPreferences.getString(PreferenceKeys.avatarImageKey)??"",
+                            isNetwork: true,
                           ),
                         ),
                         SizedBox(width: size(context).width * numD02),

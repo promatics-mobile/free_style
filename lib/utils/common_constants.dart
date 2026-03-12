@@ -89,8 +89,13 @@ class PreferenceKeys {
   static String tokenKey = "tokenKey";
   static String fullNameKey = "firstNameKey";
   static String emailKey = "emailKey";
+  static String userNameKey = "userNameKey";
+  static String countryCodeKey = "countryCodeKey";
   static String mobileKey = "mobileKey";
-  static String profileImageKey = "profileImageKey";
+  static String avatarImageKey = "avatarKey";
+  static String ballImageKey = "ballImageKey";
+  static String avatarIdKey = "avatarIdKey";
+  static String ballIdKey = "ballIdKey";
 }
 
 

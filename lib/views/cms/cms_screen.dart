@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
 
 import '../../routes/route.dart';
@@ -30,11 +31,14 @@ class CmsScreen extends StatelessWidget {
             cubitData = context.read<CmsCubit>();
             return SingleChildScrollView(
               padding: EdgeInsets.all(size(context).width * numD04),
-              child: CommonText(
-                  text: type == "Privacy Policy"
-                      ? cubitData.privacyPolicy
-                      : type == "Terms & Conditions" ? cubitData.termsAndConditions :cubitData.licensesTerms,
-                  fontSize: size(context).width * numD035),
+              child: Html(
+                data: cubitData.cmsData,
+                style: {
+                  "body": Style(
+                    color: Colors.white.withValues(alpha: 0.8),
+                  ),
+                },
+              ),
             );
           },
         ),

@@ -62,7 +62,6 @@ class DioNetworkCall {
         },
       );
 
-
       if (showLoader) {
         ApiLoader.hide();
       }
@@ -72,33 +71,53 @@ class DioNetworkCall {
         /// Logging Response
         debugPrint("✅ CODE → ${response.statusCode}");
         debugPrint("✅ RESPONSE → ${jsonEncode(response.data)}");
-        networkResponse.onResponse(
-          requestCode: requestCode,
-          response: jsonEncode(response.data as Map<String, dynamic>),
-        );
-      }
-      else {
+
+        try {
+          networkResponse.onResponse(
+            requestCode: requestCode,
+            response: jsonEncode(response.data as Map<String, dynamic>),
+          );
+        } catch (e, stack) {
+          debugPrint("❌ onResponse ERROR → $e");
+          debugPrint(stack.toString());
+        }
+      } else {
         /// Logging Response
         debugPrint("❌ ERROR CODE → ${response.statusCode}");
         debugPrint("❌ ERROR RESPONSE → ${jsonEncode(response.data)}");
 
         var data = response.data as Map<String, dynamic>;
-        showToast(isError: true, message: data['message'].toString());
+        if(!data.toString().contains("Username already taken")){
+          showToast(isError: true, message: data['message'].toString());
+        }
 
+        try {
+          networkResponse.onApiError(
+            requestCode: requestCode,
+            response: jsonEncode(response.data as Map<String, dynamic>),
+          );
+        } catch (e, stack) {
+          debugPrint("❌ onApiError → $e");
+          debugPrint(stack.toString());
+        }
+      }
+    } on DioException catch (e) {
+      try {
+        networkResponse.onApiError(requestCode: requestCode, response: jsonEncode(_handleError(e)));
+      } catch (e, stack) {
+        debugPrint("❌ onApiError → $e");
+        debugPrint(stack.toString());
+      }
+    } catch (e) {
+      try {
         networkResponse.onApiError(
           requestCode: requestCode,
-          response: jsonEncode(response.data as Map<String, dynamic>),
+          response: jsonEncode({"message": e.toString()}),
         );
+      } catch (e, stack) {
+        debugPrint("❌ onApiError → $e");
+        debugPrint(stack.toString());
       }
-
-
-    } on DioException catch (e) {
-      networkResponse.onApiError(requestCode: requestCode, response: jsonEncode(_handleError(e)));
-    } catch (e) {
-      networkResponse.onApiError(
-        requestCode: requestCode,
-        response: jsonEncode({"message": e.toString()}),
-      );
     } finally {
       if (showLoader) {
         ApiLoader.hide();

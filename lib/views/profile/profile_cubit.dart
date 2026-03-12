@@ -1,14 +1,18 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:free_style/network_class/api_response.dart';
+import 'package:free_style/views/profile/user_model.dart';
 import 'package:meta/meta.dart';
-
+import '../../network_class/api_service.dart';
+import '../../network_class/web_urls.dart';
 part 'profile_state.dart';
 
-class ProfileCubit extends Cubit<ProfileState> {
-  ProfileCubit() : super(ProfileInitial());
-
+class ProfileCubit extends Cubit<ProfileState> implements NetworkResponse{
+  UserModel? userModel;
   int selectedTabIndex = 0;
-
   List<ProfileItemModel> battlesList = [
     ProfileItemModel(
       title: "Victory against @ShadowStriker",
@@ -100,7 +104,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       type: "battle",
     ),
   ];
-
   List<ProfileItemModel> achievementsList = [
     ProfileItemModel(
       title: "Trick Master: 50 Tricks",
@@ -148,7 +151,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       type: "achievement",
     ),
   ];
-
   List<ProfileItemModel> promotionsList = [
     ProfileItemModel(
       title: "Promoted to Gold League II",
@@ -196,7 +198,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       type: "promotion",
     ),
   ];
-
   List<ProfileItemModel> historyList = [
     ProfileItemModel(
       title: "Participated in Global Tournament",
@@ -244,12 +245,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       type: "history",
     ),
   ];
-
-  void onChangeTab(int index) {
-    selectedTabIndex = index;
-    emit(ProfileInitial());
-  }
-
   List<ProfileItemModel> getActiveList() {
     switch (selectedTabIndex) {
       case 0:
@@ -264,6 +259,56 @@ class ProfileCubit extends Cubit<ProfileState> {
         return [];
     }
   }
+
+  ProfileCubit() : super(ProfileInitial()){
+    callGetProfileApi();
+  }
+
+  void onChangeTab(int index) {
+    selectedTabIndex = index;
+    emit(ProfileInitial());
+  }
+
+
+  void callGetProfileApi() {
+    DioNetworkCall().callApiRequest(
+      endUrl: getProfileUrl,
+      method: "GET",
+      requestCode: getProfileReq,
+      networkResponse: this,
+    );
+  }
+
+  @override
+  void onApiError({required int requestCode, required String response}) {
+    switch (requestCode) {
+      case getProfileReq:
+        break;
+    }
+  }
+
+  @override
+  void onResponse({required int requestCode, required String response}) {
+    try {
+      switch (requestCode) {
+        case getProfileReq:
+          try{
+            log(response);
+            var data = jsonDecode(response);
+            userModel = UserModel.fromJson(data['user']);
+            debugPrint("here::");
+            emit(ProfileInitial());
+            break;
+          }catch (e, stack) {
+            debugPrint("error::$e $stack");
+          }
+
+      }
+    } catch (e, stack) {
+      debugPrint("error::$e $stack");
+    }
+  }
+
 }
 
 class ProfileItemModel {

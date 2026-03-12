@@ -330,8 +330,9 @@ final GoRouter router = GoRouter(
       path: AppRouter.resetPasswordScreen,
       name: AppRouter.resetPasswordScreen,
       builder: (context, state) {
+        final data = state.extra as Map;
         return BlocProvider(
-          create: (_) => ResetPasswordCubit(),
+          create: (_) => ResetPasswordCubit(email: data['email']),
           child: ResetPasswordScreen(),
         );
       },

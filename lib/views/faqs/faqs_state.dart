@@ -1,6 +1,6 @@
 part of 'faqs_cubit.dart';
 
 @immutable
-sealed class FaqsState {}
+sealed class FaqState {}
 
-final class FaqsInitial extends FaqsState {}
+final class FaqInitial extends FaqState {}

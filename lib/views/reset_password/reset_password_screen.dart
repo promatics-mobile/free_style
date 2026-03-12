@@ -71,12 +71,12 @@ class ResetPasswordScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         CommonTextFormField(
-                          controller: cubit.newPasswordController,
+                          controller: cubit.otpController,
                           filled: true,
-                          hint: "Enter 6-digit Code",
+                          hint: "Enter OTP",
                           isPassword: true,
                           maxLines: 1,
-                          maxLength: 6,
+                          maxLength: 4,
                           counterText: "",
                           contentPadding: EdgeInsets.symmetric(
                             horizontal: size(context).width * numD03,
@@ -87,38 +87,14 @@ class ResetPasswordScreen extends StatelessWidget {
                               left: size(context).width * numD03,
                               right: size(context).width * numD03,
                             ),
-                            child: CommonText(
-                              text: "#",
-                              fontSize: size(context).width * numD06,
-                              fontWeight: FontWeight.bold,
+                            child: Icon(
+                              Icons.lock_outline,
                               color: CommonColors.buttonColor,
                             ),
                           ),
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
                               return "Required*";
-                            }
-
-                            if (value.length < 8) {
-                              return "Password should be at least 8 characters";
-                            }
-
-                            if (!RegExp(r'[A-Z]').hasMatch(value)) {
-                              return "Password should contain at least one uppercase letter";
-                            }
-
-                            if (!RegExp(r'[a-z]').hasMatch(value)) {
-                              return "Password should contain at least one lowercase letter";
-                            }
-
-                            if (!RegExp(r'[0-9]').hasMatch(value)) {
-                              return "Password should contain at least one number";
-                            }
-
-                            if (!RegExp(
-                              r'[!@#$%^&*(),.?":{}|<>]',
-                            ).hasMatch(value)) {
-                              return "Password should contain at least one special character";
                             }
 
                             return null;
@@ -220,11 +196,10 @@ class ResetPasswordScreen extends StatelessWidget {
                   CommonButton(
                     text: "Reset Password",
                     onTap: () {
-                      router.push(AppRouter.logInScreen);
-                      /* if (cubit.formKey.currentState!
+                       if (cubit.formKey.currentState!
                           .validate()) {
                         cubit.callResetPasswordAPI();
-                      }*/
+                      }
                     },
                   ),
                   SizedBox(height: size(context).width * numD06),

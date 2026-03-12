@@ -1,14 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:free_style/main.dart';
+import 'package:free_style/network_class/api_response.dart';
+import 'package:free_style/network_class/api_service.dart';
 import 'package:free_style/utils/common_constants.dart';
 import 'package:free_style/views/social/social_screen.dart';
+
+import '../../network_class/web_urls.dart';
 import '../../routes/route.dart';
 import '../battles/battles_screen.dart';
 import '../home/home_screen.dart';
 import '../profile/profile_screen.dart';
+import '../profile/user_model.dart';
 
-class DashboardCubit extends Cubit<DashboardState> {
+class DashboardCubit extends Cubit<DashboardState>  {
   final List<Widget> dashboardScreens = [
     HomeScreen(),
     BattlesScreen(),
@@ -16,16 +23,12 @@ class DashboardCubit extends Cubit<DashboardState> {
     ProfileScreen(),
   ];
 
-  DashboardCubit(int value) : super(DashboardState(
-          selectedIndex: 0,
-          selectedTabIndex: 0,
-          selectedTitle: "Home")) {
+  DashboardCubit(int value)
+    : super(DashboardState(selectedIndex: 0, selectedTabIndex: 0, selectedTitle: "Home")) {
     sharedPreferences.setBool(PreferenceKeys.isRememberedKey, true);
-
-    Future.delayed(Duration(milliseconds: 500),(){
+    Future.delayed(Duration(milliseconds: 500), () {
       onTapBottomBar(value);
     });
-
   }
 
   void onTapBottomBar(int index) {
@@ -44,23 +47,22 @@ class DashboardCubit extends Cubit<DashboardState> {
         router.go(AppRouter.socialScreen);
         break;
 
-        case 3:
-          name = "My profile";
+      case 3:
+        name = "My profile";
         router.go(AppRouter.profileScreen);
         break;
     }
     debugPrint("index::$index");
     state.selectedIndex = index;
     state.selectedTitle = name;
-    emit(state.copyWith(
-        selectedIndex: state.selectedIndex,
-        selectedTitle : state.selectedTitle));
-
+    emit(state.copyWith(selectedIndex: state.selectedIndex, selectedTitle: state.selectedTitle));
   }
 
-  void onChangeHelpSupportTab(int index){
+  void onChangeHelpSupportTab(int index) {
     emit(state.copyWith(selectedTabIndex: index));
   }
+
+
 
 }
 
@@ -69,17 +71,9 @@ class DashboardState {
   int? selectedTabIndex;
   String? selectedTitle;
 
-  DashboardState({
-    this.selectedIndex,
-    this.selectedTitle,
-    this.selectedTabIndex,
-  });
+  DashboardState({this.selectedIndex, this.selectedTitle, this.selectedTabIndex});
 
-  DashboardState copyWith({
-    int? selectedIndex,
-    int? selectedTabIndex,
-    String? selectedTitle,
-  }) {
+  DashboardState copyWith({int? selectedIndex, int? selectedTabIndex, String? selectedTitle}) {
     return DashboardState(
       selectedIndex: selectedIndex ?? this.selectedIndex,
       selectedTabIndex: selectedTabIndex ?? this.selectedTabIndex,

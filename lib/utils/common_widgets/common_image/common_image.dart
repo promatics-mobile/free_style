@@ -72,7 +72,8 @@ class CommonImage extends StatelessWidget {
         return errorWidget ??
             Center(
               child: Icon(
-                Icons.image_not_supported,
+                Icons.account_circle_rounded,
+                color: CommonColors.secondaryLightColor,
                 size: (width != null && width!.isFinite) ? width :  size(context).width*numD06,
               ),
             );

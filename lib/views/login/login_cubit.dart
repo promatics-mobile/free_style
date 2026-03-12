@@ -92,6 +92,7 @@ class LogInCubit extends Cubit<LogInState>  implements NetworkResponse{
     switch (requestCode) {
       case loginReq:
         var data = jsonDecode(response);
+        emit(state.copyWith());
         break;
     }
   }
@@ -107,13 +108,19 @@ class LogInCubit extends Cubit<LogInState>  implements NetworkResponse{
           sharedPreferences.setString(PreferenceKeys.userIdKey, map['user']["_id"] ?? "");
           sharedPreferences.setString(PreferenceKeys.fullNameKey, map['user']["name"] ?? "");
           sharedPreferences.setString(PreferenceKeys.emailKey, map['user']["email"] ?? "");
+
+          if(map['user']['mobile'] !=null){
+            sharedPreferences.setString(PreferenceKeys.countryCodeKey, map['user']['mobile']["country_code"] ?? "");
+            sharedPreferences.setString(PreferenceKeys.mobileKey, map['user']['mobile']["number"] ?? "");
+          }
+
           router.go(AppRouter.homeScreen);
-        }else{
+        } else {
           router.push(
             AppRouter.otpVerificationScreen,
             extra: {
-              "number": loginType == LoginType.phone ? phoneController.text : "",
-              "country_code": loginType == LoginType.phone ? countryCode : "",
+              "number": phoneController.text,
+              "country_code": countryCode,
               "verification_type": "login",
             },
           );
