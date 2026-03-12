@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:free_style/network_class/api_service.dart';
@@ -8,12 +9,12 @@ import '../../../main.dart';
 import '../../network_class/api_response.dart';
 import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
+import '../profile_setup/cosmetics_model.dart';
 import 'login_state.dart';
-
 
 enum LoginType { email, phone }
 
-class LogInCubit extends Cubit<LogInState>  implements NetworkResponse{
+class LogInCubit extends Cubit<LogInState> implements NetworkResponse {
   LogInCubit() : super(LogInState(agree: false));
 
   var formKey = GlobalKey<FormState>();
@@ -83,7 +84,9 @@ class LogInCubit extends Cubit<LogInState>  implements NetworkResponse{
       networkResponse: this,
       endUrl: loginUrl,
       requestCode: loginReq,
-      json: param, method: 'POST',
+      json: param,
+      showLoader: true,
+      method: 'POST',
     );
   }
 
@@ -103,15 +106,40 @@ class LogInCubit extends Cubit<LogInState>  implements NetworkResponse{
       case loginReq:
         var map = jsonDecode(response);
 
-        if(loginType == LoginType.email){
+        if (loginType == LoginType.email) {
           sharedPreferences.setString(PreferenceKeys.tokenKey, map["token"]);
           sharedPreferences.setString(PreferenceKeys.userIdKey, map['user']["_id"] ?? "");
           sharedPreferences.setString(PreferenceKeys.fullNameKey, map['user']["name"] ?? "");
           sharedPreferences.setString(PreferenceKeys.emailKey, map['user']["email"] ?? "");
+          sharedPreferences.setString(PreferenceKeys.userNameKey, map['user']["user_name"] ?? "");
 
-          if(map['user']['mobile'] !=null){
-            sharedPreferences.setString(PreferenceKeys.countryCodeKey, map['user']['mobile']["country_code"] ?? "");
-            sharedPreferences.setString(PreferenceKeys.mobileKey, map['user']['mobile']["number"] ?? "");
+          if (map['user']['equipped']['avatar'] != null) {
+            var avatar = CosmeticItem.fromJson(map['user']['equipped']["avatar"]);
+            sharedPreferences.setString(PreferenceKeys.avatarIdKey, avatar.sId ?? "");
+            sharedPreferences.setString(
+              PreferenceKeys.avatarImageKey,
+              avatar.picture!.first.fullPath ?? "",
+            );
+          }
+
+          if (map['user']['equipped']['ball'] != null) {
+            var avatar = CosmeticItem.fromJson(map['user']['equipped']["ball"]);
+            sharedPreferences.setString(PreferenceKeys.ballIdKey, avatar.sId ?? "");
+            sharedPreferences.setString(
+              PreferenceKeys.ballImageKey,
+              avatar.picture!.first.fullPath ?? "",
+            );
+          }
+
+          if (map['user']['mobile'] != null) {
+            sharedPreferences.setString(
+              PreferenceKeys.countryCodeKey,
+              map['user']['mobile']["country_code"] ?? "",
+            );
+            sharedPreferences.setString(
+              PreferenceKeys.mobileKey,
+              map['user']['mobile']["number"] ?? "",
+            );
           }
 
           router.go(AppRouter.homeScreen);
@@ -129,5 +157,4 @@ class LogInCubit extends Cubit<LogInState>  implements NetworkResponse{
         break;
     }
   }
-
 }

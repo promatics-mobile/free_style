@@ -15,7 +15,8 @@ import '../home/home_screen.dart';
 import '../profile/profile_screen.dart';
 import '../profile/user_model.dart';
 
-class DashboardCubit extends Cubit<DashboardState>  {
+class DashboardCubit extends Cubit<DashboardState> implements NetworkResponse {
+  UserModel? userModel;
   final List<Widget> dashboardScreens = [
     HomeScreen(),
     BattlesScreen(),
@@ -23,13 +24,19 @@ class DashboardCubit extends Cubit<DashboardState>  {
     ProfileScreen(),
   ];
 
+
+
+
   DashboardCubit(int value)
     : super(DashboardState(selectedIndex: 0, selectedTabIndex: 0, selectedTitle: "Home")) {
     sharedPreferences.setBool(PreferenceKeys.isRememberedKey, true);
     Future.delayed(Duration(milliseconds: 500), () {
       onTapBottomBar(value);
     });
+    callGetProfileApi();
   }
+
+
 
   void onTapBottomBar(int index) {
     String name = "";
@@ -37,6 +44,7 @@ class DashboardCubit extends Cubit<DashboardState>  {
       case 0:
         name = "Home";
         router.go(AppRouter.homeScreen);
+        callGetProfileApi();
         break;
       case 1:
         name = "Battles";
@@ -49,6 +57,7 @@ class DashboardCubit extends Cubit<DashboardState>  {
 
       case 3:
         name = "My profile";
+
         router.go(AppRouter.profileScreen);
         break;
     }
@@ -56,14 +65,50 @@ class DashboardCubit extends Cubit<DashboardState>  {
     state.selectedIndex = index;
     state.selectedTitle = name;
     emit(state.copyWith(selectedIndex: state.selectedIndex, selectedTitle: state.selectedTitle));
+
   }
 
   void onChangeHelpSupportTab(int index) {
     emit(state.copyWith(selectedTabIndex: index));
   }
 
+  void callGetProfileApi() {
+    DioNetworkCall().callApiRequest(
+      endUrl: getProfileUrl,
+      method: "GET",
+      requestCode: getProfileReq,
+      networkResponse: this,
+    );
+  }
 
+  @override
+  void onApiError({required int requestCode, required String response}) {
+    switch (requestCode) {
+      case getProfileReq:
+        break;
+    }
+  }
 
+  @override
+  void onResponse({required int requestCode, required String response}) {
+    try {
+      switch (requestCode) {
+        case getProfileReq:
+          try{
+            var data = jsonDecode(response);
+            userModel = UserModel.fromJson(data['user']);
+            debugPrint("here::");
+            emit(state.copyWith());
+            break;
+          }catch (e, stack) {
+            debugPrint("error::$e $stack");
+          }
+
+      }
+    } catch (e, stack) {
+      debugPrint("error::$e $stack");
+    }
+  }
 }
 
 class DashboardState {

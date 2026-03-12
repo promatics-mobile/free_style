@@ -1,3 +1,5 @@
+import '../profile_setup/cosmetics_model.dart';
+
 class UserModel {
   Wallet? wallet;
   String? id;
@@ -5,8 +7,14 @@ class UserModel {
   String? email;
   bool? isEmailVerified;
   bool? isMobileVerified;
+  Mobile? mobile;
   int? xp;
   int? level;
+  int? xpRequired;
+  int? tricks;
+  int? challenges;
+  int? battles;
+  String? userName;
   Equipped? equipped;
   String? createdAt;
   String? updatedAt;
@@ -19,8 +27,14 @@ class UserModel {
     this.email,
     this.isEmailVerified,
     this.isMobileVerified,
+    this.mobile,
     this.xp,
     this.level,
+    this.xpRequired,
+    this.tricks,
+    this.challenges,
+    this.battles,
+    this.userName,
     this.equipped,
     this.createdAt,
     this.updatedAt,
@@ -34,8 +48,14 @@ class UserModel {
     email = json['email'];
     isEmailVerified = json['is_email_verified'];
     isMobileVerified = json['is_mobile_verified'];
+    mobile = json['mobile'] != null ? Mobile.fromJson(json['mobile']) : null;
     xp = json['xp'];
     level = json['level'];
+    xpRequired = json['xp_required'];
+    tricks = json['tricks']??0;
+    challenges = json['challenges']??0;
+    battles = json['battles']??0;
+    userName = json['user_name'];
     equipped =
     json['equipped'] != null ? Equipped.fromJson(json['equipped']) : null;
     createdAt = json['created_at'];
@@ -43,26 +63,6 @@ class UserModel {
     v = json['__v'];
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (wallet != null) {
-      data['wallet'] = wallet!.toJson();
-    }
-    data['_id'] = id;
-    data['name'] = name;
-    data['email'] = email;
-    data['is_email_verified'] = isEmailVerified;
-    data['is_mobile_verified'] = isMobileVerified;
-    data['xp'] = xp;
-    data['level'] = level;
-    if (equipped != null) {
-      data['equipped'] = equipped!.toJson();
-    }
-    data['created_at'] = createdAt;
-    data['updated_at'] = updatedAt;
-    data['__v'] = v;
-    return data;
-  }
 }
 
 class Wallet {
@@ -75,27 +75,40 @@ class Wallet {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['coins'] = coins;
-    return data;
+    return {'coins': coins};
+  }
+}
+
+class Mobile {
+  String? countryCode;
+  String? number;
+
+  Mobile({this.countryCode, this.number});
+
+  Mobile.fromJson(Map<String, dynamic> json) {
+    countryCode = json['country_code'];
+    number = json['number'];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'country_code': countryCode,
+      'number': number,
+    };
   }
 }
 
 class Equipped {
-  dynamic avatar;
-  dynamic ball;
+  CosmeticItem? avatar;
+  CosmeticItem? ball;
 
   Equipped({this.avatar, this.ball});
 
   Equipped.fromJson(Map<String, dynamic> json) {
-    avatar = json['avatar'];
-    ball = json['ball'];
+    avatar =
+    json['avatar'] != null ? CosmeticItem.fromJson(json['avatar']) : null;
+    ball = json['ball'] != null ? CosmeticItem.fromJson(json['ball']) : null;
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['avatar'] = avatar;
-    data['ball'] = ball;
-    return data;
-  }
 }
+

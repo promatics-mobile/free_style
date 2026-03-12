@@ -101,7 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                       backgroundColor: Colors.red,
                     ),
                     CommonText(
-                      text: " Lvl 12 ${CommonSymbol.dotSymbol} Red Tier",
+                      text: " Lvl ${cubit.userModel!.level} ${CommonSymbol.dotSymbol} Red Tier",
                       fontSize: size(context).width * numD03,
                       color: Colors.grey,
                     ),
@@ -121,9 +121,9 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildStatColumn("17", "TRICKS"),
-                    _buildStatColumn("158", "CHALLENGES"),
-                    _buildStatColumn("85", "BATTLES"),
+                    _buildStatColumn(cubit.userModel!.tricks.toString(), "TRICKS"),
+                    _buildStatColumn(cubit.userModel!.challenges.toString(), "CHALLENGES"),
+                    _buildStatColumn(cubit.userModel!.battles.toString(), "BATTLES"),
                   ],
                 ),
                 SizedBox(height: size(context).width * numD05),
@@ -176,7 +176,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                                 width: size(context).width * numD02,
                               ),
                               CommonText(
-                                text: "340 XP Available",
+                                text: "${cubit.userModel!.xp.toString()} XP Available",
                               ),
                               Spacer(),
                               Icon(

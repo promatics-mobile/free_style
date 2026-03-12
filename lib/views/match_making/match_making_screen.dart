@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:free_style/generated/assets.dart';
+import 'package:free_style/main.dart';
 import 'package:free_style/routes/route.dart';
 import 'package:free_style/utils/common_decorations/common_decorations.dart';
 import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
@@ -7,6 +9,7 @@ import 'package:free_style/utils/common_widgets/common_button/common_button.dart
 import 'package:free_style/utils/common_widgets/common_button/common_gradient_button.dart';
 import 'package:free_style/utils/common_widgets/common_image/common_image.dart';
 import 'package:free_style/utils/common_widgets/common_text/common_text.dart';
+import 'package:free_style/views/dashboard/dashboard_cubit.dart';
 
 import '../../utils/common_constants.dart';
 
@@ -37,10 +40,10 @@ class MatchMakingScreen extends StatelessWidget {
                 Column(
                   children: [
                     ClipOval(
-                      child: CommonImage(imagePath: Assets.assetsIcDummyUser1,
+                      child: CommonImage(imagePath: context.read<DashboardCubit>().userModel!.equipped!.avatar!.picture!.first.fullPath??"",
                         height: size(context).width * numD20,
                         width: size(context).width * numD20,
-                        isNetwork: false,),
+                        isNetwork: true,),
                     ),
                     SizedBox(height: size(context).width * numD01),
                     CommonText(text:"You",
