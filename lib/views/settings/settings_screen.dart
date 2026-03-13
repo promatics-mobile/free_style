@@ -32,7 +32,7 @@ class SettingsScreen extends StatelessWidget {
                     fontSize: size(context).width * numD04,
                     fontWeight: .w500,
                   ),
-                  leading: Icon(Icons.account_circle_outlined, color: Colors.white),
+                  leading: Icon(Icons.account_circle_outlined, color: CommonColors.secondaryColor),
                   trailing: Icon(Icons.keyboard_arrow_right_rounded, color: Colors.white),
                   tileColor: CommonColors.themeColor,
                   shape: RoundedRectangleBorder(
@@ -48,11 +48,31 @@ class SettingsScreen extends StatelessWidget {
                   dense: true,
                   contentPadding: EdgeInsets.zero,
                   title: CommonText(
+                    text: "Verification",
+                    fontSize: size(context).width * numD04,
+                    fontWeight: .w500,
+                  ),
+                  leading: Icon(Icons.verified_outlined, color: CommonColors.secondaryColor),
+                  trailing: Icon(Icons.keyboard_arrow_right_rounded, color: Colors.white),
+                  tileColor: CommonColors.themeColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadiusGeometry.circular(size(context).width * numD02),
+                  ),
+                  onTap: () {
+                    router.push(AppRouter.emailMobileVerificationScreen);
+                  },
+                ),
+                SizedBox(height: size(context).width * numD04),
+
+                ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  title: CommonText(
                     text: "Change Password",
                     fontSize: size(context).width * numD04,
                     fontWeight: .w500,
                   ),
-                  leading: Icon(Icons.lock_outline, color: Colors.white),
+                  leading: Icon(Icons.lock_outline, color: CommonColors.secondaryColor),
                   trailing: Icon(Icons.keyboard_arrow_right_rounded, color: Colors.white),
                   tileColor: CommonColors.themeColor,
                   shape: RoundedRectangleBorder(
@@ -72,7 +92,7 @@ class SettingsScreen extends StatelessWidget {
                     fontSize: size(context).width * numD04,
                     fontWeight: .w500,
                   ),
-                  leading: Icon(Icons.question_answer_outlined, color: Colors.white),
+                  leading: Icon(Icons.question_answer_outlined, color: CommonColors.secondaryColor),
                   trailing: Icon(Icons.keyboard_arrow_right_rounded, color: Colors.white),
                   tileColor: CommonColors.themeColor,
                   shape: RoundedRectangleBorder(
@@ -92,7 +112,7 @@ class SettingsScreen extends StatelessWidget {
                     fontSize: size(context).width * numD04,
                     fontWeight: .w500,
                   ),
-                  leading: Icon(Icons.help_outline, color: Colors.white),
+                  leading: Icon(Icons.help_outline, color: CommonColors.secondaryColor),
                   trailing: Icon(Icons.keyboard_arrow_right_rounded, color: Colors.white),
                   tileColor: CommonColors.themeColor,
                   shape: RoundedRectangleBorder(
@@ -111,7 +131,7 @@ class SettingsScreen extends StatelessWidget {
                     fontSize: size(context).width * numD04,
                     fontWeight: .w500,
                   ),
-                  leading: Icon(Icons.info_outlined, color: Colors.white),
+                  leading: Icon(Icons.info_outlined, color: CommonColors.secondaryColor),
                   trailing: Icon(Icons.keyboard_arrow_right_rounded, color: Colors.white),
                   tileColor: CommonColors.themeColor,
                   shape: RoundedRectangleBorder(
@@ -130,7 +150,7 @@ class SettingsScreen extends StatelessWidget {
                     fontSize: size(context).width * numD04,
                     fontWeight: .w500,
                   ),
-                  leading: Icon(Icons.description_outlined, color: Colors.white),
+                  leading: Icon(Icons.description_outlined, color: CommonColors.secondaryColor),
                   trailing: Icon(Icons.keyboard_arrow_right_rounded, color: Colors.white),
                   tileColor: CommonColors.themeColor,
                   shape: RoundedRectangleBorder(
@@ -149,7 +169,7 @@ class SettingsScreen extends StatelessWidget {
                     fontSize: size(context).width * numD04,
                     fontWeight: .w500,
                   ),
-                  leading: Icon(Icons.privacy_tip_outlined, color: Colors.white),
+                  leading: Icon(Icons.privacy_tip_outlined, color: CommonColors.secondaryColor),
                   trailing: Icon(Icons.keyboard_arrow_right_rounded, color: Colors.white),
                   tileColor: CommonColors.themeColor,
                   shape: RoundedRectangleBorder(
@@ -169,7 +189,7 @@ class SettingsScreen extends StatelessWidget {
                     fontSize: size(context).width * numD04,
                     fontWeight: .w500,
                   ),
-                  leading: Icon(Icons.logout_outlined, color: Colors.white),
+                  leading: Icon(Icons.logout_outlined, color: CommonColors.secondaryColor),
                   trailing: Icon(Icons.keyboard_arrow_right_rounded, color: Colors.white),
                   tileColor: CommonColors.themeColor,
                   shape: RoundedRectangleBorder(
@@ -182,6 +202,7 @@ class SettingsScreen extends StatelessWidget {
                       subTitle: "Are you sure you want to logout?",
                       onFirstButtonTap: () {
                         sharedPreferences.clear();
+                        context.read<DashboardCubit>().onTapBottomBar(0);
                         router.go(AppRouter.walkThroughScreen);
                       },
                       onSecondButtonTap: () {
@@ -213,6 +234,7 @@ class SettingsScreen extends StatelessWidget {
                       subTitle: "Are you sure you want to delete your account?",
                       onFirstButtonTap: () {
                         sharedPreferences.clear();
+                        context.read<DashboardCubit>().onTapBottomBar(0);
                         router.go(AppRouter.walkThroughScreen);
                       },
                       onSecondButtonTap: () {

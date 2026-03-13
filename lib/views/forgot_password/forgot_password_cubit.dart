@@ -42,6 +42,7 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> implements NetworkR
          AppRouter.resetPasswordScreen,
          extra: {
            "email": emailController.text,
+           "isReset": true
          },
        );
 

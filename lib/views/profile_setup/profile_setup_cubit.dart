@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:free_style/network_class/api_service.dart';
 import 'package:free_style/network_class/web_urls.dart';
 import 'package:free_style/views/profile_setup/cosmetics_model.dart';
@@ -9,6 +10,7 @@ import '../../main.dart';
 import '../../network_class/api_response.dart';
 import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
+import '../dashboard/dashboard_cubit.dart';
 
 part 'profile_setup_state.dart';
 
@@ -26,6 +28,9 @@ class ProfileSetupCubit extends Cubit<ProfileSetupState> implements NetworkRespo
     usernameController.text = sharedPreferences.getString(PreferenceKeys.userNameKey)??"";
     selectedAvatarId = sharedPreferences.getString(PreferenceKeys.avatarIdKey)??"";
     selectedBallId = sharedPreferences.getString(PreferenceKeys.ballIdKey)??"";
+    selectedAvatarPath = sharedPreferences.getString(PreferenceKeys.avatarImageKey)??"";
+    selectedBallPath = sharedPreferences.getString(PreferenceKeys.ballImageKey)??"";
+
     callGetCosmeticsApi();
   }
 
@@ -67,9 +72,9 @@ class ProfileSetupCubit extends Cubit<ProfileSetupState> implements NetworkRespo
       "ballId": selectedBallId,
     };
 
-    //if(usernameController.text != sharedPreferences.getString(PreferenceKeys.userNameKey)){
+    if(usernameController.text != sharedPreferences.getString(PreferenceKeys.userNameKey)){
       param['user_name'] = usernameController.text;
-   // }
+    }
 
     DioNetworkCall().callApiRequest(
       networkResponse: this,
@@ -77,6 +82,7 @@ class ProfileSetupCubit extends Cubit<ProfileSetupState> implements NetworkRespo
       endUrl: profileSetupUrl,
       requestCode: profileSetupReq,
       json: param,
+      showLoader: true
     );
   }
 
@@ -123,6 +129,10 @@ class ProfileSetupCubit extends Cubit<ProfileSetupState> implements NetworkRespo
           sharedPreferences.setString(PreferenceKeys.ballImageKey,selectedBallPath);
           sharedPreferences.setString(PreferenceKeys.ballIdKey,selectedBallId??"");
           sharedPreferences.setString(PreferenceKeys.userNameKey,usernameController.text);
+
+          Future.delayed(Duration(seconds: 1),(){
+            navigatorKey.currentContext!.read<DashboardCubit>().onTapBottomBar(0);
+          });
           router.go(AppRouter.homeScreen);
         }
         break;

@@ -11,7 +11,6 @@ import '../../generated/assets.dart';
 import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
 import '../../utils/common_decorations/common_decorations.dart';
-import '../../utils/common_widgets/common_button/common_short_button.dart';
 import '../../utils/common_widgets/common_text/common_text.dart';
 import 'dashboard_cubit.dart';
 
@@ -24,11 +23,13 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen>
-    with TickerProviderStateMixin {
+class _DashboardScreenState extends State<DashboardScreen> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    Future.delayed(Duration(seconds: 1), () {
+      context.read<DashboardCubit>().callGetProfileApi();
+    });
     super.initState();
   }
 
@@ -40,175 +41,160 @@ class _DashboardScreenState extends State<DashboardScreen>
         return Scaffold(
           appBar: state.selectedIndex == 0
               ? CustomAppBar(
-            centerTitle: false,
-            titleWidget: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                InkWell(
-                  onTap: () {
-                    router.push(AppRouter.profileSetupScreen);
-                  },
-                  child: Row(
+                  centerTitle: false,
+                  titleWidget: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ClipOval(
-                        child: CommonImage(
-                          width: size(context).width * numD13,
-                          height: size(context).width * numD13,
-                          imagePath: sharedPreferences.getString(PreferenceKeys.avatarImageKey)??"",
-                          isNetwork: true,
-                        ),
-                      ),
-                      SizedBox(width: size(context).width * numD02),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CommonText(
-                            text: sharedPreferences.getString(PreferenceKeys.fullNameKey)??"DummyUser",
-                            fontSize: size(context).width * numD04,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                radius: size(context).width * numD012,
-                                backgroundColor: Colors.red,
+                      InkWell(
+                        onTap: () {
+                          router.push(AppRouter.profileSetupScreen);
+                        },
+                        child: Row(
+                          children: [
+                            ClipOval(
+                              child: CommonImage(
+                                width: size(context).width * numD13,
+                                height: size(context).width * numD13,
+                                imagePath:
+                                    sharedPreferences.getString(PreferenceKeys.avatarImageKey) ??
+                                    "",
+                                isNetwork: true,
                               ),
-                              CommonText(
-                                text:
-                                " Lvl ${cubitData.userModel !=null ?cubitData.userModel!.level: ""} ${CommonSymbol.dotSymbol} Red Tier",
-                                fontSize: size(context).width * numD028,
-                                color: Colors.grey,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: size(context).width * numD005),
-                          Container(
-                            decoration: commonBgColorDecoration(
-                              size(context).width * numD04,
-                              CommonColors.secondaryLightColor,
                             ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: size(context).width * numD02,
-                            ),
-                            height: size(context).width * numD05,
-                            child: Row(
+                            SizedBox(width: size(context).width * numD02),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  margin: EdgeInsets.all(
-                                    size(context).width * numD005,
-                                  ),
-                                  child: CommonImage(
-                                    imagePath: Assets.iconsIcGoldCoin,
-                                    height: size(context).width * numD03,
-                                    width: size(context).width * numD03,
-                                    isNetwork: false,
-                                  ),
-                                ),
                                 CommonText(
-                                  text: "450000 C",
-                                  fontSize: size(context).width * numD03,
-                                  color: Colors.black,
+                                  text:
+                                      sharedPreferences.getString(PreferenceKeys.fullNameKey) ??
+                                      "DummyUser",
+                                  fontSize: size(context).width * numD04,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: size(context).width * numD012,
+                                      backgroundColor: Colors.red,
+                                    ),
+                                    CommonText(
+                                      text:
+                                          " Lvl ${cubitData.userModel != null ? cubitData.userModel!.level : ""} ${CommonSymbol.dotSymbol} Red Tier",
+                                      fontSize: size(context).width * numD028,
+                                      color: Colors.grey,
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: size(context).width * numD005),
+                                Container(
+                                  decoration: commonBgColorDecoration(
+                                    size(context).width * numD04,
+                                    CommonColors.secondaryLightColor,
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: size(context).width * numD02,
+                                  ),
+                                  height: size(context).width * numD05,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.all(size(context).width * numD005),
+                                        child: CommonImage(
+                                          imagePath: Assets.iconsIcGoldCoin,
+                                          height: size(context).width * numD03,
+                                          width: size(context).width * numD03,
+                                          isNetwork: false,
+                                        ),
+                                      ),
+                                      CommonText(
+                                        text: "450000 C",
+                                        fontSize: size(context).width * numD03,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
+                            SizedBox(width: size(context).width * numD02),
+                          ],
+                        ),
                       ),
-                      SizedBox(width: size(context).width * numD02),
                     ],
                   ),
-                ),
-              ],
-            ),
-            actions: [
-
-
-              IconButton(
-                onPressed: () {
-                  router.push(AppRouter.shopScreen);
-                },
-                icon: CommonImage(
-                  imagePath: Assets.iconsIcShop,
-                  height: size(context).width * numD06,
-                  width: size(context).width * numD06,
-                  color: Colors.white,
-                  isNetwork: false,
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                  router.push(AppRouter.globalLeadBoardScreen);
-                },
-                icon: CommonImage(
-                  imagePath: Assets.iconsIcLeadboard,
-                  height: size(context).width * numD06,
-                  width: size(context).width * numD06,
-                  color: Colors.white,
-                  isNetwork: false,
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                  router.push(AppRouter.notificationsScreen);
-                },
-                icon: Icon(Icons.notifications_none, color: Colors.white),
-              ),
-            ],
-            showBack: false,
-          )
+                  actions: [
+                    IconButton(
+                      onPressed: () {
+                        router.push(AppRouter.shopScreen);
+                      },
+                      icon: CommonImage(
+                        imagePath: Assets.iconsIcShop,
+                        height: size(context).width * numD06,
+                        width: size(context).width * numD06,
+                        color: Colors.white,
+                        isNetwork: false,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        router.push(AppRouter.globalLeadBoardScreen);
+                      },
+                      icon: CommonImage(
+                        imagePath: Assets.iconsIcLeadboard,
+                        height: size(context).width * numD06,
+                        width: size(context).width * numD06,
+                        color: Colors.white,
+                        isNetwork: false,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        router.push(AppRouter.notificationsScreen);
+                      },
+                      icon: Icon(Icons.notifications_none, color: Colors.white),
+                    ),
+                  ],
+                  showBack: false,
+                )
               : CommonAppBar(
-            title: state.selectedTitle ?? "",
-            showBack: false,
-            actions: [
-              if (state.selectedIndex == 3)
-                IconButton(
-                  onPressed: () {
-                    router.push(AppRouter.settingsScreen);
-                  },
-                  icon: Icon(
-                    Icons.settings_outlined,
-                    color: Colors.white,
-                  ),
-                ),
+                  title: state.selectedTitle ?? "",
+                  showBack: false,
+                  actions: [
+                    if (state.selectedIndex == 3)
+                      IconButton(
+                        onPressed: () {
+                          router.push(AppRouter.settingsScreen);
+                        },
+                        icon: Icon(Icons.settings_outlined, color: Colors.white),
+                      ),
 
-              if (state.selectedIndex == 1)
-                IconButton(
-                  onPressed: () {
-                    router.push(AppRouter.challengeHistoryScreen);
-                  },
-                  icon: Icon(
-                    Icons.history,
-                    color: Colors.white,
-                  ),
-                ),
+                    if (state.selectedIndex == 1)
+                      IconButton(
+                        onPressed: () {
+                          router.push(AppRouter.challengeHistoryScreen);
+                        },
+                        icon: Icon(Icons.history, color: Colors.white),
+                      ),
 
-              if (state.selectedIndex == 2)
-                IconButton(
-                  onPressed: () {
-                    router.push(AppRouter.searchPlayerScreen);
-                  },
-                  icon: Icon(
-                    Icons.person_add_alt,
-                    color: Colors.white,
-                  ),
+                    if (state.selectedIndex == 2)
+                      IconButton(
+                        onPressed: () {
+                          router.push(AppRouter.searchPlayerScreen);
+                        },
+                        icon: Icon(Icons.person_add_alt, color: Colors.white),
+                      ),
+                    IconButton(
+                      onPressed: () {
+                        router.push(AppRouter.notificationsScreen);
+                      },
+                      icon: Icon(Icons.notifications_none, color: Colors.white),
+                    ),
+                  ],
                 ),
-              IconButton(
-                onPressed: () {
-                  router.push(AppRouter.notificationsScreen);
-                },
-                icon: Icon(Icons.notifications_none, color: Colors.white),
-              ),
-            ],
-          ),
-          body: Container(
-            child: widget.child,
-          ),
+          body: Container(child: widget.child),
           bottomNavigationBar: MotionTabBar(
-            controller: MotionTabBarController(
-              initialIndex: 0,
-              length: 4,
-              vsync: this,
-            ),
+            controller: MotionTabBarController(initialIndex: 0, length: 4, vsync: this),
             initialSelectedTab: "Home",
             useSafeArea: true,
             labelAlwaysVisible: false,
@@ -257,5 +243,4 @@ class _DashboardScreenState extends State<DashboardScreen>
       },
     );
   }
-
 }

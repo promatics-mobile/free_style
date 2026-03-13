@@ -14,6 +14,7 @@ import '../battles/battles_screen.dart';
 import '../home/home_screen.dart';
 import '../profile/profile_screen.dart';
 import '../profile/user_model.dart';
+import '../profile_setup/cosmetics_model.dart';
 
 class DashboardCubit extends Cubit<DashboardState> implements NetworkResponse {
   UserModel? userModel;
@@ -25,15 +26,11 @@ class DashboardCubit extends Cubit<DashboardState> implements NetworkResponse {
   ];
 
 
-
-
   DashboardCubit(int value)
     : super(DashboardState(selectedIndex: 0, selectedTabIndex: 0, selectedTitle: "Home")) {
-    sharedPreferences.setBool(PreferenceKeys.isRememberedKey, true);
     Future.delayed(Duration(milliseconds: 500), () {
       onTapBottomBar(value);
     });
-    callGetProfileApi();
   }
 
 
@@ -44,7 +41,9 @@ class DashboardCubit extends Cubit<DashboardState> implements NetworkResponse {
       case 0:
         name = "Home";
         router.go(AppRouter.homeScreen);
-        callGetProfileApi();
+        if((sharedPreferences.getString(PreferenceKeys.tokenKey)??"").isNotEmpty){
+          callGetProfileApi();
+        }
         break;
       case 1:
         name = "Battles";
@@ -57,7 +56,6 @@ class DashboardCubit extends Cubit<DashboardState> implements NetworkResponse {
 
       case 3:
         name = "My profile";
-
         router.go(AppRouter.profileScreen);
         break;
     }
@@ -95,10 +93,48 @@ class DashboardCubit extends Cubit<DashboardState> implements NetworkResponse {
       switch (requestCode) {
         case getProfileReq:
           try{
-            var data = jsonDecode(response);
-            userModel = UserModel.fromJson(data['user']);
-            debugPrint("here::");
+            var map = jsonDecode(response);
+            userModel = UserModel.fromJson(map['user']);
+
+            sharedPreferences.setString(PreferenceKeys.emailKey, map['user']["email"] ?? "");
+            sharedPreferences.setString(PreferenceKeys.userNameKey, map['user']["user_name"] ?? "");
+
+            if (map['user']['equipped']['avatar'] != null) {
+              var avatar = CosmeticItem.fromJson(map['user']['equipped']["avatar"]);
+              sharedPreferences.setString(PreferenceKeys.avatarIdKey, avatar.sId ?? "");
+              sharedPreferences.setString(
+                PreferenceKeys.avatarImageKey,
+                avatar.picture!.first.fullPath ?? "",
+              );
+            }
+            if (map['user']['equipped']['ball'] != null) {
+              var avatar = CosmeticItem.fromJson(map['user']['equipped']["ball"]);
+              sharedPreferences.setString(PreferenceKeys.ballIdKey, avatar.sId ?? "");
+              sharedPreferences.setString(
+                PreferenceKeys.ballImageKey,
+                avatar.picture!.first.fullPath ?? "",
+              );
+            }
+            if (map['user']['mobile'] != null) {
+              sharedPreferences.setString(
+                PreferenceKeys.countryCodeKey,
+                map['user']['mobile']["country_code"] ?? "",
+              );
+              sharedPreferences.setString(
+                PreferenceKeys.mobileKey,
+                map['user']['mobile']["number"] ?? "",
+              );
+            }
+
             emit(state.copyWith());
+            debugPrint("userName::${userModel!.userName}");
+            if(userModel!.userName == null){
+              final isSameRoute = router.state.path == AppRouter.profileSetupScreen;
+              if (!isSameRoute) {
+              router.push(AppRouter.profileSetupScreen);
+              }
+            }
+
             break;
           }catch (e, stack) {
             debugPrint("error::$e $stack");

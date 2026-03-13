@@ -3,10 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
 
-import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
-import '../../utils/common_widgets.dart';
-import '../../utils/common_widgets/common_text/common_text.dart';
 import 'cms_cubit.dart';
 import 'cms_state.dart';
 
@@ -21,9 +18,7 @@ class CmsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(
-        title: type,
-      ),
+      appBar: CommonAppBar(title: type),
       body: BlocProvider(
         create: (context) => CmsCubit(type),
         child: BlocBuilder<CmsCubit, CmsState>(
@@ -33,11 +28,7 @@ class CmsScreen extends StatelessWidget {
               padding: EdgeInsets.all(size(context).width * numD04),
               child: Html(
                 data: cubitData.cmsData,
-                style: {
-                  "body": Style(
-                    color: Colors.white.withValues(alpha: 0.8),
-                  ),
-                },
+                style: {"body": Style(color: Colors.white.withValues(alpha: 0.8))},
               ),
             );
           },

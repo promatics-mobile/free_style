@@ -1,16 +1,15 @@
-import 'package:country_picker/country_picker.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:free_style/utils/common_decorations/common_decorations.dart';
 import 'package:free_style/utils/common_widgets/text_form_field/common_text_form_field.dart';
+
 import '../../../generated/assets.dart';
-import '../../../main.dart';
 import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
 import '../../utils/common_methods.dart';
-import '../../utils/common_widgets.dart';
 import '../../utils/common_widgets/common_button/common_button.dart';
+import '../../utils/common_widgets/common_country_picker/common_country_picker.dart';
 import '../../utils/common_widgets/common_image/common_image.dart';
 import '../../utils/common_widgets/common_text/common_text.dart';
 import 'login_cubit.dart';
@@ -37,9 +36,7 @@ class LogInScreen extends StatelessWidget {
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: size(context).width * numD04,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
                     child: Form(
                       key: cubit.formKey,
                       child: Column(
@@ -63,13 +60,12 @@ class LogInScreen extends StatelessWidget {
                                 TextSpan(
                                   text: "Create Account",
                                   style: TextStyle(
-                                      color: CommonColors.buttonColor,
-                                      fontWeight: FontWeight.bold),
+                                    color: CommonColors.buttonColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      router.push(
-                                        AppRouter.createAccountScreen,
-                                      );
+                                      router.push(AppRouter.createAccountScreen);
                                     },
                                 ),
                               ],
@@ -83,9 +79,7 @@ class LogInScreen extends StatelessWidget {
                               size(context).width * numD02,
                               Colors.grey.shade200,
                             ),
-                            padding: EdgeInsets.all(
-                              size(context).width * numD02,
-                            ),
+                            padding: EdgeInsets.all(size(context).width * numD02),
                             child: Row(
                               children: [
                                 Expanded(
@@ -99,8 +93,7 @@ class LogInScreen extends StatelessWidget {
                                       ),
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
-                                        color:
-                                            cubit.loginType == LoginType.email
+                                        color: cubit.loginType == LoginType.email
                                             ? Colors.white
                                             : Colors.transparent,
                                         borderRadius: BorderRadius.circular(
@@ -111,8 +104,7 @@ class LogInScreen extends StatelessWidget {
                                         text: "Email",
                                         fontSize: size(context).width * numD045,
                                         fontWeight: FontWeight.w600,
-                                        color:
-                                            cubit.loginType == LoginType.email
+                                        color: cubit.loginType == LoginType.email
                                             ? CommonColors.themeColor
                                             : Colors.grey,
                                       ),
@@ -133,8 +125,7 @@ class LogInScreen extends StatelessWidget {
                                       ),
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
-                                        color:
-                                            cubit.loginType == LoginType.phone
+                                        color: cubit.loginType == LoginType.phone
                                             ? Colors.white
                                             : Colors.transparent,
                                         borderRadius: BorderRadius.circular(
@@ -145,8 +136,7 @@ class LogInScreen extends StatelessWidget {
                                         text: "Phone",
                                         fontSize: size(context).width * numD045,
                                         fontWeight: FontWeight.w600,
-                                        color:
-                                            cubit.loginType == LoginType.phone
+                                        color: cubit.loginType == LoginType.phone
                                             ? Colors.black
                                             : Colors.grey,
                                       ),
@@ -164,9 +154,7 @@ class LogInScreen extends StatelessWidget {
                               size(context).width * numD02,
                               Colors.white,
                             ),
-                            padding: EdgeInsets.all(
-                              size(context).width * numD02,
-                            ),
+                            padding: EdgeInsets.all(size(context).width * numD02),
                             child: Column(
                               children: [
                                 if (cubit.loginType == LoginType.email)
@@ -177,15 +165,17 @@ class LogInScreen extends StatelessWidget {
                                     hint: "Enter Email Address",
                                     keyboardType: TextInputType.emailAddress,
 
-                                    prefixIcon: Icon(Icons.email_outlined,color: CommonColors.buttonColor,),
+                                    prefixIcon: Icon(
+                                      Icons.email_outlined,
+                                      color: CommonColors.buttonColor,
+                                    ),
                                     validator: (value) {
-                                      if (value == null ||
-                                          value.trim().isEmpty) {
+                                      if (value == null || value.trim().isEmpty) {
                                         return "Required*";
                                       }
                                       if (!emailRegex.hasMatch(value.trim())) {
-                                  return "Please enter a valid email address";
-                                }
+                                        return "Please enter a valid email address";
+                                      }
                                       return null;
                                     },
                                   ),
@@ -202,21 +192,17 @@ class LogInScreen extends StatelessWidget {
                                     maxLines: 1,
 
                                     validator: (value) {
-                                      if (value == null ||
-                                          value.trim().isEmpty) {
+                                      if (value == null || value.trim().isEmpty) {
                                         return "Required*";
                                       }
 
                                       final phone = value.trim();
 
-                                      if (!RegExp(
-                                        r'^[0-9]+$',
-                                      ).hasMatch(phone)) {
+                                      if (!RegExp(r'^[0-9]+$').hasMatch(phone)) {
                                         return "Please enter a valid mobile number";
                                       }
 
-                                      if (phone.length < 6 ||
-                                          phone.length > 15) {
+                                      if (phone.length < 6 || phone.length > 15) {
                                         return "Please enter a valid mobile number";
                                       }
 
@@ -225,12 +211,11 @@ class LogInScreen extends StatelessWidget {
 
                                     prefixIcon: GestureDetector(
                                       onTap: () async {
+                                        hideKeyboard(context);
                                         showCountryCodePickerDialog(
                                           context,
                                           onChanged: (country) {
-                                            cubit.updateCountryCode(
-                                              country.phoneCode ?? '',
-                                            );
+                                            cubit.updateCountryCode(country.phoneCode ?? '');
                                           },
                                         );
                                       },
@@ -240,8 +225,7 @@ class LogInScreen extends StatelessWidget {
                                           text: cubit.countryCode.isEmpty
                                               ? '+--'
                                               : cubit.countryCode,
-                                          fontSize:
-                                              size(context).width * numD035,
+                                          fontSize: size(context).width * numD035,
                                           color: CommonColors.themeColor,
                                           fontWeight: FontWeight.w400,
                                         ),
@@ -258,10 +242,14 @@ class LogInScreen extends StatelessWidget {
                                     hint: "Enter Password",
                                     isPassword: true,
 
-                                    prefixIcon: Icon(Icons.lock_outline,color: CommonColors.buttonColor,),
+                                    prefixIcon: Icon(
+                                      Icons.lock_outline,
+                                      color: CommonColors.buttonColor,
+                                    ),
                                     contentPadding: EdgeInsets.symmetric(
-                                        horizontal: size(context).width * numD03,
-                                        vertical: size(context).width * numD04),
+                                      horizontal: size(context).width * numD03,
+                                      vertical: size(context).width * numD04,
+                                    ),
                                     validator: (value) {
                                       if (value == null || value.trim().isEmpty) {
                                         return "Required*";
@@ -296,13 +284,11 @@ class LogInScreen extends StatelessWidget {
 
                           CommonButton(
                             onTap: () {
-                              if(cubit.formKey.currentState!.validate()){
+                              if (cubit.formKey.currentState!.validate()) {
                                 cubit.callLoginApi();
                               }
                             },
-                            text: cubit.loginType == LoginType.email
-                                ? "Login"
-                                : "Send OTP",
+                            text: cubit.loginType == LoginType.email ? "Login" : "Send OTP",
                           ),
 
                           SizedBox(height: size(context).width * numD1),
@@ -312,9 +298,7 @@ class LogInScreen extends StatelessWidget {
                               Expanded(
                                 child: Container(
                                   height: size(context).width * numD005,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                  ),
+                                  decoration: BoxDecoration(color: Colors.white),
                                 ),
                               ),
                               Container(
@@ -323,9 +307,7 @@ class LogInScreen extends StatelessWidget {
                                 ),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.circular(
-                                    size(context).width * numD04,
-                                  ),
+                                  borderRadius: BorderRadius.circular(size(context).width * numD04),
                                 ),
                                 child: CommonText(
                                   text: "OR CONTINUE WITH",
@@ -337,9 +319,7 @@ class LogInScreen extends StatelessWidget {
                               Expanded(
                                 child: Container(
                                   height: size(context).width * numD005,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                  ),
+                                  decoration: BoxDecoration(color: Colors.white),
                                 ),
                               ),
                             ],
@@ -357,9 +337,7 @@ class LogInScreen extends StatelessWidget {
                                     borderColor: Colors.white,
                                     borderWidth: 1,
                                   ),
-                                  padding: EdgeInsets.all(
-                                    size(context).width * numD01,
-                                  ),
+                                  padding: EdgeInsets.all(size(context).width * numD01),
                                   child: CommonImage(
                                     height: size(context).width * numD1,
                                     width: size(context).width * numD1,
@@ -375,9 +353,7 @@ class LogInScreen extends StatelessWidget {
                                     borderColor: Colors.white,
                                     borderWidth: 1,
                                   ),
-                                  padding: EdgeInsets.all(
-                                    size(context).width * numD01,
-                                  ),
+                                  padding: EdgeInsets.all(size(context).width * numD01),
                                   child: CommonImage(
                                     height: size(context).width * numD1,
                                     width: size(context).width * numD1,
@@ -400,28 +376,6 @@ class LogInScreen extends StatelessWidget {
             ],
           ),
         );
-      },
-    );
-  }
-
-  void showCountryCodePickerDialog(
-    BuildContext context, {
-    required Function(Country) onChanged,
-  }) {
-    showCountryPicker(
-      context: context,
-      showPhoneCode: true,
-      useSafeArea: true,
-      countryListTheme: CountryListThemeData(
-        margin: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(size(context).width * numD04),
-          topRight: Radius.circular(size(context).width * numD04),
-        ),
-      ),
-      onSelect: (Country country) {
-        debugPrint('Select country: ${country.displayName}');
-        onChanged(country);
       },
     );
   }

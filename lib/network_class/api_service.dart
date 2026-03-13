@@ -27,7 +27,8 @@ class DioNetworkCall {
 
     bool showLoader = false,
     Function(double progress)? onProgress,
-  }) async {
+  })
+  async {
     try {
       if (showLoader) {
         ApiLoader.show();
@@ -102,6 +103,9 @@ class DioNetworkCall {
         }
       }
     } on DioException catch (e) {
+      if (showLoader) {
+        ApiLoader.hide();
+      }
       try {
         networkResponse.onApiError(requestCode: requestCode, response: jsonEncode(_handleError(e)));
       } catch (e, stack) {
@@ -109,6 +113,9 @@ class DioNetworkCall {
         debugPrint(stack.toString());
       }
     } catch (e) {
+      if (showLoader) {
+        ApiLoader.hide();
+      }
       try {
         networkResponse.onApiError(
           requestCode: requestCode,
@@ -118,6 +125,7 @@ class DioNetworkCall {
         debugPrint("❌ onApiError → $e");
         debugPrint(stack.toString());
       }
+
     } finally {
       if (showLoader) {
         ApiLoader.hide();

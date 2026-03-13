@@ -9,12 +9,14 @@ import 'package:free_style/views/reset_password/reset_password_state.dart';
 import '../../../main.dart';
 import '../../network_class/web_urls.dart';
 import '../../routes/route.dart';
+import '../../utils/common_constants.dart';
 import '../../utils/common_methods.dart';
 
 class ResetPasswordCubit extends Cubit<ResetPasswordState> implements NetworkResponse {
   String email;
+  bool isReset;
 
-  ResetPasswordCubit({required this.email})
+  ResetPasswordCubit({required this.email, required this.isReset})
     : super(ResetPasswordState(agree: false));
 
   var formKey = GlobalKey<FormState>();
@@ -23,7 +25,11 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> implements NetworkRes
   TextEditingController confirmPasswordController = TextEditingController();
 
   void callResetPasswordAPI() {
-    var param = {"new_password": newPasswordController.text.trim(), "otp": otpController.text, "email": email};
+    var param = {
+      "new_password": newPasswordController.text.trim(),
+      "otp": otpController.text,
+      "email": email,
+    };
 
     DioNetworkCall().callApiRequest(
       networkResponse: this,
@@ -31,6 +37,22 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> implements NetworkRes
       requestCode: resetPasswordReq,
       json: param,
       method: "POST",
+    );
+  }
+
+  void callSetUpPasswordAPI() {
+    var param = {
+      "password": newPasswordController.text.trim(),
+      //"otp": otpController.text,
+      //"email": email,
+    };
+
+    DioNetworkCall().callApiRequest(
+      networkResponse: this,
+      endUrl: setUpPasswordUrl,
+      requestCode: setUpPasswordReq,
+      json: param,
+      method: "PATCH",
     );
   }
 
@@ -61,6 +83,15 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> implements NetworkRes
             isError: false,
             message: "Password updated successfully, Please login to continue.",
           );
+          break;
+
+        case setUpPasswordReq:
+          var map = jsonDecode(response);
+          Navigator.popUntil(
+            navigatorKey.currentContext!,
+            (route) => route.settings.name == AppRouter.emailMobileVerificationScreen,
+          );
+          showToast(isError: false, message: "Verified successfully");
           break;
       }
     } on Exception catch (e, st) {

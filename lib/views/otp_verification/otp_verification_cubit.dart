@@ -11,6 +11,7 @@ import '../../../main.dart';
 import '../../network_class/api_service.dart';
 import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
+import '../dashboard/dashboard_cubit.dart';
 import '../profile_setup/cosmetics_model.dart';
 import 'otp_verification_state.dart';
 
@@ -135,42 +136,77 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> implements Networ
         case verifyOtpReq:
           final map = jsonDecode(response);
 
-          sharedPreferences.setString(PreferenceKeys.tokenKey, map["token"]);
-          sharedPreferences.setString(PreferenceKeys.userIdKey, map['user']["_id"] ?? "");
-          sharedPreferences.setString(PreferenceKeys.fullNameKey, map['user']["name"] ?? "");
-          sharedPreferences.setString(PreferenceKeys.emailKey, map['user']["email"] ?? "");
-          sharedPreferences.setString(PreferenceKeys.userNameKey, map['user']["user_name"] ?? "");
+          if(verificationType == "email_mobile_verify"){
+            if(email.isNotEmpty){
+              router.push(
+                AppRouter.resetPasswordScreen,
+                extra: {
+                  "email": email,
+                  "isReset": false
+                },
+              ).then((value){
+                navigatorKey.currentContext!.read<DashboardCubit>().callGetProfileApi();
+              });
 
-          if (map['user']['equipped']['avatar'] != null) {
-            var avatar = CosmeticItem.fromJson(map['user']['equipped']["avatar"]);
-            sharedPreferences.setString(PreferenceKeys.avatarIdKey, avatar.sId ?? "");
-            sharedPreferences.setString(
-              PreferenceKeys.avatarImageKey,
-              avatar.picture!.first.fullPath ?? "",
-            );
+            }
+            else{
+              if (map['user']['mobile'] != null) {
+                sharedPreferences.setString(
+                  PreferenceKeys.countryCodeKey,
+                  map['user']['mobile']["country_code"] ?? "",
+                );
+                sharedPreferences.setString(
+                  PreferenceKeys.mobileKey,
+                  map['user']['mobile']["number"] ?? "",
+                );
+              }
+              Navigator.popUntil(
+                navigatorKey.currentContext!,
+                    (route) => route.settings.name == AppRouter.emailMobileVerificationScreen,
+              );
+              showToast(
+                isError: false,
+                message: "Verified successfully",
+              );
+            }
+          }else{
+            sharedPreferences.setString(PreferenceKeys.tokenKey, map["token"]);
+            sharedPreferences.setString(PreferenceKeys.userIdKey, map['user']["_id"] ?? "");
+            sharedPreferences.setString(PreferenceKeys.fullNameKey, map['user']["name"] ?? "");
+            sharedPreferences.setString(PreferenceKeys.emailKey, map['user']["email"] ?? "");
+            sharedPreferences.setString(PreferenceKeys.userNameKey, map['user']["user_name"] ?? "");
+
+            if (map['user']['equipped']['avatar'] != null) {
+              var avatar = CosmeticItem.fromJson(map['user']['equipped']["avatar"]);
+              sharedPreferences.setString(PreferenceKeys.avatarIdKey, avatar.sId ?? "");
+              sharedPreferences.setString(
+                PreferenceKeys.avatarImageKey,
+                avatar.picture!.first.fullPath ?? "",
+              );
+            }
+
+            if (map['user']['equipped']['ball'] != null) {
+              var avatar = CosmeticItem.fromJson(map['user']['equipped']["ball"]);
+              sharedPreferences.setString(PreferenceKeys.ballIdKey, avatar.sId ?? "");
+              sharedPreferences.setString(
+                PreferenceKeys.ballImageKey,
+                avatar.picture!.first.fullPath ?? "",
+              );
+            }
+
+            if (map['user']['mobile'] != null) {
+              sharedPreferences.setString(
+                PreferenceKeys.countryCodeKey,
+                map['user']['mobile']["country_code"] ?? "",
+              );
+              sharedPreferences.setString(
+                PreferenceKeys.mobileKey,
+                map['user']['mobile']["number"] ?? "",
+              );
+            }
+
+            router.go(AppRouter.homeScreen);
           }
-
-          if (map['user']['equipped']['ball'] != null) {
-            var avatar = CosmeticItem.fromJson(map['user']['equipped']["ball"]);
-            sharedPreferences.setString(PreferenceKeys.ballIdKey, avatar.sId ?? "");
-            sharedPreferences.setString(
-              PreferenceKeys.ballImageKey,
-              avatar.picture!.first.fullPath ?? "",
-            );
-          }
-
-          if (map['user']['mobile'] != null) {
-            sharedPreferences.setString(
-              PreferenceKeys.countryCodeKey,
-              map['user']['mobile']["country_code"] ?? "",
-            );
-            sharedPreferences.setString(
-              PreferenceKeys.mobileKey,
-              map['user']['mobile']["number"] ?? "",
-            );
-          }
-
-          router.go(AppRouter.homeScreen);
 
           break;
 

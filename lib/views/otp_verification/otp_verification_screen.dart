@@ -83,7 +83,7 @@ class OtpVerificationScreen extends StatelessWidget {
                         fontSize: size(context).width * numD045,
                       ),
                       onCompleted: (value) {
-                        //onCompleteOtpFunc();
+
                       },
                       validator: (pin) {
                         if (pin == null || pin.isEmpty) {
@@ -171,7 +171,8 @@ class OtpVerificationScreen extends StatelessWidget {
                   onTap: () {
                     hideKeyboard(context);
                     if (cubit.verificationType == "create_account" ||
-                        cubit.verificationType == "login") {
+                        cubit.verificationType == "login" ||
+                        cubit.verificationType == "email_mobile_verify") {
                       cubit.callVerifyEmailPhoneOtpAPI();
                     }
                   },

@@ -6,10 +6,12 @@ import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_button.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_short_button.dart';
 import 'package:free_style/utils/common_widgets/text_form_field/common_text_form_field.dart';
+import 'package:free_style/views/dashboard/dashboard_cubit.dart';
 import 'package:free_style/views/profile_setup/profile_setup_cubit.dart';
 
 import '../../utils/common_constants.dart';
 import '../../utils/common_methods.dart';
+import '../../utils/common_shimmers/common_shimmer.dart';
 import '../../utils/common_widgets/common_image/common_image.dart';
 import '../../utils/common_widgets/common_text/common_text.dart';
 
@@ -85,48 +87,54 @@ class ProfileSetupScreen extends StatelessWidget {
                   fontSize: size(context).width * numD04,
                 ),
                 SizedBox(height: size(context).width * numD04),
-                GridView.builder(
-                  itemCount: cubit.avatars.length,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    crossAxisSpacing: size(context).width * numD02,
-                    mainAxisSpacing: size(context).width * numD02,
-                    childAspectRatio: 1.1,
-                  ),
-                  itemBuilder: (context, idx) {
-                    var item = cubit.avatars[idx];
-                    return InkWell(
-                      onTap: (){
-                        cubit.onSelectAvatar(item.sId ?? "",item.picture!.first.fullPath!);
-                      },
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: [
-                          ClipOval(
-                            child: CommonImage(
-                              imagePath: item.picture!.first.fullPath ?? "",
-                              width: size(context).width * numD20,
-                              height: size(context).width * numD20,
-                              isNetwork: true,
-                              border: BoxBorder.all(color:
-                              item.sId == cubit.selectedAvatarId ?
-                              CommonColors.secondaryColor : Colors.transparent),
-                              shape: BoxShape.circle,
+                Visibility(
+                  visible: cubit.avatars.isNotEmpty,
+                  replacement: HorizontalListShimmer(
+                    width: size(context).width * numD20,
+                    height: size(context).width * numD20,itemCount: 4,),
+                  child: GridView.builder(
+                    itemCount: cubit.avatars.length,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4,
+                      crossAxisSpacing: size(context).width * numD02,
+                      mainAxisSpacing: size(context).width * numD02,
+                      childAspectRatio: 1.1,
+                    ),
+                    itemBuilder: (context, idx) {
+                      var item = cubit.avatars[idx];
+                      return InkWell(
+                        onTap: (){
+                          cubit.onSelectAvatar(item.sId ?? "",item.picture!.first.fullPath!);
+                        },
+                        child: Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            ClipOval(
+                              child: CommonImage(
+                                imagePath: item.picture!.first.fullPath ?? "",
+                                width: size(context).width * numD20,
+                                height: size(context).width * numD20,
+                                isNetwork: true,
+                                border: BoxBorder.all(color:
+                                item.sId == cubit.selectedAvatarId ?
+                                CommonColors.secondaryColor : Colors.transparent),
+                                shape: BoxShape.circle,
+                              ),
                             ),
-                          ),
-                          if(item.sId == cubit.selectedAvatarId)
-                          Container(
-                            decoration: commonBgColorDecoration(size(context).width * numD03, CommonColors.secondaryColor),
-                            padding: EdgeInsets.symmetric(horizontal: size(context).width * numD03),
-                            child: CommonText(text:"Selected",color: CommonColors.themeColor,
-                              fontSize: size(context).width * numD03,),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                            if(item.sId == cubit.selectedAvatarId)
+                            Container(
+                              decoration: commonBgColorDecoration(size(context).width * numD03, CommonColors.secondaryColor),
+                              padding: EdgeInsets.symmetric(horizontal: size(context).width * numD03),
+                              child: CommonText(text:"Selected",color: CommonColors.themeColor,
+                                fontSize: size(context).width * numD03,),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
 
                 SizedBox(height: size(context).width * numD05),
@@ -137,48 +145,54 @@ class ProfileSetupScreen extends StatelessWidget {
                   fontSize: size(context).width * numD04,
                 ),
                 SizedBox(height: size(context).width * numD04),
-                GridView.builder(
-                  itemCount: cubit.balls.length,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    crossAxisSpacing: size(context).width * numD02,
-                    mainAxisSpacing: size(context).width * numD02,
-                    childAspectRatio: 1.1,
+                Visibility(
+                  visible: cubit.balls.isNotEmpty,
+                  replacement: HorizontalListShimmer(
+                    width: size(context).width * numD20,
+                    height: size(context).width * numD20,itemCount: 4,),
+                  child: GridView.builder(
+                    itemCount: cubit.balls.length,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4,
+                      crossAxisSpacing: size(context).width * numD02,
+                      mainAxisSpacing: size(context).width * numD02,
+                      childAspectRatio: 1.1,
+                    ),
+                    itemBuilder: (context, idx) {
+                      var item = cubit.balls[idx];
+                      return InkWell(
+                        onTap: (){
+                          cubit.onSelectBall(item.sId ?? "",item.picture!.first.fullPath!);
+                        },
+                        child: Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            ClipOval(
+                              child: CommonImage(
+                                imagePath: item.picture!.first.fullPath ?? "",
+                                width: size(context).width * numD20,
+                                height: size(context).width * numD20,
+                                isNetwork: true,
+                                border: BoxBorder.all(color:
+                                item.sId == cubit.selectedBallId ?
+                                CommonColors.secondaryColor : Colors.transparent),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            if(item.sId == cubit.selectedBallId)
+                              Container(
+                                decoration: commonBgColorDecoration(size(context).width * numD03, CommonColors.secondaryColor),
+                                padding: EdgeInsets.symmetric(horizontal: size(context).width * numD03),
+                                child: CommonText(text:"Selected",color: CommonColors.themeColor,
+                                  fontSize: size(context).width * numD03,),
+                              ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                  itemBuilder: (context, idx) {
-                    var item = cubit.balls[idx];
-                    return InkWell(
-                      onTap: (){
-                        cubit.onSelectBall(item.sId ?? "",item.picture!.first.fullPath!);
-                      },
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: [
-                          ClipOval(
-                            child: CommonImage(
-                              imagePath: item.picture!.first.fullPath ?? "",
-                              width: size(context).width * numD20,
-                              height: size(context).width * numD20,
-                              isNetwork: true,
-                              border: BoxBorder.all(color:
-                              item.sId == cubit.selectedBallId ?
-                              CommonColors.secondaryColor : Colors.transparent),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          if(item.sId == cubit.selectedBallId)
-                            Container(
-                              decoration: commonBgColorDecoration(size(context).width * numD03, CommonColors.secondaryColor),
-                              padding: EdgeInsets.symmetric(horizontal: size(context).width * numD03),
-                              child: CommonText(text:"Selected",color: CommonColors.themeColor,
-                                fontSize: size(context).width * numD03,),
-                            ),
-                        ],
-                      ),
-                    );
-                  },
                 ),
                 SizedBox(height: size(context).width * numD1),
 

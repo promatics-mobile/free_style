@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:free_style/routes/route.dart';
 import 'package:free_style/utils/common_widgets/text_form_field/common_text_form_field.dart';
 import 'package:free_style/views/reset_password/reset_password_cubit.dart';
 import 'package:free_style/views/reset_password/reset_password_state.dart';
 
-import '../../../generated/assets.dart';
-import '../../../main.dart';
 import '../../utils/common_constants.dart';
 import '../../utils/common_decorations/common_decorations.dart';
-import '../../utils/common_widgets.dart';
 import '../../utils/common_widgets/app_bars/common_app_bar.dart';
 import '../../utils/common_widgets/common_button/common_button.dart';
-import '../../utils/common_widgets/common_image/common_image.dart';
 import '../../utils/common_widgets/common_text/common_text.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
@@ -35,9 +30,7 @@ class ResetPasswordScreen extends StatelessWidget {
           resizeToAvoidBottomInset: false,
           appBar: CommonAppBar(title: ""),
           body: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: size(context).width * numD04,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
             child: Form(
               key: cubit.formKey,
               child: Column(
@@ -45,7 +38,7 @@ class ResetPasswordScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CommonText(
-                    text: "Reset Password",
+                    text: cubit.isReset? "Reset Password" : "Set Password",
                     fontSize: size(context).width * numD07,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -53,8 +46,9 @@ class ResetPasswordScreen extends StatelessWidget {
                   ),
                   SizedBox(height: size(context).width * numD03),
                   CommonText(
-                    text:
-                        "Enter the verification code sent to your email and create a new password",
+                    text:cubit.isReset?
+                        "Enter the verification code sent to your email and create a new password":
+                      "Please create a password that you will use to log in with your email in the future.",
                     fontSize: size(context).width * numD035,
                     color: Colors.white,
                     textAlign: TextAlign.center,
@@ -63,13 +57,11 @@ class ResetPasswordScreen extends StatelessWidget {
                   SizedBox(height: size(context).width * numD10),
 
                   Container(
-                    decoration: commonBgColorDecoration(
-                      size(context).width * numD02,
-                      Colors.white,
-                    ),
+                    decoration: commonBgColorDecoration(size(context).width * numD02, Colors.white),
                     padding: EdgeInsets.all(size(context).width * numD02),
                     child: Column(
                       children: [
+                        if(cubit.isReset)
                         CommonTextFormField(
                           controller: cubit.otpController,
                           filled: true,
@@ -87,10 +79,7 @@ class ResetPasswordScreen extends StatelessWidget {
                               left: size(context).width * numD03,
                               right: size(context).width * numD03,
                             ),
-                            child: Icon(
-                              Icons.lock_outline,
-                              color: CommonColors.buttonColor,
-                            ),
+                            child: Icon(Icons.lock_outline, color: CommonColors.buttonColor),
                           ),
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
@@ -100,6 +89,7 @@ class ResetPasswordScreen extends StatelessWidget {
                             return null;
                           },
                         ),
+                        if(cubit.isReset)
                         SizedBox(height: size(context).width * numD04),
                         CommonTextFormField(
                           controller: cubit.newPasswordController,
@@ -118,10 +108,7 @@ class ResetPasswordScreen extends StatelessWidget {
                               left: size(context).width * numD03,
                               right: size(context).width * numD03,
                             ),
-                            child: Icon(
-                              Icons.lock_outline,
-                              color: CommonColors.buttonColor,
-                            ),
+                            child: Icon(Icons.lock_outline, color: CommonColors.buttonColor),
                           ),
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
@@ -144,9 +131,7 @@ class ResetPasswordScreen extends StatelessWidget {
                               return "Password should contain at least one number";
                             }
 
-                            if (!RegExp(
-                              r'[!@#$%^&*(),.?":{}|<>]',
-                            ).hasMatch(value)) {
+                            if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
                               return "Password should contain at least one special character";
                             }
 
@@ -169,18 +154,14 @@ class ResetPasswordScreen extends StatelessWidget {
                               left: size(context).width * numD03,
                               right: size(context).width * numD03,
                             ),
-                            child: Icon(
-                              Icons.lock_outline,
-                              color: CommonColors.buttonColor,
-                            ),
+                            child: Icon(Icons.lock_outline, color: CommonColors.buttonColor),
                           ),
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
                               return "Required*";
                             }
 
-                            if (value.trim() !=
-                                cubit.newPasswordController.text.trim()) {
+                            if (value.trim() != cubit.newPasswordController.text.trim()) {
                               return "Password does not match";
                             }
 
@@ -194,11 +175,14 @@ class ResetPasswordScreen extends StatelessWidget {
                   SizedBox(height: size(context).width * numD1),
 
                   CommonButton(
-                    text: "Reset Password",
+                    text: cubit.isReset ? "Reset Password" : "Set Password",
                     onTap: () {
-                       if (cubit.formKey.currentState!
-                          .validate()) {
+                      if (cubit.formKey.currentState!.validate()) {
+                        if(cubit.isReset){
                         cubit.callResetPasswordAPI();
+                        }else{
+                          cubit.callSetUpPasswordAPI();
+                        }
                       }
                     },
                   ),

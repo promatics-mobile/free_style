@@ -6,12 +6,15 @@ import 'package:free_style/views/battles/battles_cubit.dart';
 import 'package:free_style/views/battles/battles_screen.dart';
 import 'package:free_style/views/challenge_approved/challenge_approved_screen.dart';
 import 'package:free_style/views/challenge_history/challenge_history_screen.dart';
+import 'package:free_style/views/chat_conversation/conversation_cubit.dart';
+import 'package:free_style/views/chat_conversation/conversation_screen.dart';
 import 'package:free_style/views/contact_us/contact_us_cubit.dart';
 import 'package:free_style/views/create_account/create_account_cubit.dart';
 import 'package:free_style/views/dashboard/dashboard_cubit.dart';
 import 'package:free_style/views/dashboard/dashboard_screen.dart';
 import 'package:free_style/views/dialy_challenge/daily_challenge_cubit.dart';
 import 'package:free_style/views/dialy_challenge/daily_challenge_screen.dart';
+import 'package:free_style/views/email_mobile_verification/email_mobile_verification_screen.dart';
 import 'package:free_style/views/faqs/faqs_cubit.dart';
 import 'package:free_style/views/faqs/faqs_screen.dart';
 import 'package:free_style/views/global_lead_board/global_lead_board_cubit.dart';
@@ -62,6 +65,7 @@ import '../views/cms/cms_cubit.dart';
 import '../views/cms/cms_screen.dart';
 import '../views/contact_us/contact_us.dart';
 import '../views/create_account/create_account_screen.dart';
+import '../views/email_mobile_verification/email_mobile_verification_cubit.dart';
 import '../views/forgot_password/forgot_password_cubit.dart';
 import '../views/forgot_password/forgot_password_screen.dart';
 import '../views/home/home_cubit.dart';
@@ -126,6 +130,8 @@ class AppRouter {
   static const String battleVictoryScreen = "/battle_victory_screen";
   static const String leagueRankingScreen = "/league_ranking_screen";
   static const String globalLeadBoardScreen = "/global_lead_board_screen";
+  static const String emailMobileVerificationScreen = "/email_mobile_verification_screen";
+  static const String conversationScreen = "/conversation_screen";
 }
 
 final GoRouter router = GoRouter(
@@ -332,7 +338,7 @@ final GoRouter router = GoRouter(
       builder: (context, state) {
         final data = state.extra as Map;
         return BlocProvider(
-          create: (_) => ResetPasswordCubit(email: data['email']),
+          create: (_) => ResetPasswordCubit(email: data['email'],isReset:data['isReset']),
           child: ResetPasswordScreen(),
         );
       },
@@ -626,6 +632,27 @@ final GoRouter router = GoRouter(
         return BlocProvider(
           create: (_) => GlobalLeadBoardCubit(),
           child: const GlobalLeadBoardScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: AppRouter.emailMobileVerificationScreen,
+      name: AppRouter.emailMobileVerificationScreen,
+      builder: (context, state) {
+        return BlocProvider(
+          create: (_) => EmailMobileVerificationCubit(),
+          child: const EmailMobileVerificationScreen(),
+        );
+      },
+    ), GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: AppRouter.conversationScreen,
+      name: AppRouter.conversationScreen,
+      builder: (context, state) {
+        return BlocProvider(
+          create: (_) => ConversationCubit(),
+          child: const ConversationScreen(),
         );
       },
     ),

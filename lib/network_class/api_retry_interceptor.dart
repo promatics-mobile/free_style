@@ -17,7 +17,6 @@ class RetryInterceptor extends Interceptor {
       DioException err,
       ErrorInterceptorHandler handler,
       ) async {
-
     if (_shouldRetry(err)) {
 
       final attempt = err.requestOptions.extra["retry_attempt"] ?? 0;
@@ -36,7 +35,6 @@ class RetryInterceptor extends Interceptor {
         }
       }
     }
-
     return handler.next(err);
   }
 

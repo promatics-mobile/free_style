@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:free_style/routes/route.dart';
 import 'package:free_style/utils/common_methods.dart';
 import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_button.dart';
@@ -28,7 +29,17 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> with TickerProv
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: CommonAppBar(title: "Player Profile", showBack: true),
+      appBar: CommonAppBar(title: "Player Profile", showBack: true,
+      actions: [
+        IconButton(onPressed: (){
+          router.push(AppRouter.conversationScreen);
+        }, icon: CommonImage(imagePath: Assets.iconsIcMessage,
+          color: CommonColors.secondaryColor,
+          height: size(context).width * numD07,
+          width: size(context).width * numD07,
+          isNetwork: false,))
+      ],
+      ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
         child: Column(

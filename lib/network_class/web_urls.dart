@@ -43,3 +43,12 @@ const profileCosmeticsReq = 13;
 
 const profileSetupUrl = "user/profilesetup";
 const profileSetupReq = 14;
+
+const emailMobileVerifyUrl = "user/updateidentifier";
+const emailMobileVerifyReq = 15;
+
+const fetchShopUrl = "user/fetchshop";
+const fetchShopReq = 16;
+
+const setUpPasswordUrl = "user/setuppassword";
+const setUpPasswordReq = 17;

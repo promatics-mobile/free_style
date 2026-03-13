@@ -1,23 +1,11 @@
-import 'package:delightful_toast/toast/utils/enums.dart';
-import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'dart:core';
-import 'dart:developer';
-import 'package:delightful_toast/delight_toast.dart';
-import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
-import '../main.dart';
-import 'common_widgets.dart';
-
 
 /// ==============================================
 /// APP-NAME, FONTS
 /// ==============================================
 const String appName = "Free Style";
 const String fontFamily = "Ubuntu";
-
 
 /// ==============================================
 /// COLORS & GRADIENTS
@@ -47,16 +35,13 @@ class GradientColors {
   GradientColors(this.colors);
 
   static List<Color> sky = [const Color(0xFF6448FE), const Color(0xFF5FC6FF)];
-  static List<Color> sunset = [
-    const Color(0xFFFE6197),
-    const Color(0xFFFFB463)
-  ];
+  static List<Color> sunset = [const Color(0xFFFE6197), const Color(0xFFFFB463)];
   static List<Color> sea = [const Color(0xFF61A3FE), const Color(0xFF63FFD5)];
   static List<Color> mango = [const Color(0xFFFFA738), const Color(0xFFFFE130)];
   static List<Color> fire = [const Color(0xFFFF5DCD), const Color(0xFFFF8484)];
-  static List<Color> background = [Colors.deepPurple.shade700,CommonColors.secondaryLightColor];
-
+  static List<Color> background = [Colors.deepPurple.shade700, CommonColors.secondaryLightColor];
 }
+
 class GradientTemplate {
   static List<GradientColors> gradientTemplate = [
     GradientColors(GradientColors.sky),
@@ -79,12 +64,10 @@ class CommonSymbol {
   static String dotSymbol = "\u2022";
 }
 
-
 /// ==============================================
 /// SHARED-PREFERENCE KEYS
 /// ==============================================
 class PreferenceKeys {
-  static String isRememberedKey = "isRememberedKey";
   static String userIdKey = "userIdKey";
   static String tokenKey = "tokenKey";
   static String fullNameKey = "firstNameKey";
@@ -98,7 +81,6 @@ class PreferenceKeys {
   static String ballIdKey = "ballIdKey";
 }
 
-
 /// ==============================================
 /// Font Sizes
 /// ==============================================
@@ -109,16 +91,19 @@ Size size(BuildContext context) {
 /// ==============================================
 /// Screen Size Helpers
 /// ==============================================
-double viewInsetBottom(BuildContext context){
+double viewInsetBottom(BuildContext context) {
   return MediaQuery.of(context).viewInsets.bottom;
 }
+
 bool isSmallScreen(BuildContext context) {
   return MediaQuery.of(context).size.width < 600;
 }
+
 bool isMediumScreen(BuildContext context) {
   final width = MediaQuery.of(context).size.width;
   return width >= 600 && width < 1200;
 }
+
 bool isLargeScreen(BuildContext context) {
   return MediaQuery.of(context).size.width >= 1200;
 }
@@ -315,11 +300,3 @@ const numInt8 = 8;
 const numInt9 = 9;
 const numInt10 = 10;
 const numInt100 = 100;
-
-
-
-
-
-
-
-

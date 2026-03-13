@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
         create: (context) => SplashCubit(),
         child: BlocListener<SplashCubit, bool>(
           listener: (context, isLogin) {
-            debugPrint("SplashLoaded::");
+            debugPrint("isLogin::$isLogin");
             hideKeyboard(context);
 
             if (isLogin) {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+
 import 'package:delightful_toast/delight_toast.dart';
 import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:delightful_toast/toast/utils/enums.dart';
@@ -8,15 +9,13 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart' as permission;
+
 import '../main.dart';
 import 'common_constants.dart';
-import 'common_widgets.dart';
 import 'common_widgets/common_text/common_text.dart';
-
 
 /// Get Image or Camera ::
 void imagePickerOptions({
@@ -29,44 +28,50 @@ void imagePickerOptions({
     title: Text(
       "Select an option",
       style: TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-          fontSize: size.width * numD05),
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+        fontSize: size.width * numD05,
+      ),
     ),
     actions: [
       CupertinoActionSheetAction(
-          onPressed: () {
-            Navigator.pop(context);
-            onCamera();
-          },
-          child: Text(
-            "Camera",
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: size.width * numD045,
-                fontWeight: FontWeight.bold),
-          )),
+        onPressed: () {
+          Navigator.pop(context);
+          onCamera();
+        },
+        child: Text(
+          "Camera",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: size.width * numD045,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       CupertinoActionSheetAction(
         onPressed: () {
           Navigator.pop(context);
           onGallery();
         },
-        child: Text("Gallery",
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: size.width * numD045,
-                fontWeight: FontWeight.bold)),
+        child: Text(
+          "Gallery",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: size.width * numD045,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     ],
     cancelButton: CupertinoActionSheetAction(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        child: const Text(
-          "Cancel",
-          style: TextStyle(
-              color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
-        )),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      child: const Text(
+        "Cancel",
+        style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+    ),
   );
   showCupertinoModalPopup(context: context, builder: (context) => action);
 }
@@ -88,10 +93,7 @@ Future<XFile?> pickOrClickImage(ImageSource source) async {
           return image;
         }
       } else {
-        showToast(
-          isError: true,
-          message: "Permission denied",
-        );
+        showToast(isError: true, message: "Permission denied");
         await permission.openAppSettings();
       }
     } else {
@@ -105,10 +107,7 @@ Future<XFile?> pickOrClickImage(ImageSource source) async {
           return image;
         }
       } else {
-        showToast(
-          isError: true,
-          message: "Permission denied",
-        );
+        showToast(isError: true, message: "Permission denied");
         await permission.openAppSettings();
       }
     }
@@ -123,10 +122,7 @@ Future<XFile?> pickOrClickImage(ImageSource source) async {
         return image;
       }
     } else {
-      showToast(
-        isError: true,
-        message: "Permission denied",
-      );
+      showToast(isError: true, message: "Permission denied");
       await permission.openAppSettings();
     }
   }
@@ -138,7 +134,6 @@ Future<FilePickerResult?> pickImageOrVideo({
   required bool isMultiSelect,
   required FileType fileType,
 }) async {
-
   if (Platform.isAndroid) {
     int sdk = await getSdkVersion();
     debugPrint("SDK_Version :: $sdk");
@@ -148,52 +143,52 @@ Future<FilePickerResult?> pickImageOrVideo({
 
       if (photoValue && videoValue) {
         FilePickerResult? result = await FilePicker.platform.pickFiles(
-          allowMultiple: isMultiSelect, type: fileType,);
+          allowMultiple: isMultiSelect,
+          type: fileType,
+        );
         if (result != null) {
           return result;
         }
       } else {
-        showToast(isError: true,message: "Permission denied",);
+        showToast(isError: true, message: "Permission denied");
         await permission.openAppSettings();
       }
-    }
-    else {
+    } else {
       bool storageValue = await storagePermission();
       bool cameraValue = await cameraPermission();
       if (cameraValue && storageValue) {
-        FilePickerResult? result = await FilePicker.platform
-            .pickFiles(allowMultiple: isMultiSelect, type: fileType);
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          allowMultiple: isMultiSelect,
+          type: fileType,
+        );
         if (result != null) {
           return result;
         }
       } else {
-        showToast(isError: true,message: "Permission denied",);
+        showToast(isError: true, message: "Permission denied");
         await permission.openAppSettings();
       }
     }
-  }
-  else if (Platform.isIOS){
+  } else if (Platform.isIOS) {
     bool storageValue = await storagePermission();
     bool cameraValue = await cameraPermission();
     if (cameraValue && storageValue) {
-      FilePickerResult? result = await FilePicker.platform
-          .pickFiles(allowMultiple: isMultiSelect, type: fileType);
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowMultiple: isMultiSelect,
+        type: fileType,
+      );
       if (result != null) {
         return result;
       }
-    } else{
-      showToast(isError: true,message: "Permission denied",);
+    } else {
+      showToast(isError: true, message: "Permission denied");
       await permission.openAppSettings();
     }
   }
   return null;
-
 }
 
-Future<FilePickerResult?> pickVideoAndImage({
-  required bool isMultiSelect,
-}) async {
-
+Future<FilePickerResult?> pickVideoAndImage({required bool isMultiSelect}) async {
   if (Platform.isAndroid) {
     int sdk = await getSdkVersion();
     debugPrint("SDK_Version :: $sdk");
@@ -203,50 +198,55 @@ Future<FilePickerResult?> pickVideoAndImage({
 
       if (photoValue && videoValue) {
         FilePickerResult? result = await FilePicker.platform.pickFiles(
-            allowMultiple: isMultiSelect, type: FileType.custom,allowedExtensions: ['mp4','jpg','jpeg','png']);
+          allowMultiple: isMultiSelect,
+          type: FileType.custom,
+          allowedExtensions: ['mp4', 'jpg', 'jpeg', 'png'],
+        );
         if (result != null) {
           return result;
         }
       } else {
-        showToast(isError: true,message: "Permission denied",);
+        showToast(isError: true, message: "Permission denied");
         await permission.openAppSettings();
       }
-    }
-    else {
+    } else {
       bool storageValue = await storagePermission();
       bool cameraValue = await cameraPermission();
       if (cameraValue && storageValue) {
-        FilePickerResult? result = await FilePicker.platform
-            .pickFiles(allowMultiple: isMultiSelect, type: FileType.custom,allowedExtensions: ['mp4','jpg','jpeg','png']);
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          allowMultiple: isMultiSelect,
+          type: FileType.custom,
+          allowedExtensions: ['mp4', 'jpg', 'jpeg', 'png'],
+        );
         if (result != null) {
           return result;
         }
       } else {
-        showToast(isError: true,message: "Permission denied",);
+        showToast(isError: true, message: "Permission denied");
         await permission.openAppSettings();
       }
     }
-  }
-  else if (Platform.isIOS){
+  } else if (Platform.isIOS) {
     bool storageValue = await storagePermission();
     bool cameraValue = await cameraPermission();
     if (cameraValue && storageValue) {
-      FilePickerResult? result = await FilePicker.platform
-          .pickFiles(allowMultiple: isMultiSelect, type: FileType.custom,allowedExtensions: ['mp4','jpg','jpeg','png']);
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowMultiple: isMultiSelect,
+        type: FileType.custom,
+        allowedExtensions: ['mp4', 'jpg', 'jpeg', 'png'],
+      );
       if (result != null) {
         return result;
       }
-    } else{
-      showToast(isError: true,message: "Permission denied",);
+    } else {
+      showToast(isError: true, message: "Permission denied");
       await permission.openAppSettings();
     }
   }
   return null;
-
 }
 
 Future<FilePickerResult?> pickCsvFile() async {
-
   if (Platform.isAndroid) {
     int sdk = await getSdkVersion();
     debugPrint("SDK_Version :: $sdk");
@@ -254,51 +254,56 @@ Future<FilePickerResult?> pickCsvFile() async {
       bool photoValue = await photoPermission();
       bool videoValue = await videoPermission();
       if (photoValue && videoValue) {
-        FilePickerResult? result = await FilePicker.platform
-            .pickFiles(allowMultiple: false, type: FileType.custom, allowedExtensions: ["csv"]);
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          allowMultiple: false,
+          type: FileType.custom,
+          allowedExtensions: ["csv"],
+        );
         if (result != null) {
           return result;
         }
       } else {
-        showToast(isError: true,message: "Permission denied",);
+        showToast(isError: true, message: "Permission denied");
         await permission.openAppSettings();
       }
-    }
-    else {
+    } else {
       bool storageValue = await storagePermission();
       bool cameraValue = await cameraPermission();
       if (cameraValue && storageValue) {
-        FilePickerResult? result = await FilePicker.platform
-            .pickFiles(allowMultiple: false, type: FileType.custom, allowedExtensions: ["csv"]);
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          allowMultiple: false,
+          type: FileType.custom,
+          allowedExtensions: ["csv"],
+        );
         if (result != null) {
           return result;
         }
       } else {
-        showToast(isError: true,message: "Permission denied",);
+        showToast(isError: true, message: "Permission denied");
         await permission.openAppSettings();
       }
     }
-  }
-  else if (Platform.isIOS){
+  } else if (Platform.isIOS) {
     bool storageValue = await storagePermission();
     bool cameraValue = await cameraPermission();
     if (cameraValue && storageValue) {
-      FilePickerResult? result = await FilePicker.platform
-          .pickFiles(allowMultiple: false, type: FileType.custom, allowedExtensions: ["csv"]);
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowMultiple: false,
+        type: FileType.custom,
+        allowedExtensions: ["csv"],
+      );
       if (result != null) {
         return result;
       }
-    } else{
-      showToast(isError: true,message: "Permission denied",);
+    } else {
+      showToast(isError: true, message: "Permission denied");
       await permission.openAppSettings();
     }
   }
   return null;
-
 }
 
 Future<FilePickerResult?> pickPdfFile() async {
-
   if (Platform.isAndroid) {
     int sdk = await getSdkVersion();
     debugPrint("SDK_Version :: $sdk");
@@ -307,133 +312,143 @@ Future<FilePickerResult?> pickPdfFile() async {
       bool videoValue = await videoPermission();
 
       if (photoValue && videoValue) {
-        FilePickerResult? result = await FilePicker.platform
-            .pickFiles(allowMultiple: false, type: FileType.custom, allowedExtensions: ["pdf"]);
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          allowMultiple: false,
+          type: FileType.custom,
+          allowedExtensions: ["pdf"],
+        );
         if (result != null) {
           return result;
         }
       } else {
-        showToast(isError: true,message: "Permission denied",);
+        showToast(isError: true, message: "Permission denied");
         await permission.openAppSettings();
       }
-    }
-    else {
+    } else {
       bool storageValue = await storagePermission();
       bool cameraValue = await cameraPermission();
       if (cameraValue && storageValue) {
-        FilePickerResult? result = await FilePicker.platform
-            .pickFiles(allowMultiple: false, type: FileType.custom, allowedExtensions: ["pdf"]);
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          allowMultiple: false,
+          type: FileType.custom,
+          allowedExtensions: ["pdf"],
+        );
         if (result != null) {
           return result;
         }
       } else {
-        showToast(isError: true,message: "Permission denied",);
+        showToast(isError: true, message: "Permission denied");
         await permission.openAppSettings();
       }
     }
-  }
-  else if (Platform.isIOS){
+  } else if (Platform.isIOS) {
     bool storageValue = await storagePermission();
     bool cameraValue = await cameraPermission();
     if (cameraValue && storageValue) {
-      FilePickerResult? result = await FilePicker.platform
-          .pickFiles(allowMultiple: false, type: FileType.custom, allowedExtensions: ["pdf"]);
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowMultiple: false,
+        type: FileType.custom,
+        allowedExtensions: ["pdf"],
+      );
       if (result != null) {
         return result;
       }
-    } else{
-      showToast(isError: true,message: "Permission denied",);
+    } else {
+      showToast(isError: true, message: "Permission denied");
       await permission.openAppSettings();
     }
   }
   return null;
-
 }
 
-Future<bool> locationPermission() async{
+Future<bool> locationPermission() async {
   var status = await permission.Permission.location.status;
-  switch(status){
-    case permission.PermissionStatus.denied : {
-      var service = await permission.Permission.location.request();
-      return service.isDenied ? false : true;
-    }
+  switch (status) {
+    case permission.PermissionStatus.denied:
+      {
+        var service = await permission.Permission.location.request();
+        return service.isDenied ? false : true;
+      }
     case permission.PermissionStatus.granted:
       return true;
     case permission.PermissionStatus.restricted:
-      showToast(isError: true,message: "Please enable location permission");
+      showToast(isError: true, message: "Please enable location permission");
       return false;
     case permission.PermissionStatus.permanentlyDenied:
-      showToast(isError: true,message: "Please enable location permission");
+      showToast(isError: true, message: "Please enable location permission");
       permission.openAppSettings();
       return false;
     case permission.PermissionStatus.limited:
-      showToast(isError: true,message: "Please enable location permission");
+      showToast(isError: true, message: "Please enable location permission");
       return false;
-    default :
+    default:
       return false;
   }
 }
 
-Future<bool> storagePermission() async{
+Future<bool> storagePermission() async {
   var status = await permission.Permission.storage.status;
-  switch(status){
-    case permission.PermissionStatus.denied : {
-      var requestValue = await permission.Permission.storage.request();
-      return requestValue.isDenied ? false : true;
-    }
+  switch (status) {
+    case permission.PermissionStatus.denied:
+      {
+        var requestValue = await permission.Permission.storage.request();
+        return requestValue.isDenied ? false : true;
+      }
     case permission.PermissionStatus.granted:
       return true;
     case permission.PermissionStatus.restricted:
-      showToast(isError: true,message: "Please enable storage permission");
+      showToast(isError: true, message: "Please enable storage permission");
       return false;
     case permission.PermissionStatus.permanentlyDenied:
-      showToast(isError: true,message: "Please enable storage permission");
+      showToast(isError: true, message: "Please enable storage permission");
       permission.openAppSettings();
       return false;
     case permission.PermissionStatus.limited:
-      showToast(isError: true,message: "Please enable storage permission");
+      showToast(isError: true, message: "Please enable storage permission");
       return false;
-    default :
+    default:
       return false;
   }
 }
 
-Future<bool> cameraPermission() async{
+Future<bool> cameraPermission() async {
   var status = await permission.Permission.camera.status;
 
-  switch(status){
-    case permission.PermissionStatus.denied : {
-      var requestValue = await permission.Permission.camera.request();
-      return requestValue.isDenied ? false : true;
-    }
+  switch (status) {
+    case permission.PermissionStatus.denied:
+      {
+        var requestValue = await permission.Permission.camera.request();
+        return requestValue.isDenied ? false : true;
+      }
     case permission.PermissionStatus.granted:
       return true;
 
     case permission.PermissionStatus.restricted:
-      showToast(isError: true,message: "Please enable camera permission");
+      showToast(isError: true, message: "Please enable camera permission");
       return false;
     case permission.PermissionStatus.permanentlyDenied:
-      showToast(isError: true,message: "Please enable camera permission");
+      showToast(isError: true, message: "Please enable camera permission");
       permission.openAppSettings();
       return false;
 
     case permission.PermissionStatus.limited:
-      showToast(isError: true,message: "Please enable camera permission");
+      showToast(isError: true, message: "Please enable camera permission");
       return false;
 
-    default :
+    default:
       return false;
   }
 }
 
-Future<bool> photoPermission() async{
+Future<bool> photoPermission() async {
   var status = await permission.Permission.photos.status;
   debugPrint("PhotoStatus: $status");
-  switch(status){
-    case permission.PermissionStatus.denied : {
-      var requestValue = await permission.Permission.photos.request();
-      return requestValue.isDenied ? false : true;
-    }
+  switch (status) {
+    case permission.PermissionStatus.denied:
+      {
+        var requestValue = await permission.Permission.photos.request();
+        return requestValue.isDenied ? false : true;
+      }
 
     case permission.PermissionStatus.granted:
       return true;
@@ -443,46 +458,47 @@ Future<bool> photoPermission() async{
 
       return false;
     case permission.PermissionStatus.permanentlyDenied:
-      showToast(isError: true,message: "Please enable storage permission");
+      showToast(isError: true, message: "Please enable storage permission");
       permission.openAppSettings();
       return false;
 
     case permission.PermissionStatus.limited:
-      showToast(isError: true,message: "Please enable storage permission");
+      showToast(isError: true, message: "Please enable storage permission");
       return false;
 
-    default :
+    default:
       return false;
   }
 }
 
-Future<bool> videoPermission() async{
+Future<bool> videoPermission() async {
   var status = await permission.Permission.videos.status;
   debugPrint("VideoStatus: $status");
 
-  switch(status){
-    case permission.PermissionStatus.denied : {
-      var requestValue = await permission.Permission.videos.request();
-      return requestValue.isDenied ? false : true;
-    }
+  switch (status) {
+    case permission.PermissionStatus.denied:
+      {
+        var requestValue = await permission.Permission.videos.request();
+        return requestValue.isDenied ? false : true;
+      }
 
     case permission.PermissionStatus.granted:
       return true;
 
     case permission.PermissionStatus.restricted:
-      showToast(isError: true,message: "Please enable storage permission");
+      showToast(isError: true, message: "Please enable storage permission");
 
       return false;
     case permission.PermissionStatus.permanentlyDenied:
-      showToast(isError: true,message: "Please enable storage permission");
+      showToast(isError: true, message: "Please enable storage permission");
       permission.openAppSettings();
       return false;
 
     case permission.PermissionStatus.limited:
-      showToast(isError: true,message: "Please enable storage permission");
+      showToast(isError: true, message: "Please enable storage permission");
       return false;
 
-    default :
+    default:
       return false;
   }
 }
@@ -504,8 +520,7 @@ class Uuid {
 
   int _generateBits(int bitCount) => _random.nextInt(1 << bitCount);
 
-  String _printDigits(int value, int count) =>
-      value.toRadixString(16).padLeft(count, '0');
+  String _printDigits(int value, int count) => value.toRadixString(16).padLeft(count, '0');
 }
 
 Future<int> getSdkVersion() async {
@@ -515,20 +530,18 @@ Future<int> getSdkVersion() async {
   return androidInfo.version.sdkInt;
 }
 
-
 /// ==============================================
 /// EMAIL REGEXP
 /// ==============================================
 
-final emailRegex = RegExp(
-    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-
+final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
 /// ==============================================
 /// METHODS
 /// ==============================================
-void hideKeyboard(BuildContext context) {FocusScope.of(context).requestFocus(FocusNode()); }
-
+void hideKeyboard(BuildContext context) {
+  FocusScope.of(context).requestFocus(FocusNode());
+}
 
 void showToast({required bool isError, required String message}) async {
   DelightToastBar(
@@ -539,25 +552,23 @@ void showToast({required bool isError, required String message}) async {
     builder: (context) => ToastCard(
       color: Colors.white,
       leading: isError
-          ? Icon(
-        Icons.warning_rounded,
-        color: Colors.red,
-        size: size(context).width * numD1,
-      )
+          ? Icon(Icons.warning_rounded, color: Colors.red, size: size(context).width * numD1)
           : Icon(
-        Icons.check_circle_rounded,
-        color: Colors.green,
-        size: size(context).width * numD1,
-      ),
+              Icons.check_circle_rounded,
+              color: Colors.green,
+              size: size(context).width * numD1,
+            ),
       title: CommonText(
-          text: message,
-          color: Colors.black,
-          textAlign: TextAlign.start,
-          fontWeight: FontWeight.w500,
-          fontSize: size(context).width * numD035),
+        text: message,
+        color: Colors.black,
+        textAlign: TextAlign.start,
+        fontWeight: FontWeight.w500,
+        fontSize: size(context).width * numD035,
+      ),
     ),
   ).show(navigatorKey.currentContext!);
 }
+
 void showToastLongDelay({required bool isError, required String message}) async {
   DelightToastBar(
     autoDismiss: true,
@@ -566,26 +577,28 @@ void showToastLongDelay({required bool isError, required String message}) async 
     builder: (context) => ToastCard(
       color: Colors.white,
       leading: isError
-          ? Icon(
-        Icons.warning_rounded,
-        color: Colors.red,
-        size:size(context).width * numD1,
-      )
+          ? Icon(Icons.warning_rounded, color: Colors.red, size: size(context).width * numD1)
           : Icon(
-        Icons.check_circle_rounded,
-        color: Colors.green,
-        size:size(context).width * numD1,
-      ),
+              Icons.check_circle_rounded,
+              color: Colors.green,
+              size: size(context).width * numD1,
+            ),
       title: CommonText(
-          text: message,
-          color: Colors.black,
-          textAlign: TextAlign.start,
-          fontWeight: FontWeight.w500,
-          fontSize:size(context).width * numD035),
+        text: message,
+        color: Colors.black,
+        textAlign: TextAlign.start,
+        fontWeight: FontWeight.w500,
+        fontSize: size(context).width * numD035,
+      ),
     ),
   ).show(navigatorKey.currentContext!);
 }
-void showToastWithTitle({required bool isError, required String title, required String message}) async {
+
+void showToastWithTitle({
+  required bool isError,
+  required String title,
+  required String message,
+}) async {
   DelightToastBar(
     autoDismiss: true,
     snackbarDuration: const Duration(milliseconds: 3000),
@@ -594,71 +607,71 @@ void showToastWithTitle({required bool isError, required String title, required 
     builder: (context) => ToastCard(
       color: Colors.white,
       leading: isError
-          ? Icon(
-        Icons.warning_rounded,
-        color: Colors.red,
-        size:size(context).width * numD1,
-      )
+          ? Icon(Icons.warning_rounded, color: Colors.red, size: size(context).width * numD1)
           : Icon(
-        Icons.check_circle_rounded,
-        color: Colors.green,
-        size:size(context).width * numD1,
-      ),
+              Icons.check_circle_rounded,
+              color: Colors.green,
+              size: size(context).width * numD1,
+            ),
       title: CommonText(
-          text: title,
-          color: Colors.black,
-          textAlign: TextAlign.start,
-          fontWeight: FontWeight.bold,
-          fontSize:size(context).width * numD04),
+        text: title,
+        color: Colors.black,
+        textAlign: TextAlign.start,
+        fontWeight: FontWeight.bold,
+        fontSize: size(context).width * numD04,
+      ),
       subtitle: CommonText(
-          text: message,
-          color: Colors.black,
-          fontWeight: FontWeight.w500,
-          textAlign: TextAlign.start,
-          fontSize:size(context).width * numD03),
+        text: message,
+        color: Colors.black,
+        fontWeight: FontWeight.w500,
+        textAlign: TextAlign.start,
+        fontSize: size(context).width * numD03,
+      ),
     ),
   ).show(navigatorKey.currentContext!);
 }
-
 
 String hideMobileNumber(String mobileNumber) {
   if (mobileNumber.length < 4) {
     return mobileNumber;
   } else {
-    String maskedNumber = '*' * (mobileNumber.length - 4) +
-        mobileNumber.substring(mobileNumber.length - 4);
+    String maskedNumber =
+        '*' * (mobileNumber.length - 4) + mobileNumber.substring(mobileNumber.length - 4);
     return maskedNumber;
   }
 }
+
 String generateAutoId() {
   return DateTime.now().millisecondsSinceEpoch.toString();
 }
+
 DateTime getNextDay(DateTime date, int day) {
   int diff = day - date.weekday;
   if (diff <= 0) diff += 7;
   return date.add(Duration(days: diff));
 }
-String getDaysLeft(DateTime targetDate) {
 
+String getDaysLeft(DateTime targetDate) {
   DateTime now = DateTime.now();
   int difference = targetDate.difference(now).inDays;
 
-  if(difference.isNegative){
+  if (difference.isNegative) {
     return targetDate.toString().split(" ").first;
   } else if (difference == 0) {
     return 'Today';
   } else if (difference == 1) {
     return 'Tomorrow';
   } else if (difference < 7) {
-    if(difference == 1){
+    if (difference == 1) {
       return '$difference day left';
-    }else{
+    } else {
       return '$difference days left';
     }
   } else {
     return targetDate.toString().split(" ").first;
   }
 }
+
 String timeAgo(DateTime dateTime, {bool numericDates = true}) {
   final date2 = DateTime.now();
   final difference = date2.difference(dateTime);
@@ -683,6 +696,7 @@ String timeAgo(DateTime dateTime, {bool numericDates = true}) {
     return 'Just now';
   }
 }
+
 bool dateTimeFormatCheck(String date) {
   try {
     DateTime covertValue = DateTime.parse(date);
@@ -691,14 +705,16 @@ bool dateTimeFormatCheck(String date) {
     return false;
   }
 }
-String dateTimeFormatter({required String dateTime,
+
+String dateTimeFormatter({
+  required String dateTime,
   String format = "yyyy-MM-dd",
   bool time = false,
-  bool utc = false}) {
+  bool utc = false,
+}) {
   try {
     debugPrint("FormatTime: $dateTime");
-    DateTime currentDateTime =
-    utc ? DateTime.now().toUtc() : DateTime.now().toLocal();
+    DateTime currentDateTime = utc ? DateTime.now().toUtc() : DateTime.now().toLocal();
     DateTime parseDateTime = DateTime.now();
 
     if (dateTimeFormatCheck(dateTime) && format.isNotEmpty) {
@@ -711,12 +727,12 @@ String dateTimeFormatter({required String dateTime,
       parseDateTime = DateTime.parse("$dateTime $time");
     }
 
-    return DateFormat(format)
-        .format(utc ? parseDateTime.toUtc() : parseDateTime.toLocal());
+    return DateFormat(format).format(utc ? parseDateTime.toUtc() : parseDateTime.toLocal());
   } on FormatException catch (e) {
     return DateFormat(format).format(DateTime.now());
   }
 }
+
 int weekdayFromString(String day) {
   switch (day.toLowerCase()) {
     case 'mon':
@@ -737,7 +753,8 @@ int weekdayFromString(String day) {
       return -1;
   }
 }
-int getTimeDifferenceInDays(String date){
+
+int getTimeDifferenceInDays(String date) {
   DateTime startDate = DateTime.parse(date);
   DateTime endDate = DateTime.now(); // Current date
   Duration difference = startDate.difference(endDate);
@@ -746,10 +763,9 @@ int getTimeDifferenceInDays(String date){
   return differenceInDays;
 }
 
-
 extension Currency on double {
   String indianRupeeFormat() {
-    return NumberFormat.currency(locale: 'en_IN', symbol: '₹ ',decimalDigits: 0).format(this);
+    return NumberFormat.currency(locale: 'en_IN', symbol: '₹ ', decimalDigits: 0).format(this);
   }
 }
 
@@ -764,8 +780,7 @@ extension StringExtenstions on String {
 
   /// check whether the string is valid email or not
 
-  bool isValidEmail() =>
-      RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$').hasMatch(this);
+  bool isValidEmail() => RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$').hasMatch(this);
 
   ///return true if there is only alphabets in string
   bool isAlpha() => RegExp(r'^[a-zA-Z]+$').hasMatch(this);
@@ -781,12 +796,10 @@ extension StringExtenstions on String {
 
   ///return true if string is valid floating value eg 1.2
   bool isFloat() =>
-      RegExp(r'^(?:-?(?:[0-9]+))?(?:\.[0-9]*)?(?:[eE][\+\-]?(?:[0-9]+))?$')
-          .hasMatch(this);
+      RegExp(r'^(?:-?(?:[0-9]+))?(?:\.[0-9]*)?(?:[eE][\+\-]?(?:[0-9]+))?$').hasMatch(this);
 
   ///return true if string is valid hexadecimal color code
-  bool isHexColor() =>
-      RegExp(r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$').hasMatch(this);
+  bool isHexColor() => RegExp(r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$').hasMatch(this);
 
   //Conversion function
 
@@ -797,9 +810,7 @@ extension StringExtenstions on String {
   double toDouble() => double.parse(this);
 
   ///parse string hexadecimal color to color object
-  Color toHexColor() =>
-      Color(int.parse(substring(1, 7), radix: 16) + 0xFF000000);
-
+  Color toHexColor() => Color(int.parse(substring(1, 7), radix: 16) + 0xFF000000);
 
   ///parse string to JsonMap
   Map<String, dynamic> toJsonMap() => jsonDecode(this);
@@ -811,30 +822,24 @@ extension StringExtenstions on String {
   DateTime toDate({required String format}) => DateFormat(format).parse(this);
 
   ///format StringDate UTC StringDate
-  String formatDateStringToUTC(
-      {required String? inputPattern, required String? outputPattern}) {
+  String formatDateStringToUTC({required String? inputPattern, required String? outputPattern}) {
     if (outputPattern == null || outputPattern.isEmpty) {
       outputPattern = inputPattern;
     }
-    return DateFormat(outputPattern)
-        .format(DateFormat(inputPattern).parse(this).toUtc());
+    return DateFormat(outputPattern).format(DateFormat(inputPattern).parse(this).toUtc());
   }
 
   ///changes the date format
-  String changeDateStringFormat(
-      {required String inputPattern, required String outputPattern}) {
-    return DateFormat(outputPattern)
-        .format(DateFormat(inputPattern).parse(this));
+  String changeDateStringFormat({required String inputPattern, required String outputPattern}) {
+    return DateFormat(outputPattern).format(DateFormat(inputPattern).parse(this));
   }
 
   ///parse StringDate toLocal date
-  String formatDateStringToLocal(
-      {required String? inputPattern, required String? outputPattern}) {
+  String formatDateStringToLocal({required String? inputPattern, required String? outputPattern}) {
     if (outputPattern == null || outputPattern.isEmpty) {
       outputPattern = inputPattern;
     }
-    return DateFormat(outputPattern)
-        .format(DateFormat(inputPattern).parse(this).toLocal());
+    return DateFormat(outputPattern).format(DateFormat(inputPattern).parse(this).toLocal());
   }
 
   ///convert String to list of Chars
@@ -859,8 +864,7 @@ extension StringExtenstions on String {
   }
 
   ///replace chars from start to end with  eg 12345****10
-  String replaceChars(
-      {int start = 0, required int end, String delimiter = "*"}) {
+  String replaceChars({int start = 0, required int end, String delimiter = "*"}) {
     StringBuffer buffer = StringBuffer();
     int counter = 0;
     for (var rune in runes) {
@@ -890,8 +894,7 @@ extension StringExtenstions on String {
   }
 
   ///compare string in case Insensitive manner
-  bool equalsIgnoreCase(String compareTo) =>
-      toLowerCase() == compareTo.toLowerCase();
+  bool equalsIgnoreCase(String compareTo) => toLowerCase() == compareTo.toLowerCase();
 }
 
 String formatTime(int seconds) {
@@ -899,5 +902,3 @@ String formatTime(int seconds) {
   final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
   return "$minutes:$remainingSeconds";
 }
-
-

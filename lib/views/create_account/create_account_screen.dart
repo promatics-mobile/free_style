@@ -9,6 +9,7 @@ import '../../utils/common_constants.dart';
 import '../../utils/common_decorations/common_decorations.dart';
 import '../../utils/common_methods.dart';
 import '../../utils/common_widgets/common_button/common_button.dart';
+import '../../utils/common_widgets/common_country_picker/common_country_picker.dart';
 import '../../utils/common_widgets/common_image/common_image.dart';
 import '../../utils/common_widgets/common_text/common_text.dart';
 import '../../utils/common_widgets/text_form_field/common_text_form_field.dart';
@@ -181,6 +182,7 @@ class CreateAccountScreen extends StatelessWidget {
                               },
                               prefixIcon: GestureDetector(
                                 onTap: () async {
+                                  hideKeyboard(context);
                                   showCountryCodePickerDialog(
                                     context,
                                     onChanged: (country) {
@@ -474,22 +476,5 @@ class CreateAccountScreen extends StatelessWidget {
     );
   }
 
-  void showCountryCodePickerDialog(BuildContext context, {required Function(Country) onChanged}) {
-    showCountryPicker(
-      context: context,
-      showPhoneCode: true,
-      useSafeArea: true,
-      countryListTheme: CountryListThemeData(
-        margin: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(size(context).width * numD04),
-          topRight: Radius.circular(size(context).width * numD04),
-        ),
-      ),
-      onSelect: (Country country) {
-        debugPrint('Select country: ${country.displayName}');
-        onChanged(country);
-      },
-    );
-  }
+
 }

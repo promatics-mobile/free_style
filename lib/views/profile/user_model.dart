@@ -5,8 +5,8 @@ class UserModel {
   String? id;
   String? name;
   String? email;
-  bool? isEmailVerified;
-  bool? isMobileVerified;
+  bool? isEmailVerified=false;
+  bool? isMobileVerified =false;
   Mobile? mobile;
   int? xp;
   int? level;
@@ -46,8 +46,8 @@ class UserModel {
     id = json['_id'];
     name = json['name'];
     email = json['email'];
-    isEmailVerified = json['is_email_verified'];
-    isMobileVerified = json['is_mobile_verified'];
+    isEmailVerified = json['is_email_verified']??false;
+    isMobileVerified = json['is_mobile_verified']??false;
     mobile = json['mobile'] != null ? Mobile.fromJson(json['mobile']) : null;
     xp = json['xp'];
     level = json['level'];
