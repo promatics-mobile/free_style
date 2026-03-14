@@ -130,10 +130,11 @@ class ProfileSetupCubit extends Cubit<ProfileSetupState> implements NetworkRespo
           sharedPreferences.setString(PreferenceKeys.ballIdKey,selectedBallId??"");
           sharedPreferences.setString(PreferenceKeys.userNameKey,usernameController.text);
 
+          router.go(AppRouter.homeScreen);
+
           Future.delayed(Duration(seconds: 1),(){
             navigatorKey.currentContext!.read<DashboardCubit>().onTapBottomBar(0);
           });
-          router.go(AppRouter.homeScreen);
         }
         break;
     }

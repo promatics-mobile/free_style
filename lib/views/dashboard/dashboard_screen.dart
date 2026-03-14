@@ -4,13 +4,12 @@ import 'package:free_style/main.dart';
 import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
 import 'package:free_style/utils/common_widgets/app_bars/custom_app_bar.dart';
 import 'package:free_style/utils/common_widgets/common_image/common_image.dart';
-import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
-import 'package:motion_tab_bar_v2/motion-tab-controller.dart';
 
 import '../../generated/assets.dart';
 import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
 import '../../utils/common_decorations/common_decorations.dart';
+import '../../utils/common_widgets/common_bottom_nav_bar/common_bottom_nav_bar.dart';
 import '../../utils/common_widgets/common_text/common_text.dart';
 import 'dashboard_cubit.dart';
 
@@ -27,7 +26,7 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
 
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 1), () {
+    WidgetsBinding.instance.addPostFrameCallback((_){
       context.read<DashboardCubit>().callGetProfileApi();
     });
     super.initState();
@@ -45,82 +44,83 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
                   titleWidget: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      InkWell(
-                        onTap: () {
-                          router.push(AppRouter.profileSetupScreen);
-                        },
-                        child: Row(
-                          children: [
-                            ClipOval(
-                              child: CommonImage(
-                                width: size(context).width * numD13,
-                                height: size(context).width * numD13,
-                                imagePath:
-                                    sharedPreferences.getString(PreferenceKeys.avatarImageKey) ??
-                                    "",
-                                isNetwork: true,
+                      if (cubitData.userModel != null)
+                        InkWell(
+                          onTap: () {
+                            router.push(AppRouter.profileSetupScreen);
+                          },
+                          child: Row(
+                            children: [
+                              ClipOval(
+                                child: CommonImage(
+                                  width: size(context).width * numD13,
+                                  height: size(context).width * numD13,
+                                  imagePath:
+                                      sharedPreferences.getString(PreferenceKeys.avatarImageKey) ??
+                                      "",
+                                  isNetwork: true,
+                                ),
                               ),
-                            ),
-                            SizedBox(width: size(context).width * numD02),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CommonText(
-                                  text:
-                                      sharedPreferences.getString(PreferenceKeys.fullNameKey) ??
-                                      "DummyUser",
-                                  fontSize: size(context).width * numD04,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                Row(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: size(context).width * numD012,
-                                      backgroundColor: Colors.red,
-                                    ),
-                                    CommonText(
-                                      text:
-                                          " Lvl ${cubitData.userModel != null ? cubitData.userModel!.level : ""} ${CommonSymbol.dotSymbol} Red Tier",
-                                      fontSize: size(context).width * numD028,
-                                      color: Colors.grey,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: size(context).width * numD005),
-                                Container(
-                                  decoration: commonBgColorDecoration(
-                                    size(context).width * numD04,
-                                    CommonColors.secondaryLightColor,
+                              SizedBox(width: size(context).width * numD02),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CommonText(
+                                    text:
+                                        sharedPreferences.getString(PreferenceKeys.fullNameKey) ??
+                                        "DummyUser",
+                                    fontSize: size(context).width * numD04,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: size(context).width * numD02,
-                                  ),
-                                  height: size(context).width * numD05,
-                                  child: Row(
+                                  Row(
                                     children: [
-                                      Container(
-                                        margin: EdgeInsets.all(size(context).width * numD005),
-                                        child: CommonImage(
-                                          imagePath: Assets.iconsIcGoldCoin,
-                                          height: size(context).width * numD03,
-                                          width: size(context).width * numD03,
-                                          isNetwork: false,
-                                        ),
+                                      CircleAvatar(
+                                        radius: size(context).width * numD012,
+                                        backgroundColor: Colors.red,
                                       ),
                                       CommonText(
-                                        text: "450000 C",
-                                        fontSize: size(context).width * numD03,
-                                        color: Colors.black,
+                                        text:
+                                            " Lvl ${cubitData.userModel != null ? cubitData.userModel!.level : ""} ${CommonSymbol.dotSymbol} Red Tier",
+                                        fontSize: size(context).width * numD028,
+                                        color: Colors.grey,
                                       ),
                                     ],
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(width: size(context).width * numD02),
-                          ],
+                                  SizedBox(height: size(context).width * numD005),
+                                  Container(
+                                    decoration: commonBgColorDecoration(
+                                      size(context).width * numD04,
+                                      CommonColors.secondaryLightColor,
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: size(context).width * numD02,
+                                    ),
+                                    height: size(context).width * numD05,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.all(size(context).width * numD005),
+                                          child: CommonImage(
+                                            imagePath: Assets.iconsIcGoldCoin,
+                                            height: size(context).width * numD03,
+                                            width: size(context).width * numD03,
+                                            isNetwork: false,
+                                          ),
+                                        ),
+                                        CommonText(
+                                          text: "${cubitData.userModel!.wallet?.coins} C",
+                                          fontSize: size(context).width * numD03,
+                                          color: Colors.black,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(width: size(context).width * numD02),
+                            ],
+                          ),
                         ),
-                      ),
                     ],
                   ),
                   actions: [
@@ -192,52 +192,17 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
                     ),
                   ],
                 ),
-          body: Container(child: widget.child),
-          bottomNavigationBar: MotionTabBar(
-            controller: MotionTabBarController(initialIndex: 0, length: 4, vsync: this),
-            initialSelectedTab: "Home",
-            useSafeArea: true,
-            labelAlwaysVisible: false,
-            labels: const ["Home", "Battles", "Social", "Profile"],
-            iconWidgets: [
-              Image.asset(
-                Assets.iconsIcHome,
-                height: size(context).width * numD06,
-                width: size(context).width * numD06,
-              ),
-              Image.asset(
-                Assets.iconsIcBattle,
-                height: size(context).width * numD06,
-                width: size(context).width * numD06,
-              ),
-              Image.asset(
-                Assets.iconsIcSocial,
-                height: size(context).width * numD06,
-                width: size(context).width * numD06,
-              ),
-              Image.asset(
-                Assets.iconsIcProfile,
-                height: size(context).width * numD06,
-                width: size(context).width * numD06,
+          body: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Container(margin: EdgeInsets.only(bottom: 65), child: widget.child),
+              GameBottomNavigation(
+                onTap: (index) {
+                  cubitData.onTapBottomBar(index);
+                },
+                currentIndex: state.selectedIndex ?? 0,
               ),
             ],
-            tabSize: size(context).width * numD12,
-            tabBarHeight: size(context).width * numD15,
-            textStyle: TextStyle(
-              fontSize: size(context).width * numD035,
-              color: Colors.black,
-              fontWeight: FontWeight.w500,
-            ),
-            tabIconSize: size(context).width * numD04,
-            tabIconSelectedSize: size(context).width * numD06,
-            tabSelectedColor: CommonColors.secondaryColor,
-            tabIconSelectedColor: Colors.black,
-            tabBarColor: Colors.white,
-            onTabItemSelected: (int value) {
-              Future.delayed(Duration(milliseconds: 400), () {
-                cubitData.onTapBottomBar(value);
-              });
-            },
           ),
         );
       },

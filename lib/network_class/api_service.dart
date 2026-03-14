@@ -63,9 +63,6 @@ class DioNetworkCall {
         },
       );
 
-      if (showLoader) {
-        ApiLoader.hide();
-      }
 
       /// Success 200 OR 201
       if (response.statusCode! <= 201) {
@@ -74,6 +71,7 @@ class DioNetworkCall {
         debugPrint("✅ RESPONSE → ${jsonEncode(response.data)}");
 
         try {
+
           networkResponse.onResponse(
             requestCode: requestCode,
             response: jsonEncode(response.data as Map<String, dynamic>),
@@ -103,9 +101,6 @@ class DioNetworkCall {
         }
       }
     } on DioException catch (e) {
-      if (showLoader) {
-        ApiLoader.hide();
-      }
       try {
         networkResponse.onApiError(requestCode: requestCode, response: jsonEncode(_handleError(e)));
       } catch (e, stack) {
@@ -113,9 +108,6 @@ class DioNetworkCall {
         debugPrint(stack.toString());
       }
     } catch (e) {
-      if (showLoader) {
-        ApiLoader.hide();
-      }
       try {
         networkResponse.onApiError(
           requestCode: requestCode,

@@ -17,6 +17,31 @@ class ShopModel {
   }
 }
 
+class InventoryModel {
+  bool? success;
+  String? message;
+  List<ShopItem>? shop;
+
+  InventoryModel({this.success, this.message, this.shop});
+
+  InventoryModel.fromJson(Map<String, dynamic> json) {
+    success = json['success'];
+    message = json['message'];
+    if (json['inventory'] != null) {
+      shop = <ShopItem>[];
+      json['inventory'].forEach((v) {
+
+        if(v.containsKey('product')){
+          shop!.add(ShopItem.fromJson(v['product']));
+        }else{
+          shop!.add(ShopItem.fromJson(v));
+        }
+
+      });
+    }
+  }
+}
+
 class ShopItem {
   bool? owned;
   String? sId;
@@ -26,7 +51,7 @@ class ShopItem {
   String? rarity;
   String? collection;
   Price? price;
-  bool? isFree;
+  bool? isFree = false;
   List<Pictures>? pictures;
 
   ShopItem(
@@ -50,7 +75,7 @@ class ShopItem {
     rarity = json['rarity'];
     collection = json['collection'];
     price = json['price'] != null ? Price.fromJson(json['price']) : null;
-    isFree = json['is_free'];
+    isFree = json['is_free']??false;
     if (json['pictures'] != null) {
       pictures = <Pictures>[];
       json['pictures'].forEach((v) {

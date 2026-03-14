@@ -6,42 +6,26 @@ import 'package:free_style/main.dart';
 import 'package:free_style/network_class/api_response.dart';
 import 'package:free_style/network_class/api_service.dart';
 import 'package:free_style/utils/common_constants.dart';
-import 'package:free_style/views/social/social_screen.dart';
 
 import '../../network_class/web_urls.dart';
 import '../../routes/route.dart';
-import '../battles/battles_screen.dart';
-import '../home/home_screen.dart';
-import '../profile/profile_screen.dart';
 import '../profile/user_model.dart';
 import '../profile_setup/cosmetics_model.dart';
 
 class DashboardCubit extends Cubit<DashboardState> implements NetworkResponse {
   UserModel? userModel;
-  final List<Widget> dashboardScreens = [
-    HomeScreen(),
-    BattlesScreen(),
-    SocialScreen(),
-    ProfileScreen(),
-  ];
-
 
   DashboardCubit(int value)
-    : super(DashboardState(selectedIndex: 0, selectedTabIndex: 0, selectedTitle: "Home")) {
-    Future.delayed(Duration(milliseconds: 500), () {
-      onTapBottomBar(value);
-    });
-  }
-
-
+    : super(DashboardState(selectedIndex: 0, selectedTabIndex: 0, selectedTitle: "Home"));
 
   void onTapBottomBar(int index) {
     String name = "";
+
     switch (index) {
       case 0:
         name = "Home";
         router.go(AppRouter.homeScreen);
-        if((sharedPreferences.getString(PreferenceKeys.tokenKey)??"").isNotEmpty){
+        if ((sharedPreferences.getString(PreferenceKeys.tokenKey) ?? "").isNotEmpty) {
           callGetProfileApi();
         }
         break;
@@ -62,8 +46,8 @@ class DashboardCubit extends Cubit<DashboardState> implements NetworkResponse {
     debugPrint("index::$index");
     state.selectedIndex = index;
     state.selectedTitle = name;
-    emit(state.copyWith(selectedIndex: state.selectedIndex, selectedTitle: state.selectedTitle));
 
+    emit(state.copyWith(selectedIndex: state.selectedIndex, selectedTitle: state.selectedTitle));
   }
 
   void onChangeHelpSupportTab(int index) {
@@ -92,7 +76,7 @@ class DashboardCubit extends Cubit<DashboardState> implements NetworkResponse {
     try {
       switch (requestCode) {
         case getProfileReq:
-          try{
+          try {
             var map = jsonDecode(response);
             userModel = UserModel.fromJson(map['user']);
 
@@ -128,18 +112,17 @@ class DashboardCubit extends Cubit<DashboardState> implements NetworkResponse {
 
             emit(state.copyWith());
             debugPrint("userName::${userModel!.userName}");
-            if(userModel!.userName == null){
+            if (userModel!.userName == null) {
               final isSameRoute = router.state.path == AppRouter.profileSetupScreen;
               if (!isSameRoute) {
-              router.push(AppRouter.profileSetupScreen);
+                router.push(AppRouter.profileSetupScreen);
               }
             }
 
             break;
-          }catch (e, stack) {
+          } catch (e, stack) {
             debugPrint("error::$e $stack");
           }
-
       }
     } catch (e, stack) {
       debugPrint("error::$e $stack");

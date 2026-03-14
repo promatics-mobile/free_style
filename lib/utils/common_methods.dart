@@ -902,3 +902,10 @@ String formatTime(int seconds) {
   final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
   return "$minutes:$remainingSeconds";
 }
+
+int getRemainingCoins(int? walletCoins, int? price) {
+  final coins = walletCoins ?? 0;
+  final itemPrice = price ?? 0;
+  final remaining = coins - itemPrice;
+  return remaining < 0 ? 0 : remaining;
+}

@@ -52,3 +52,12 @@ const fetchShopReq = 16;
 
 const setUpPasswordUrl = "user/setuppassword";
 const setUpPasswordReq = 17;
+
+const buyProductUrl = "user/purchaseItem/";
+const buyProductReq = 18;
+
+const fetchInventoryUrl = "user/fetchInventory";
+const fetchInventoryReq = 19;
+
+const equipItemUrl = "user/setprofilecosmetics";
+const equipItemReq = 20;

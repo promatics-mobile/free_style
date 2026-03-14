@@ -15,3 +15,16 @@ class MenuItemModel {
     required this.icon,
   });
 }
+
+
+class ItemModel {
+   String title;
+   String? icon;
+   bool isSelected;
+
+   ItemModel({
+     required this.title,
+     required this.isSelected,
+     this.icon,
+  });
+}

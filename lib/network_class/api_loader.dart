@@ -1,38 +1,39 @@
 import 'package:flutter/material.dart';
-
+import 'package:free_style/utils/common_widgets/loaders/common_loader.dart';
 import '../../main.dart';
-import '../utils/common_constants.dart';
 
 class ApiLoader {
   static bool _isShowing = false;
+  static BuildContext? _dialogContext;
 
   static void show() {
     if (_isShowing) return;
+    final context = navigatorKey.currentContext;
+    if (context == null) return;
     _isShowing = true;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showDialog(
-        context: navigatorKey.currentContext!,
-        barrierDismissible: false,
-        builder: (context) {
-          return PopScope(
-            canPop: false,
-            child: Center(
-              child: CircularProgressIndicator(
-                color: CommonColors.secondaryColor,
-              ),
-            ),
-          );
-        },
-      );
-    });
-
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      useRootNavigator: true,
+      builder: (dialogContext) {
+        _dialogContext = dialogContext;
+        return const PopScope(
+          canPop: false,
+          child: Center(
+            child: CommonLoader(),
+          ),
+        );
+      },
+    );
   }
 
   static void hide() {
     if (!_isShowing) return;
     _isShowing = false;
-    Navigator.of(navigatorKey.currentContext!, rootNavigator: true).pop();
+    if (_dialogContext != null) {
+      Navigator.of(_dialogContext!, rootNavigator: true).pop();
+      _dialogContext = null;
+    }
   }
-
 }

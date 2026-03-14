@@ -131,7 +131,7 @@ Widget commonShortOutlinedButton({
   double? horizontalPadding,
 }) {
   return SizedBox(
-    height: buttonHeight ?? size.width * numD05,
+    height: buttonHeight ?? size.width * numD14,
     child: ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
@@ -192,7 +192,7 @@ Widget commonOutlinedButton({
   Color? borderColor,
 }) {
   return SizedBox(
-    height: buttonHeight ?? size.width * numD07,
+    height: buttonHeight ?? size.width * numD14,
     child: ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(

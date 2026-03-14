@@ -10,7 +10,6 @@ import 'package:free_style/views/chat_conversation/conversation_cubit.dart';
 import 'package:free_style/views/chat_conversation/conversation_screen.dart';
 import 'package:free_style/views/contact_us/contact_us_cubit.dart';
 import 'package:free_style/views/create_account/create_account_cubit.dart';
-import 'package:free_style/views/dashboard/dashboard_cubit.dart';
 import 'package:free_style/views/dashboard/dashboard_screen.dart';
 import 'package:free_style/views/dialy_challenge/daily_challenge_cubit.dart';
 import 'package:free_style/views/dialy_challenge/daily_challenge_screen.dart';
@@ -19,6 +18,7 @@ import 'package:free_style/views/faqs/faqs_cubit.dart';
 import 'package:free_style/views/faqs/faqs_screen.dart';
 import 'package:free_style/views/global_lead_board/global_lead_board_cubit.dart';
 import 'package:free_style/views/global_lead_board/global_lead_board_screen.dart';
+import 'package:free_style/views/inventory/inventory_cubit.dart';
 import 'package:free_style/views/league_ranking/league_ranking_cubit.dart';
 import 'package:free_style/views/league_ranking/league_ranking_screen.dart';
 import 'package:free_style/views/login/login_cubit.dart';
@@ -44,6 +44,7 @@ import 'package:free_style/views/settings/settings_cubit.dart';
 import 'package:free_style/views/settings/settings_screen.dart';
 import 'package:free_style/views/shop/item_detail_screen.dart';
 import 'package:free_style/views/shop/shop_cubit.dart';
+import 'package:free_style/views/shop/shop_model.dart';
 import 'package:free_style/views/shop/shop_screen.dart';
 import 'package:free_style/views/skill_tree/skill_tree_cubit.dart';
 import 'package:free_style/views/social/social_cubit.dart';
@@ -144,10 +145,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.splashScreen,
       name: AppRouter.splashScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => SplashCubit(),
-          child: const SplashScreen(),
-        );
+        return BlocProvider(create: (_) => SplashCubit(), child: const SplashScreen());
       },
     ),
 
@@ -157,10 +155,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.walkThroughScreen,
       name: AppRouter.walkThroughScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => WalkthroughCubit(),
-          child: const WalkthroughScreen(),
-        );
+        return BlocProvider(create: (_) => WalkthroughCubit(), child: const WalkthroughScreen());
       },
     ),
 
@@ -180,10 +175,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.createAccountScreen,
       name: AppRouter.createAccountScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => CreateAccountCubit(),
-          child: CreateAccountScreen(),
-        );
+        return BlocProvider(create: (_) => CreateAccountCubit(), child: CreateAccountScreen());
       },
     ),
 
@@ -193,10 +185,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.forgotPasswordScreen,
       name: AppRouter.forgotPasswordScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => ForgotPasswordCubit(),
-          child: ForgotPasswordScreen(),
-        );
+        return BlocProvider(create: (_) => ForgotPasswordCubit(), child: ForgotPasswordScreen());
       },
     ),
 
@@ -213,92 +202,63 @@ final GoRouter router = GoRouter(
       },
     ),
 
-
     /// Dashboard
     ShellRoute(
-        navigatorKey: shellNavigatorKey,
-        builder: (context, state, child) {
-          return DashboardScreen(child: child);
-        },
-        routes: [
-          GoRoute(
-            parentNavigatorKey: shellNavigatorKey,
-            path: AppRouter.homeScreen,
-            name: AppRouter.homeScreen,
-            pageBuilder: (context, state) => CustomTransitionPage(
-              key: state.pageKey,
-              child: BlocProvider(
-                create: (context) => HomeCubit(),
-                child: HomeScreen(),
-              ),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return FadeTransition(
-                  opacity: animation,
-                  child: child,
-                );
-              },
-            ),
+      navigatorKey: shellNavigatorKey,
+      builder: (context, state, child) {
+        return DashboardScreen(child: child);
+      },
+      routes: [
+        GoRoute(
+          parentNavigatorKey: shellNavigatorKey,
+          path: AppRouter.homeScreen,
+          name: AppRouter.homeScreen,
+          pageBuilder: (context, state) => CustomTransitionPage(
+            key: state.pageKey,
+            child: BlocProvider(create: (context) => HomeCubit(), child: HomeScreen()),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
           ),
-          GoRoute(
-            parentNavigatorKey: shellNavigatorKey,
-            path: AppRouter.battleScreen,
-            name: AppRouter.battleScreen,
-            pageBuilder: (context, state) => CustomTransitionPage(
-              key: state.pageKey,
-              child: BlocProvider(
-                create: (context) => BattlesCubit(),
-                child: BattlesScreen(),
-              ),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return FadeTransition(
-                  opacity: animation,
-                  child: child,
-                );
-              },
-            ),
+        ),
+        GoRoute(
+          parentNavigatorKey: shellNavigatorKey,
+          path: AppRouter.battleScreen,
+          name: AppRouter.battleScreen,
+          pageBuilder: (context, state) => CustomTransitionPage(
+            key: state.pageKey,
+            child: BlocProvider(create: (context) => BattlesCubit(), child: BattlesScreen()),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
           ),
-          GoRoute(
-            parentNavigatorKey: shellNavigatorKey,
-            path: AppRouter.socialScreen,
-            name: AppRouter.socialScreen,
-            pageBuilder: (context, state) => CustomTransitionPage(
-              key: state.pageKey,
-              child: BlocProvider(
-                create: (context) => SocialCubit(),
-                child: SocialScreen(),
-              ),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return FadeTransition(
-                  opacity: animation,
-                  child: child,
-                );
-              },
-            ),
+        ),
+        GoRoute(
+          parentNavigatorKey: shellNavigatorKey,
+          path: AppRouter.socialScreen,
+          name: AppRouter.socialScreen,
+          pageBuilder: (context, state) => CustomTransitionPage(
+            key: state.pageKey,
+            child: BlocProvider(create: (context) => SocialCubit(), child: SocialScreen()),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
           ),
-          GoRoute(
-            parentNavigatorKey: shellNavigatorKey,
-            path: AppRouter.profileScreen,
-            name: AppRouter.profileScreen,
-            pageBuilder: (context, state) => CustomTransitionPage(
-              key: state.pageKey,
-              child: BlocProvider(
-                create: (context) => ProfileCubit(),
-                child: ProfileScreen(),
-              ),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return FadeTransition(
-                  opacity: animation,
-                  child: child,
-                );
-              },
-            ),
+        ),
+        GoRoute(
+          parentNavigatorKey: shellNavigatorKey,
+          path: AppRouter.profileScreen,
+          name: AppRouter.profileScreen,
+          pageBuilder: (context, state) => CustomTransitionPage(
+            key: state.pageKey,
+            child: BlocProvider(create: (context) => ProfileCubit(), child: ProfileScreen()),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
           ),
-        ]),
-
+        ),
+      ],
+    ),
 
     /// CMS Screen (Terms, Privacy, etc.)
     GoRoute(
@@ -321,10 +281,10 @@ final GoRouter router = GoRouter(
         final data = state.extra as Map;
         return BlocProvider(
           create: (_) => OtpVerificationCubit(
-            email: data["email"]??"",
-            phone: data["number"]??"",
-            countryCode: data["country_code"]??"",
-            verificationType: data["verification_type"]??""
+            email: data["email"] ?? "",
+            phone: data["number"] ?? "",
+            countryCode: data["country_code"] ?? "",
+            verificationType: data["verification_type"] ?? "",
           ),
           child: OtpVerificationScreen(),
         );
@@ -338,7 +298,7 @@ final GoRouter router = GoRouter(
       builder: (context, state) {
         final data = state.extra as Map;
         return BlocProvider(
-          create: (_) => ResetPasswordCubit(email: data['email'],isReset:data['isReset']),
+          create: (_) => ResetPasswordCubit(email: data['email'], isReset: data['isReset']),
           child: ResetPasswordScreen(),
         );
       },
@@ -348,10 +308,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.profileSetupScreen,
       name: AppRouter.profileSetupScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => ProfileSetupCubit(),
-          child: ProfileSetupScreen(),
-        );
+        return BlocProvider(create: (_) => ProfileSetupCubit(), child: ProfileSetupScreen());
       },
     ),
     GoRoute(
@@ -359,10 +316,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.settingsScreen,
       name: AppRouter.settingsScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => SettingsCubit(),
-          child: SettingsScreen(),
-        );
+        return BlocProvider(create: (_) => SettingsCubit(), child: SettingsScreen());
       },
     ),
     GoRoute(
@@ -370,10 +324,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.searchPlayerScreen,
       name: AppRouter.searchPlayerScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => SearchPlayersCubit(),
-          child: SearchPlayersScreen(),
-        );
+        return BlocProvider(create: (_) => SearchPlayersCubit(), child: SearchPlayersScreen());
       },
     ),
     GoRoute(
@@ -381,10 +332,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.notificationsScreen,
       name: AppRouter.notificationsScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => NotificationsCubit(),
-          child: NotificationsScreen(),
-        );
+        return BlocProvider(create: (_) => NotificationsCubit(), child: NotificationsScreen());
       },
     ),
 
@@ -393,10 +341,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.contactUsScreen,
       name: AppRouter.contactUsScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => ContactUsCubit(),
-          child: ContactUs(),
-        );
+        return BlocProvider(create: (_) => ContactUsCubit(), child: ContactUs());
       },
     ),
     GoRoute(
@@ -408,31 +353,21 @@ final GoRouter router = GoRouter(
       },
     ),
 
-
-
     GoRoute(
       parentNavigatorKey: navigatorKey,
       path: AppRouter.otherProfileScreen,
       name: AppRouter.otherProfileScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => OtherProfileCubit(),
-          child: OtherProfileScreen(),
-        );
+        return BlocProvider(create: (_) => OtherProfileCubit(), child: OtherProfileScreen());
       },
     ),
-
-
 
     GoRoute(
       parentNavigatorKey: navigatorKey,
       path: AppRouter.shopScreen,
       name: AppRouter.shopScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => ShopCubit(),
-          child: ShopScreen(),
-        );
+        return BlocProvider(create: (_) => ShopCubit(), child: ShopScreen());
       },
     ),
     GoRoute(
@@ -440,7 +375,10 @@ final GoRouter router = GoRouter(
       path: AppRouter.itemDetailScreen,
       name: AppRouter.itemDetailScreen,
       builder: (context, state) {
-        return ItemDetailScreen();
+        var data = state.extra as Map;
+        var item = data['item'] as ShopItem;
+        var cubit = data['cubit'] as ShopCubit;
+        return ItemDetailScreen(cubit: cubit, item: item);
       },
     ),
     GoRoute(
@@ -448,7 +386,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.inventoryScreen,
       name: AppRouter.inventoryScreen,
       builder: (context, state) {
-        return InventoryScreen();
+        return BlocProvider(create: (context) => InventoryCubit(), child: InventoryScreen());
       },
     ),
     GoRoute(
@@ -465,10 +403,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.tutorialScreen,
       name: AppRouter.tutorialScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => TutorialCubit(),
-          child: TutorialScreen(),
-        );
+        return BlocProvider(create: (_) => TutorialCubit(), child: TutorialScreen());
       },
     ),
 
@@ -477,10 +412,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.trainingScreen,
       name: AppRouter.trainingScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => TrainingCubit(),
-          child: TrainingScreen(),
-        );
+        return BlocProvider(create: (_) => TrainingCubit(), child: TrainingScreen());
       },
     ),
 
@@ -489,10 +421,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.skillTreeScreen,
       name: AppRouter.skillTreeScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => SkillTreeCubit(),
-          child: SkillTreeScreen(),
-        );
+        return BlocProvider(create: (_) => SkillTreeCubit(), child: SkillTreeScreen());
       },
     ),
     GoRoute(
@@ -500,10 +429,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.skillStateScreen,
       name: AppRouter.skillStateScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => SkillStateCubit(),
-          child: SkillStateScreen(),
-        );
+        return BlocProvider(create: (_) => SkillStateCubit(), child: SkillStateScreen());
       },
     ),
 
@@ -512,10 +438,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.missionScreen,
       name: AppRouter.missionScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => MissionCubit(),
-          child: MissionScreen(),
-        );
+        return BlocProvider(create: (_) => MissionCubit(), child: MissionScreen());
       },
     ),
 
@@ -524,10 +447,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.dailyChallenge,
       name: AppRouter.dailyChallenge,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => DailyChallengeCubit(),
-          child: DailyChallengeScreen(),
-        );
+        return BlocProvider(create: (_) => DailyChallengeCubit(), child: DailyChallengeScreen());
       },
     ),
     GoRoute(
@@ -593,10 +513,7 @@ final GoRouter router = GoRouter(
       path: AppRouter.victoryScreen,
       name: AppRouter.victoryScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => VictoryCubit(),
-          child: const VictoryScreen(),
-        );
+        return BlocProvider(create: (_) => VictoryCubit(), child: const VictoryScreen());
       },
     ),
 
@@ -645,17 +562,14 @@ final GoRouter router = GoRouter(
           child: const EmailMobileVerificationScreen(),
         );
       },
-    ), GoRoute(
+    ),
+    GoRoute(
       parentNavigatorKey: navigatorKey,
       path: AppRouter.conversationScreen,
       name: AppRouter.conversationScreen,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => ConversationCubit(),
-          child: const ConversationScreen(),
-        );
+        return BlocProvider(create: (_) => ConversationCubit(), child: const ConversationScreen());
       },
     ),
-
   ],
 );
