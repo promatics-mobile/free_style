@@ -53,6 +53,7 @@ import 'package:free_style/views/splash/splash_cubit.dart';
 import 'package:free_style/views/training/training_cubit.dart';
 import 'package:free_style/views/tutorial/tutorial_cubit.dart';
 import 'package:free_style/views/tutorial/tutorial_details.dart';
+import 'package:free_style/views/tutorial/tutorial_vdo_details/tutorial_video_detail_cubit.dart';
 import 'package:free_style/views/victory/victory_cubit.dart';
 import 'package:free_style/views/victory/victory_screen.dart';
 import 'package:free_style/views/walkthrough/walkthrough_cubit.dart';
@@ -81,7 +82,7 @@ import '../views/skill_tree/skill_tree_screen.dart';
 import '../views/splash/splash_screen.dart';
 import '../views/training/training_screen.dart';
 import '../views/tutorial/tutorial_screen.dart';
-import '../views/tutorial/tutorial_video_details.dart';
+import '../views/tutorial/tutorial_vdo_details/tutorial_video_details.dart';
 
 class AppRouter {
   static const String splashScreen = "/splash_screen";
@@ -467,7 +468,10 @@ final GoRouter router = GoRouter(
       path: AppRouter.tutorialVideoDetailScreen,
       name: AppRouter.tutorialVideoDetailScreen,
       builder: (context, state) {
-        return TutorialVideoDetailScreen();
+        return BlocProvider(
+          create: (_) => TutorialVdoDetailCubit(),
+          child: const TutorialVideoDetailScreen(),
+        );
       },
     ),
 

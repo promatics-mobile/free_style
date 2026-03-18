@@ -79,7 +79,6 @@ class SkillTreeScreen extends StatelessWidget {
                       child: CommonTabBar(
                         tabs: state.branchList.map((e) => e.name?.toUpperCase() ?? "").toList(),
 
-
                         views: state.branchList.map((e) {
                           final branchName = (e.name ?? "").toLowerCase();
 
@@ -88,12 +87,15 @@ class SkillTreeScreen extends StatelessWidget {
                               return lowerWidget(context, cubit);
 
                             case "upper":
+                              return lowerWidget(context, cubit);
                               return upperWidget(context, cubit);
 
                             case "new branch":
+                              return lowerWidget(context, cubit);
                               return groundWidget(context, cubit);
 
                             case "sit down":
+                              return lowerWidget(context, cubit);
                               return sitDownWidget(context, cubit);
 
                             default:
@@ -123,10 +125,16 @@ class SkillTreeScreen extends StatelessWidget {
     final skills = cubit.state.skillList;
 
     if (skills.isEmpty) {
-      return const Center(child: Text("No Skills Found"));
+      return Center(
+        child: CommonText(
+          text: "No Skills Found",
+          fontSize: size(context).width * numD04,
+          color: Colors.grey,
+        ),
+      );
     }
 
-    final skill = skills.first;
+    final skill = skills.last;
 
     return Padding(
       padding: EdgeInsets.all(size(context).width * numD04),
@@ -137,60 +145,65 @@ class SkillTreeScreen extends StatelessWidget {
           UniversalStepper(
             inverted: false,
             stepperDirection: Axis.vertical,
-            elementCount: cubit.lowerStepData.length,
+            elementCount: cubit.state.skillList.length,
 
             elementBuilder: (context, index) {
-              var item = cubit.lowerStepData[index];
-              return Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(left: size(context).width * numD04),
-                  alignment: Alignment.topLeft,
-                  child: CommonText(
-                    text: item.title,
-                    fontSize: size(context).width * numD04,
-                  ),
+              final skill = cubit.state.skillList[index];
+
+              return Container(
+                padding: EdgeInsets.only(left: size(context).width * numD04),
+                alignment: Alignment.topLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CommonText(
+                      text: skill.name?.toUpperCase() ?? "",
+                      fontSize: size(context).width * numD04,
+                      color: skill.isActive == false ? Colors.grey : Colors.white,
+                    ),
+                  ],
                 ),
               );
             },
 
             badgeBuilder: (context, index) {
-              var item = cubit.lowerStepData[index];
+              final skill = cubit.state.skillList[index];
+              final isLocked = skill.isActive == false;
+
               return Container(
-                width: size(context).width * numD09,
                 padding: EdgeInsets.all(size(context).width * numD02),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(size(context).width * numD07),
+                  borderRadius: BorderRadius.circular(size(context).width * numD1),
                 ),
-                child: FittedBox(
-                  child: CommonImage(
-                    imagePath: item.icon ?? "",
-                    isNetwork: false,
-                    color: Colors.black,
-                  ),
+                child: Icon(
+                  isLocked ? Icons.lock : Icons.check_circle,
+                  color: isLocked ? Colors.grey : CommonColors.secondaryColor,
                 ),
               );
             },
 
             pathBuilder: (context, index) {
+              final skill = cubit.state.skillList[index];
+              final isLocked = skill.isActive == false;
+
               return Container(
-                color: index == cubit.lowerStepData.length - 1
+                color: index == cubit.state.skillList.length - 1
                     ? Colors.transparent
-                    : (index < cubit.currentStep
-                    ? CommonColors.secondaryColor
-                    : Colors.white),
+                    : (isLocked ? Colors.grey.shade300 : CommonColors.secondaryColor),
                 width: size(context).width * numD01,
                 height: size(context).width * numD1,
               );
             },
 
             subPathBuilder: (context, index) {
+              final skill = cubit.state.skillList[index];
+              final isLocked = skill.isActive == false;
+
               return Container(
-                color: index == cubit.lowerStepData.length - 1
+                color: index == cubit.state.skillList.length - 1
                     ? Colors.transparent
-                    : (index < cubit.currentStep
-                    ? CommonColors.secondaryColor
-                    : Colors.white),
+                    : (isLocked ? Colors.grey.shade300 : CommonColors.secondaryColor),
                 width: size(context).width * numD01,
                 height: size(context).width * numD1,
               );
@@ -199,31 +212,26 @@ class SkillTreeScreen extends StatelessWidget {
             badgePosition: StepperBadgePosition.start,
           ),
 
-
           Row(
             children: [
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     CommonText(
                       text: skill.name ?? "",
                       fontSize: size(context).width * numD05,
                       fontWeight: FontWeight.bold,
                     ),
 
-
                     CommonText(
-                      text:
-                      "Level ${skill.minLvlReq ?? 0}+ • ${skill.difficultyLevel ?? ""}",
+                      text: "Level ${skill.minLvlReq ?? 0}+ • ${skill.difficultyLevel ?? ""}",
                       fontSize: size(context).width * numD035,
                       color: Colors.grey,
                     ),
                   ],
                 ),
               ),
-
 
               Container(
                 padding: EdgeInsets.symmetric(
@@ -254,7 +262,6 @@ class SkillTreeScreen extends StatelessWidget {
 
           SizedBox(height: size(context).width * numD04),
 
-
           Row(
             children: [
               Icon(Icons.check_circle_outline, color: CommonColors.secondaryColor),
@@ -269,14 +276,13 @@ class SkillTreeScreen extends StatelessWidget {
 
           SizedBox(height: size(context).width * numD01),
 
-
           Row(
             children: [
               Icon(Icons.monetization_on_outlined, color: CommonColors.secondaryColor),
               Expanded(
                 child: CommonText(
                   text:
-                  "Reward: ${skill.completionRewards?.coin ?? 0} Coins • ${skill.completionRewards?.xp ?? 0} XP",
+                      "Reward: ${skill.completionRewards?.coin ?? 0} Coins • ${skill.completionRewards?.xp ?? 0} XP",
                   fontSize: size(context).width * numD04,
                 ),
               ),
@@ -285,8 +291,7 @@ class SkillTreeScreen extends StatelessWidget {
 
           SizedBox(height: size(context).width * numD1),
 
-
-          if (cubit.currentTabIndex == 0)
+          // if (skill.isActive == true)
             CommonButton(
               onTap: () {
                 router.push(AppRouter.tutorialScreen);
