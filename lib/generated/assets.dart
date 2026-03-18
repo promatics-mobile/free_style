@@ -65,6 +65,7 @@ class Assets {
   static const String iconsIcFootballWhite = 'assets/icons/ic_football_white.png';
   static const String iconsIcGoldCoin = 'assets/icons/ic_gold_coin.png';
   static const String iconsIcGoogleLogo = 'assets/icons/ic_google_logo.png';
+  static const String iconsIcHighestPr = 'assets/icons/ic_highestPr.png';
   static const String iconsIcHistory = 'assets/icons/ic_history.png';
   static const String iconsIcHome = 'assets/icons/ic_home.png';
   static const String iconsIcIdea = 'assets/icons/ic_idea.png';

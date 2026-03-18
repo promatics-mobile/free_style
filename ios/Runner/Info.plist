@@ -47,5 +47,34 @@
 	<true/>
 	<key>com.apple.security.network.client</key>
     <true/>
+    <key>NSAppleMusicUsageDescription</key>
+    <string>Play using while you are hiking</string>
+    <key>NSCalendarsUsageDescription</key>
+    <string>Your app accesses Calendar.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>The app uses device camera to click picture and set as profile image.</string>
+    <key>NSContactsUsageDescription</key>
+    <string>Your app accesses contacts.</string>
+    <key>NSFaceIDUsageDescription</key>
+    <string>Authentication with TouchId or FaceID</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Always and when in use!</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Your app use location.</string>
+    <key>NSLocationUsageDescription</key>
+    <string>Older devices need location.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Your app use location.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Need microphone access for uploading videos</string>
+    <key>NSMotionUsageDescription</key>
+    <string>Your app accesses motion</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>The app uses device photos to pick and set as profile image.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>The app uses device photos to pick and set as profile image.</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>Your app accesses speech recognition.</string>
+
 </dict>
 </plist>

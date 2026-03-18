@@ -358,7 +358,11 @@ final GoRouter router = GoRouter(
       path: AppRouter.otherProfileScreen,
       name: AppRouter.otherProfileScreen,
       builder: (context, state) {
-        return BlocProvider(create: (_) => OtherProfileCubit(), child: OtherProfileScreen());
+        final extra = state.extra as Map<String, dynamic>;
+
+        final userId = extra["userId"];
+
+        return BlocProvider(create: (_) => OtherProfileCubit(userId), child: OtherProfileScreen());
       },
     ),
 

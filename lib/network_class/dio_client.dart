@@ -11,7 +11,6 @@ import '../utils/common_methods.dart';
 import 'api_loader.dart';
 import 'internet_service.dart';
 
-
 class DioClient {
   static final DioClient _instance = DioClient._internal();
 
@@ -27,7 +26,7 @@ class DioClient {
   DioClient._internal() {
     dio = Dio(
       BaseOptions(
-        baseUrl: baseURL,
+        baseUrl: baseUrl,
         connectTimeout: const Duration(seconds: 90),
         receiveTimeout: const Duration(seconds: 90),
         contentType: Headers.jsonContentType,
@@ -68,9 +67,8 @@ class DioClient {
 
             /// Prevent duplicate queue
             bool alreadyQueued = _pendingRequests.any(
-                  (r) =>
-              r.requestOptions.uri == options.uri &&
-                  r.requestOptions.method == options.method,
+              (r) =>
+                  r.requestOptions.uri == options.uri && r.requestOptions.method == options.method,
             );
 
             if (!alreadyQueued) {
@@ -78,12 +76,7 @@ class DioClient {
               if (_pendingRequests.length > 10) {
                 _pendingRequests.removeAt(0);
               }
-              _pendingRequests.add(
-                QueuedRequest(
-                  requestOptions: options,
-                  completer: completer,
-                ),
-              );
+              _pendingRequests.add(QueuedRequest(requestOptions: options, completer: completer));
             }
 
             /// Hide loader
@@ -130,8 +123,7 @@ class DioClient {
 
               final delay = Duration(seconds: retryCount * 2);
 
-              debugPrint(
-                  "🔁 Retrying API ($retryCount/3) after ${delay.inSeconds}s");
+              debugPrint("🔁 Retrying API ($retryCount/3) after ${delay.inSeconds}s");
 
               await Future.delayed(delay);
 
@@ -175,13 +167,9 @@ class DioClient {
   }
 }
 
-
 class QueuedRequest {
   final RequestOptions requestOptions;
   final Completer<Response> completer;
 
-  QueuedRequest({
-    required this.requestOptions,
-    required this.completer,
-  });
+  QueuedRequest({required this.requestOptions, required this.completer});
 }

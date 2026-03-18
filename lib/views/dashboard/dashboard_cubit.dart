@@ -16,7 +16,7 @@ class DashboardCubit extends Cubit<DashboardState> implements NetworkResponse {
   UserModel? userModel;
 
   DashboardCubit(int value)
-    : super(DashboardState(selectedIndex: 0, selectedTabIndex: 0, selectedTitle: "Home"));
+    : super(DashboardState(selectedIndex: 0, selectedTabIndex: 0, selectedTitle: "Home")) {}
 
   void onTapBottomBar(int index) {
     String name = "";

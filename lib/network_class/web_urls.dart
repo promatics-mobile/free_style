@@ -1,5 +1,7 @@
 
-const baseURL = "https://betazone.promaticstechnologies.com/fs-api/";
+// const devBaseUrl = "http.api.com";
+// const proBaseUrl = "https://betazone.promaticstechnologies.com/fs-api/";
+const baseUrl = "https://betazone.promaticstechnologies.com/fs-api/";
 const headerKey = "Authorization";
 
 const createAccountUrl = "user/signup";
@@ -61,3 +63,38 @@ const fetchInventoryReq = 19;
 
 const equipItemUrl = "user/setprofilecosmetics";
 const equipItemReq = 20;
+
+const getPlayersListingUrl = "user/players";
+const getPlayersListingReq = 21;
+
+const getOtherPlayerProfileUrl = "user/players";
+const getOtherPlayerProfileReq = 22;
+
+
+const getFriendListUrl = "user/socials";
+const getFriendListReq = 23;
+
+
+const followUrl = "user/sendrequest";
+const followReq = 24;
+
+const unFollowUrl = "user/unfriend";
+const unFollowReq = 25;
+
+const cancelSentReqUrl = "user/cancelsendrequest";
+const cancelSentReqReq = 26;
+
+const acceptRequestUrl = "user/acceptrequest";
+const acceptRequestReq = 27;
+
+const cancelReceivedReqUrl = "user/cancelreceivedrequest";
+const cancelReceivedReqReq = 28;
+
+const getBranchesUrl = "user/fetchbranches";
+const getBranchesReq = 29;
+
+const getTiersUrl = "user/fetchtiers";
+const getTiersReq = 30;
+
+const getSkillsUrl = "user/fetchskills";
+const getSkillsReq = 31;

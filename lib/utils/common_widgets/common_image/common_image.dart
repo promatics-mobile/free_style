@@ -52,7 +52,7 @@ class CommonImage extends StatelessWidget {
     Widget imageWidget;
 
     if (isNetwork) {
-      debugPrint("Path: $imagePath");
+      // debugPrint("Path: $imagePath");
       imageWidget = Image.network(
         imagePath,
         width: width,

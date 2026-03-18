@@ -26,23 +26,93 @@ class SkillTreeScreen extends StatelessWidget {
         var cubit = context.read<SkillTreeCubit>();
         return Scaffold(
           appBar: CommonAppBar(title: "Skill Tree", actions: []),
-          body: CommonTabBar(
-            tabs: ["Lower", "Upper", "Ground", "Sit Down"],
-            views: [
-              lowerWidget(context, cubit),
-              upperWidget(context, cubit),
-              groundWidget(context, cubit),
-              sitDownWidget(context, cubit),
+          body: Column(
+            children: [
+              state.tierList.isEmpty
+                  ? const SizedBox()
+                  : SizedBox(
+                      height: size(context).width * numD08,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        padding: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
+                        itemCount: state.tierList.length,
+                        separatorBuilder: (context, index) =>
+                            SizedBox(width: size(context).width * numD03),
+                        itemBuilder: (context, index) {
+                          final tier = state.tierList[index];
+                          final isSelected = state.selectedTierIndex == index;
+
+                          return GestureDetector(
+                            onTap: () {
+                              cubit.onChangeTierTab(index);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: size(context).width * numD06,
+                              ),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? CommonColors.secondaryColor
+                                    : Colors.white.withOpacity(0.05),
+                                borderRadius: BorderRadius.circular(size(context).width * numD05),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CommonText(
+                                    text: tier.name?.toUpperCase() ?? "",
+                                    color: isSelected ? Colors.black : Colors.grey.shade400,
+                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+              state.branchList.isEmpty
+                  ? const SizedBox()
+                  : Expanded(
+                      child: CommonTabBar(
+                        tabs: state.branchList.map((e) => e.name?.toUpperCase() ?? "").toList(),
+
+
+                        views: state.branchList.map((e) {
+                          final branchName = (e.name ?? "").toLowerCase();
+
+                          switch (branchName) {
+                            case "lower":
+                              return lowerWidget(context, cubit);
+
+                            case "upper":
+                              return upperWidget(context, cubit);
+
+                            case "new branch":
+                              return groundWidget(context, cubit);
+
+                            case "sit down":
+                              return sitDownWidget(context, cubit);
+
+                            default:
+                              return Center(child: Text(e.name ?? "No Data"));
+                          }
+                        }).toList(),
+
+                        isScrollable: true,
+
+                        onTap: (index) {
+                          cubit.onChangeSkillTab(index);
+                        },
+
+                        onChanged: (index) {
+                          cubit.onChangeSkillTab(index);
+                        },
+                      ),
+                    ),
             ],
-            isScrollable: true,
-            onTap: (index) {
-              debugPrint("onTap Index: $index");
-              cubit.onChangeSkillTab(index);
-            },
-            onChanged: (index) {
-              debugPrint("onChanged Index: $index");
-              cubit.onChangeSkillTab(index);
-            },
           ),
         );
       },
@@ -50,14 +120,25 @@ class SkillTreeScreen extends StatelessWidget {
   }
 
   Widget lowerWidget(BuildContext context, SkillTreeCubit cubit) {
+    final skills = cubit.state.skillList;
+
+    if (skills.isEmpty) {
+      return const Center(child: Text("No Skills Found"));
+    }
+
+    final skill = skills.first;
+
     return Padding(
-      padding: EdgeInsetsGeometry.all(size(context).width * numD04),
+      padding: EdgeInsets.all(size(context).width * numD04),
       child: Column(
-        crossAxisAlignment: .start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
           UniversalStepper(
             inverted: false,
             stepperDirection: Axis.vertical,
+            elementCount: cubit.lowerStepData.length,
+
             elementBuilder: (context, index) {
               var item = cubit.lowerStepData[index];
               return Expanded(
@@ -71,6 +152,7 @@ class SkillTreeScreen extends StatelessWidget {
                 ),
               );
             },
+
             badgeBuilder: (context, index) {
               var item = cubit.lowerStepData[index];
               return Container(
@@ -78,9 +160,7 @@ class SkillTreeScreen extends StatelessWidget {
                 padding: EdgeInsets.all(size(context).width * numD02),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(size(context).width * numD07),
-                  ),
+                  borderRadius: BorderRadius.circular(size(context).width * numD07),
                 ),
                 child: FittedBox(
                   child: CommonImage(
@@ -91,44 +171,52 @@ class SkillTreeScreen extends StatelessWidget {
                 ),
               );
             },
+
             pathBuilder: (context, index) {
               return Container(
                 color: index == cubit.lowerStepData.length - 1
                     ? Colors.transparent
                     : (index < cubit.currentStep
-                          ? CommonColors.secondaryColor
-                          : Colors.white),
+                    ? CommonColors.secondaryColor
+                    : Colors.white),
                 width: size(context).width * numD01,
                 height: size(context).width * numD1,
               );
             },
+
             subPathBuilder: (context, index) {
               return Container(
                 color: index == cubit.lowerStepData.length - 1
                     ? Colors.transparent
                     : (index < cubit.currentStep
-                          ? CommonColors.secondaryColor
-                          : Colors.white),
+                    ? CommonColors.secondaryColor
+                    : Colors.white),
                 width: size(context).width * numD01,
                 height: size(context).width * numD1,
               );
             },
-            elementCount: cubit.lowerStepData.length,
+
             badgePosition: StepperBadgePosition.start,
           ),
+
+
           Row(
             children: [
               Expanded(
                 child: Column(
-                  crossAxisAlignment: .start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
                     CommonText(
-                      text: "Around the World",
+                      text: skill.name ?? "",
                       fontSize: size(context).width * numD05,
                       fontWeight: FontWeight.bold,
                     ),
+
+
                     CommonText(
-                      text: "Lower branch b7 Tier 2",
+                      text:
+                      "Level ${skill.minLvlReq ?? 0}+ • ${skill.difficultyLevel ?? ""}",
                       fontSize: size(context).width * numD035,
                       color: Colors.grey,
                     ),
@@ -136,18 +224,18 @@ class SkillTreeScreen extends StatelessWidget {
                 ),
               ),
 
+
               Container(
                 padding: EdgeInsets.symmetric(
                   horizontal: size(context).width * numD02,
                   vertical: size(context).width * numD01,
                 ),
-
                 decoration: commonBgColorDecoration(
                   size(context).width * numD04,
                   CommonColors.secondaryColor,
                 ),
                 child: CommonText(
-                  text: "Intermediate",
+                  text: (skill.difficultyLevel ?? "").toUpperCase(),
                   fontSize: size(context).width * numD035,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -159,56 +247,37 @@ class SkillTreeScreen extends StatelessWidget {
           SizedBox(height: size(context).width * numD04),
 
           CommonText(
-            text:
-                "A classic freestyle move where the ball travels in a full circle around your before you regain control.",
+            text: "Complete this skill to earn rewards.",
             fontSize: size(context).width * numD035,
             color: Colors.grey,
           ),
-          SizedBox(height: size(context).width * numD04),
-          Row(
-            children: [
-              Icon(
-                Icons.check_circle_outline_outlined,
-                color: CommonColors.secondaryColor,
-              ),
 
+          SizedBox(height: size(context).width * numD04),
+
+
+          Row(
+            children: [
+              Icon(Icons.check_circle_outline, color: CommonColors.secondaryColor),
               Expanded(
                 child: CommonText(
-                  text: "Crossover control (Completed)",
+                  text: "Min Level ${skill.minLvlReq ?? 0}",
                   fontSize: size(context).width * numD04,
-                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
           ),
+
           SizedBox(height: size(context).width * numD01),
+
+
           Row(
             children: [
-              Icon(
-                Icons.check_circle_outline_outlined,
-                color: CommonColors.secondaryColor,
-              ),
+              Icon(Icons.monetization_on_outlined, color: CommonColors.secondaryColor),
               Expanded(
                 child: CommonText(
-                  text: "Player Level 5+",
+                  text:
+                  "Reward: ${skill.completionRewards?.coin ?? 0} Coins • ${skill.completionRewards?.xp ?? 0} XP",
                   fontSize: size(context).width * numD04,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: size(context).width * numD01),
-          Row(
-            children: [
-              Icon(
-                Icons.check_circle_outline_outlined,
-                color: CommonColors.secondaryColor,
-              ),
-              Expanded(
-                child: CommonText(
-                  text: "150 SP available to unlock",
-                  fontSize: size(context).width * numD04,
-                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
@@ -216,14 +285,179 @@ class SkillTreeScreen extends StatelessWidget {
 
           SizedBox(height: size(context).width * numD1),
 
+
           if (cubit.currentTabIndex == 0)
-            CommonButton(onTap: () {
-              router.push(AppRouter.tutorialScreen);
-            }, text: "Start Tutorial"),
+            CommonButton(
+              onTap: () {
+                router.push(AppRouter.tutorialScreen);
+              },
+              text: "Start Tutorial",
+            ),
         ],
       ),
     );
   }
+
+  // Widget lowerWidget(BuildContext context, SkillTreeCubit cubit) {
+  //   return Padding(
+  //     padding: EdgeInsetsGeometry.all(size(context).width * numD04),
+  //     child: Column(
+  //       crossAxisAlignment: .start,
+  //       children: [
+  //         UniversalStepper(
+  //           inverted: false,
+  //           stepperDirection: Axis.vertical,
+  //           elementBuilder: (context, index) {
+  //             var item = cubit.lowerStepData[index];
+  //             return Expanded(
+  //               child: Container(
+  //                 padding: EdgeInsets.only(left: size(context).width * numD04),
+  //                 alignment: Alignment.topLeft,
+  //                 child: CommonText(text: item.title, fontSize: size(context).width * numD04),
+  //               ),
+  //             );
+  //           },
+  //           badgeBuilder: (context, index) {
+  //             var item = cubit.lowerStepData[index];
+  //             return Container(
+  //               width: size(context).width * numD09,
+  //               padding: EdgeInsets.all(size(context).width * numD02),
+  //               decoration: BoxDecoration(
+  //                 color: Colors.white,
+  //                 borderRadius: BorderRadius.all(Radius.circular(size(context).width * numD07)),
+  //               ),
+  //               child: FittedBox(
+  //                 child: CommonImage(
+  //                   imagePath: item.icon ?? "",
+  //                   isNetwork: false,
+  //                   color: Colors.black,
+  //                 ),
+  //               ),
+  //             );
+  //           },
+  //           pathBuilder: (context, index) {
+  //             return Container(
+  //               color: index == cubit.lowerStepData.length - 1
+  //                   ? Colors.transparent
+  //                   : (index < cubit.currentStep ? CommonColors.secondaryColor : Colors.white),
+  //               width: size(context).width * numD01,
+  //               height: size(context).width * numD1,
+  //             );
+  //           },
+  //           subPathBuilder: (context, index) {
+  //             return Container(
+  //               color: index == cubit.lowerStepData.length - 1
+  //                   ? Colors.transparent
+  //                   : (index < cubit.currentStep ? CommonColors.secondaryColor : Colors.white),
+  //               width: size(context).width * numD01,
+  //               height: size(context).width * numD1,
+  //             );
+  //           },
+  //           elementCount: cubit.lowerStepData.length,
+  //           badgePosition: StepperBadgePosition.start,
+  //         ),
+  //         Row(
+  //           children: [
+  //             Expanded(
+  //               child: Column(
+  //                 crossAxisAlignment: .start,
+  //                 children: [
+  //                   CommonText(
+  //                     text: "Around the World",
+  //                     fontSize: size(context).width * numD05,
+  //                     fontWeight: FontWeight.bold,
+  //                   ),
+  //                   CommonText(
+  //                     text: "Lower branch b7 Tier 2",
+  //                     fontSize: size(context).width * numD035,
+  //                     color: Colors.grey,
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //
+  //             Container(
+  //               padding: EdgeInsets.symmetric(
+  //                 horizontal: size(context).width * numD02,
+  //                 vertical: size(context).width * numD01,
+  //               ),
+  //
+  //               decoration: commonBgColorDecoration(
+  //                 size(context).width * numD04,
+  //                 CommonColors.secondaryColor,
+  //               ),
+  //               child: CommonText(
+  //                 text: "Intermediate",
+  //                 fontSize: size(context).width * numD035,
+  //                 color: Colors.black,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //
+  //         SizedBox(height: size(context).width * numD04),
+  //
+  //         CommonText(
+  //           text:
+  //               "A classic freestyle move where the ball travels in a full circle around your before you regain control.",
+  //           fontSize: size(context).width * numD035,
+  //           color: Colors.grey,
+  //         ),
+  //         SizedBox(height: size(context).width * numD04),
+  //         Row(
+  //           children: [
+  //             Icon(Icons.check_circle_outline_outlined, color: CommonColors.secondaryColor),
+  //
+  //             Expanded(
+  //               child: CommonText(
+  //                 text: "Crossover control (Completed)",
+  //                 fontSize: size(context).width * numD04,
+  //                 fontWeight: FontWeight.w500,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         SizedBox(height: size(context).width * numD01),
+  //         Row(
+  //           children: [
+  //             Icon(Icons.check_circle_outline_outlined, color: CommonColors.secondaryColor),
+  //             Expanded(
+  //               child: CommonText(
+  //                 text: "Player Level 5+",
+  //                 fontSize: size(context).width * numD04,
+  //                 fontWeight: FontWeight.w500,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         SizedBox(height: size(context).width * numD01),
+  //         Row(
+  //           children: [
+  //             Icon(Icons.check_circle_outline_outlined, color: CommonColors.secondaryColor),
+  //             Expanded(
+  //               child: CommonText(
+  //                 text: "150 SP available to unlock",
+  //                 fontSize: size(context).width * numD04,
+  //                 fontWeight: FontWeight.w500,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //
+  //         SizedBox(height: size(context).width * numD1),
+  //
+  //         if (cubit.currentTabIndex == 0)
+  //           CommonButton(
+  //             onTap: () {
+  //               router.push(AppRouter.tutorialScreen);
+  //             },
+  //             text: "Start Tutorial",
+  //           ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget upperWidget(BuildContext context, SkillTreeCubit cubit) {
     return Padding(
@@ -240,10 +474,7 @@ class SkillTreeScreen extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.only(left: size(context).width * numD04),
                   alignment: Alignment.topLeft,
-                  child: CommonText(
-                    text: item.title,
-                    fontSize: size(context).width * numD04,
-                  ),
+                  child: CommonText(text: item.title, fontSize: size(context).width * numD04),
                 ),
               );
             },
@@ -254,9 +485,7 @@ class SkillTreeScreen extends StatelessWidget {
                 padding: EdgeInsets.all(size(context).width * numD02),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(size(context).width * numD07),
-                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(size(context).width * numD07)),
                 ),
                 child: FittedBox(
                   child: CommonImage(
@@ -271,9 +500,7 @@ class SkillTreeScreen extends StatelessWidget {
               return Container(
                 color: index == cubit.upperStepData.length - 1
                     ? Colors.transparent
-                    : (index < cubit.currentStep
-                          ? CommonColors.secondaryColor
-                          : Colors.white),
+                    : (index < cubit.currentStep ? CommonColors.secondaryColor : Colors.white),
                 width: size(context).width * numD01,
                 height: size(context).width * numD1,
               );
@@ -282,9 +509,7 @@ class SkillTreeScreen extends StatelessWidget {
               return Container(
                 color: index == cubit.upperStepData.length - 1
                     ? Colors.transparent
-                    : (index < cubit.currentStep
-                          ? CommonColors.secondaryColor
-                          : Colors.white),
+                    : (index < cubit.currentStep ? CommonColors.secondaryColor : Colors.white),
                 width: size(context).width * numD01,
                 height: size(context).width * numD1,
               );
@@ -334,23 +559,24 @@ class SkillTreeScreen extends StatelessWidget {
 
           SizedBox(height: size(context).width * numD04),
 
-
           SizedBox(height: size(context).width * numD04),
           Row(
             crossAxisAlignment: .start,
             children: [
-              CommonImage(imagePath: Assets.iconsIcMission, isNetwork: false,
+              CommonImage(
+                imagePath: Assets.iconsIcMission,
+                isNetwork: false,
                 height: size(context).width * numD05,
                 width: size(context).width * numD05,
                 color: CommonColors.secondaryColor,
               ),
 
-              SizedBox(width: size(context).width * numD02,),
-
+              SizedBox(width: size(context).width * numD02),
 
               Expanded(
                 child: CommonText(
-                  text: "Mission: Perform 3 clean 360 spins. consecutively without dropping the bal",
+                  text:
+                      "Mission: Perform 3 clean 360 spins. consecutively without dropping the bal",
                   fontSize: size(context).width * numD04,
                   fontWeight: FontWeight.w500,
                 ),
@@ -361,15 +587,18 @@ class SkillTreeScreen extends StatelessWidget {
           Row(
             crossAxisAlignment: .start,
             children: [
-              CommonImage(imagePath: Assets.iconsIcVideoRecord, isNetwork: false,
+              CommonImage(
+                imagePath: Assets.iconsIcVideoRecord,
+                isNetwork: false,
                 height: size(context).width * numD05,
                 width: size(context).width * numD05,
                 color: CommonColors.secondaryColor,
               ),
-              SizedBox(width: size(context).width * numD02,),
+              SizedBox(width: size(context).width * numD02),
               Expanded(
                 child: CommonText(
-                  text: "Proof: Record a video clearly showing your face and the ball throughout the trick.",
+                  text:
+                      "Proof: Record a video clearly showing your face and the ball throughout the trick.",
                   fontSize: size(context).width * numD04,
                   fontWeight: FontWeight.w500,
                 ),
@@ -398,10 +627,7 @@ class SkillTreeScreen extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.only(left: size(context).width * numD04),
                   alignment: Alignment.topLeft,
-                  child: CommonText(
-                    text: item.title,
-                    fontSize: size(context).width * numD04,
-                  ),
+                  child: CommonText(text: item.title, fontSize: size(context).width * numD04),
                 ),
               );
             },
@@ -412,9 +638,7 @@ class SkillTreeScreen extends StatelessWidget {
                 padding: EdgeInsets.all(size(context).width * numD02),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(size(context).width * numD07),
-                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(size(context).width * numD07)),
                 ),
                 child: FittedBox(
                   child: CommonImage(
@@ -429,9 +653,7 @@ class SkillTreeScreen extends StatelessWidget {
               return Container(
                 color: index == cubit.groundStepData.length - 1
                     ? Colors.transparent
-                    : (index < cubit.currentStep
-                          ? CommonColors.secondaryColor
-                          : Colors.white),
+                    : (index < cubit.currentStep ? CommonColors.secondaryColor : Colors.white),
                 width: size(context).width * numD01,
                 height: size(context).width * numD1,
               );
@@ -440,9 +662,7 @@ class SkillTreeScreen extends StatelessWidget {
               return Container(
                 color: index == cubit.groundStepData.length - 1
                     ? Colors.transparent
-                    : (index < cubit.currentStep
-                          ? CommonColors.secondaryColor
-                          : Colors.white),
+                    : (index < cubit.currentStep ? CommonColors.secondaryColor : Colors.white),
                 width: size(context).width * numD01,
                 height: size(context).width * numD1,
               );
@@ -451,170 +671,186 @@ class SkillTreeScreen extends StatelessWidget {
             badgePosition: StepperBadgePosition.start,
           ),
 
-
           Visibility(
-              visible: !cubit.showGroundUnlock,
-              replacement: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                decoration: commonOutlineDecoration(size(context).width * numD02,
-                    1, Colors.white),
-                padding: EdgeInsets.all(size(context).width * numD02),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: .start,
-                            children: [
-                              CommonText(text:"Basic Dribble",
-                                fontSize: size(context).width * numD04,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              CommonText(text:"Ground   Tier 2",
-                                color: Colors.grey,
-                                fontSize: size(context).width * numD03,),
-                            ],
+            visible: !cubit.showGroundUnlock,
+            replacement: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: commonOutlineDecoration(
+                    size(context).width * numD02,
+                    1,
+                    Colors.white,
+                  ),
+                  padding: EdgeInsets.all(size(context).width * numD02),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: .start,
+                              children: [
+                                CommonText(
+                                  text: "Basic Dribble",
+                                  fontSize: size(context).width * numD04,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                CommonText(
+                                  text: "Ground   Tier 2",
+                                  color: Colors.grey,
+                                  fontSize: size(context).width * numD03,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(width: size(context).width * numD02,),
-                        Container(
-                          decoration: commonBgColorDecoration(size(context).width * numD03, CommonColors.secondaryColor),
-                          padding: EdgeInsetsGeometry.symmetric(
-                            vertical: size(context).width * numD01,
-                            horizontal: size(context).width * numD02,
+                          SizedBox(width: size(context).width * numD02),
+                          Container(
+                            decoration: commonBgColorDecoration(
+                              size(context).width * numD03,
+                              CommonColors.secondaryColor,
+                            ),
+                            padding: EdgeInsetsGeometry.symmetric(
+                              vertical: size(context).width * numD01,
+                              horizontal: size(context).width * numD02,
+                            ),
+                            child: CommonText(
+                              text: "5 Coins",
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: size(context).width * numD03,
+                            ),
                           ),
-                          child: CommonText(text:"5 Coins",
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: size(context).width * numD03,),
-                        ),
-
-
-                      ],
-                    ),
-                    SizedBox(height:  size(context).width * numD02),
-                    CommonText(text:"Master the fundamental ground control. Required for advanced combos.",
-                      color: Colors.white,
-                      fontSize: size(context).width * numD035,),
-                    SizedBox(height:  size(context).width * numD02),
-                    Row(
-                      mainAxisAlignment: .spaceBetween,
-                      children: [
-                        Expanded(child: CommonGradientButton(text: "Mark watched", onTap: (){
-                          showToast(isError: false, message: "Mark watched successfully");
-                        })),
-                        SizedBox(width:  size(context).width * numD05),
-                        Expanded(child: CommonButton(text: "Go to mission", onTap: (){})),
-
-                      ],)
-
-                  ],
+                        ],
+                      ),
+                      SizedBox(height: size(context).width * numD02),
+                      CommonText(
+                        text:
+                            "Master the fundamental ground control. Required for advanced combos.",
+                        color: Colors.white,
+                        fontSize: size(context).width * numD035,
+                      ),
+                      SizedBox(height: size(context).width * numD02),
+                      Row(
+                        mainAxisAlignment: .spaceBetween,
+                        children: [
+                          Expanded(
+                            child: CommonGradientButton(
+                              text: "Mark watched",
+                              onTap: () {
+                                showToast(isError: false, message: "Mark watched successfully");
+                              },
+                            ),
+                          ),
+                          SizedBox(width: size(context).width * numD05),
+                          Expanded(
+                            child: CommonButton(text: "Go to mission", onTap: () {}),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: .start,
-                      children: [
-                        CommonText(
-                          text: "Leg Circle",
-                          fontSize: size(context).width * numD05,
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: .start,
+                        children: [
+                          CommonText(
+                            text: "Leg Circle",
+                            fontSize: size(context).width * numD05,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          CommonText(
+                            text: "Ground Control 2",
+                            fontSize: size(context).width * numD035,
+                            color: Colors.grey,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    InkWell(
+                      onTap: () {
+                        cubit.onTapGroundUnlock();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: size(context).width * numD02,
+                          vertical: size(context).width * numD01,
+                        ),
+
+                        decoration: commonBgColorDecoration(
+                          size(context).width * numD04,
+                          CommonColors.secondaryColor,
+                        ),
+                        child: CommonText(
+                          text: cubit.showGroundUnlock ? "Locked" : "Unlocked",
+                          fontSize: size(context).width * numD035,
+                          color: Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
-                        CommonText(
-                          text: "Ground Control 2",
-                          fontSize: size(context).width * numD035,
-                          color: Colors.grey,
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
+                ),
+                SizedBox(height: size(context).width * numD04),
+                Row(
+                  crossAxisAlignment: .start,
+                  children: [
+                    CommonImage(
+                      imagePath: Assets.iconsIcMission,
+                      isNetwork: false,
+                      height: size(context).width * numD05,
+                      width: size(context).width * numD05,
+                      color: CommonColors.secondaryColor,
+                    ),
 
-                  InkWell(
-                    onTap: (){
-                      cubit.onTapGroundUnlock();
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: size(context).width * numD02,
-                        vertical: size(context).width * numD01,
-                      ),
+                    SizedBox(width: size(context).width * numD02),
 
-                      decoration: commonBgColorDecoration(
-                        size(context).width * numD04,
-                        CommonColors.secondaryColor,
-                      ),
+                    Expanded(
                       child: CommonText(
-                        text: cubit.showGroundUnlock ? "Locked": "Unlocked",
-                        fontSize: size(context).width * numD035,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                        text:
+                            "Mission: Perform 3 clean 360 spins. consecutively without dropping the bal",
+                        fontSize: size(context).width * numD04,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: size(context).width * numD04),
-              Row(
-                crossAxisAlignment: .start,
-                children: [
-                  CommonImage(imagePath: Assets.iconsIcMission, isNetwork: false,
-                    height: size(context).width * numD05,
-                    width: size(context).width * numD05,
-                    color: CommonColors.secondaryColor,
-                  ),
-
-                  SizedBox(width: size(context).width * numD02,),
-
-
-                  Expanded(
-                    child: CommonText(
-                      text: "Mission: Perform 3 clean 360 spins. consecutively without dropping the bal",
-                      fontSize: size(context).width * numD04,
-                      fontWeight: FontWeight.w500,
+                  ],
+                ),
+                SizedBox(height: size(context).width * numD02),
+                Row(
+                  crossAxisAlignment: .start,
+                  children: [
+                    CommonImage(
+                      imagePath: Assets.iconsIcVideoRecord,
+                      isNetwork: false,
+                      height: size(context).width * numD05,
+                      width: size(context).width * numD05,
+                      color: CommonColors.secondaryColor,
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: size(context).width * numD02),
-              Row(
-                crossAxisAlignment: .start,
-                children: [
-                  CommonImage(imagePath: Assets.iconsIcVideoRecord, isNetwork: false,
-                    height: size(context).width * numD05,
-                    width: size(context).width * numD05,
-                    color: CommonColors.secondaryColor,
-                  ),
-                  SizedBox(width: size(context).width * numD02,),
-                  Expanded(
-                    child: CommonText(
-                      text: "Proof: Record a video clearly showing your face and the ball throughout the trick.",
-                      fontSize: size(context).width * numD04,
-                      fontWeight: FontWeight.w500,
+                    SizedBox(width: size(context).width * numD02),
+                    Expanded(
+                      child: CommonText(
+                        text:
+                            "Proof: Record a video clearly showing your face and the ball throughout the trick.",
+                        fontSize: size(context).width * numD04,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
-          ),
-
-
-
-
-
 
           SizedBox(height: size(context).width * numD1),
-
         ],
       ),
     );
@@ -635,10 +871,7 @@ class SkillTreeScreen extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.only(left: size(context).width * numD04),
                   alignment: Alignment.topLeft,
-                  child: CommonText(
-                    text: item.title,
-                    fontSize: size(context).width * numD04,
-                  ),
+                  child: CommonText(text: item.title, fontSize: size(context).width * numD04),
                 ),
               );
             },
@@ -649,9 +882,7 @@ class SkillTreeScreen extends StatelessWidget {
                 padding: EdgeInsets.all(size(context).width * numD02),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(size(context).width * numD07),
-                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(size(context).width * numD07)),
                 ),
                 child: FittedBox(
                   child: CommonImage(
@@ -666,9 +897,7 @@ class SkillTreeScreen extends StatelessWidget {
               return Container(
                 color: index == cubit.sitDownStepData.length - 1
                     ? Colors.transparent
-                    : (index < cubit.currentStep
-                          ? CommonColors.secondaryColor
-                          : Colors.white),
+                    : (index < cubit.currentStep ? CommonColors.secondaryColor : Colors.white),
                 width: size(context).width * numD01,
                 height: size(context).width * numD1,
               );
@@ -677,9 +906,7 @@ class SkillTreeScreen extends StatelessWidget {
               return Container(
                 color: index == cubit.sitDownStepData.length - 1
                     ? Colors.transparent
-                    : (index < cubit.currentStep
-                          ? CommonColors.secondaryColor
-                          : Colors.white),
+                    : (index < cubit.currentStep ? CommonColors.secondaryColor : Colors.white),
                 width: size(context).width * numD01,
                 height: size(context).width * numD1,
               );
@@ -708,9 +935,8 @@ class SkillTreeScreen extends StatelessWidget {
               ),
 
               InkWell(
-                onTap: (){
-
-                  showUnlockTrickBottomSheet(context,cubit);
+                onTap: () {
+                  showUnlockTrickBottomSheet(context, cubit);
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(
@@ -718,10 +944,7 @@ class SkillTreeScreen extends StatelessWidget {
                     vertical: size(context).width * numD01,
                   ),
 
-                  decoration: commonBgColorDecoration(
-                    size(context).width * numD04,
-                    Colors.red,
-                  ),
+                  decoration: commonBgColorDecoration(size(context).width * numD04, Colors.red),
                   child: CommonText(
                     text: "Action Needed",
                     fontSize: size(context).width * numD035,
@@ -733,126 +956,130 @@ class SkillTreeScreen extends StatelessWidget {
             ],
           ),
 
-
           SizedBox(height: size(context).width * numD1),
-
         ],
       ),
     );
   }
 
-
-  Future<void> showUnlockTrickBottomSheet(BuildContext context, SkillTreeCubit cubit, ){
+  Future<void> showUnlockTrickBottomSheet(BuildContext context, SkillTreeCubit cubit) {
     return showModalBottomSheet(
       isScrollControlled: true,
-        context: context, builder: (context){
+      context: context,
+      builder: (context) {
+        return SingleChildScrollView(
+          padding: EdgeInsets.all(size(context).width * numD04),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: size(context).width * numD03),
+              CommonText(
+                text: "Unlock this Trick ?",
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: size(context).width * numD05,
+              ),
 
-      return SingleChildScrollView(
-        padding: EdgeInsets.all(size(context).width * numD04),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(height: size(context).width * numD03),
-            CommonText(
-              text: "Unlock this Trick ?",
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: size(context).width * numD05,
-            ),
+              CommonText(
+                text:
+                    "SP will be spent permanently. You can access tutorial and missions right away.",
+                color: Colors.grey,
+                textAlign: TextAlign.center,
+                fontSize: size(context).width * numD035,
+              ),
+              SizedBox(height: size(context).width * numD05),
 
-            CommonText(
-              text: "SP will be spent permanently. You can access tutorial and missions right away.",
-              color: Colors.grey,
-              textAlign: TextAlign.center,
-              fontSize: size(context).width * numD035,
-            ),
-            SizedBox(height: size(context).width * numD05),
-
-            Container(
-              decoration: commonBgColorDecoration(
+              Container(
+                decoration: commonBgColorDecoration(
                   size(context).width * numD02,
-                  CommonColors.themeColor.withValues(alpha: 0.1)),
-              padding: EdgeInsets.all( size(context).width * numD02),
-              child: Column(
-                children: [
-                  Row(
+                  CommonColors.themeColor.withValues(alpha: 0.1),
+                ),
+                padding: EdgeInsets.all(size(context).width * numD02),
+                child: Column(
+                  children: [
+                    Row(
                       mainAxisAlignment: .spaceBetween,
-                      children:[
+                      children: [
                         CommonText(
                           text: "Current SP",
                           color: Colors.grey,
                           fontSize: size(context).width * numD04,
-                        ),CommonText(
+                        ),
+                        CommonText(
                           text: "320",
                           color: CommonColors.buttonColor,
                           fontWeight: FontWeight.bold,
                           fontSize: size(context).width * numD04,
                         ),
-                      ]
-                  ),
+                      ],
+                    ),
 
-                  SizedBox(height: size(context).width * numD02),
+                    SizedBox(height: size(context).width * numD02),
 
-                  Row(
+                    Row(
                       mainAxisAlignment: .spaceBetween,
-                      children:[
+                      children: [
                         CommonText(
                           text: "Unlock Cost",
                           color: Colors.grey,
                           fontSize: size(context).width * numD04,
-                        ),CommonText(
+                        ),
+                        CommonText(
                           text: "250",
                           color: CommonColors.buttonColor,
                           fontWeight: FontWeight.bold,
                           fontSize: size(context).width * numD04,
                         ),
-                      ]
-                  ),
+                      ],
+                    ),
 
-                  Divider(),
-                  Row(
+                    Divider(),
+                    Row(
                       mainAxisAlignment: .spaceBetween,
-                      children:[
+                      children: [
                         CommonText(
                           text: "SP after unlock",
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontSize: size(context).width * numD04,
-                        ),CommonText(
+                        ),
+                        CommonText(
                           text: "250",
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontSize: size(context).width * numD04,
                         ),
-                      ]
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            SizedBox(height: size(context).width * numD04),
+              SizedBox(height: size(context).width * numD04),
 
-            Container(
-              decoration: commonBgColorDecoration(
+              Container(
+                decoration: commonBgColorDecoration(
                   size(context).width * numD02,
-                  CommonColors.themeColor.withValues(alpha: 0.1)),
-              padding: EdgeInsets.all( size(context).width * numD02),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-
-                  CommonText(
-                    text: "Prerequisites",
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: size(context).width * numD04,
-                  ),
-                  SizedBox(height: size(context).width * numD04),
-                  Row(
-                      children:[
-                        Icon(Icons.check_circle_outline_outlined,
-                        size: size(context).width * numD05,
-                        color: Colors.green),
+                  CommonColors.themeColor.withValues(alpha: 0.1),
+                ),
+                padding: EdgeInsets.all(size(context).width * numD02),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CommonText(
+                      text: "Prerequisites",
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: size(context).width * numD04,
+                    ),
+                    SizedBox(height: size(context).width * numD04),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.check_circle_outline_outlined,
+                          size: size(context).width * numD05,
+                          color: Colors.green,
+                        ),
                         SizedBox(width: size(context).width * numD01),
                         Expanded(
                           child: CommonText(
@@ -861,14 +1088,16 @@ class SkillTreeScreen extends StatelessWidget {
                             fontSize: size(context).width * numD04,
                           ),
                         ),
-                      ]
-                  ),
-                  SizedBox(height: size(context).width * numD02),
-                  Row(
-                      children:[
-                        Icon(Icons.check_circle_outline_outlined,
-                            size: size(context).width * numD05,
-                            color: Colors.green),
+                      ],
+                    ),
+                    SizedBox(height: size(context).width * numD02),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.check_circle_outline_outlined,
+                          size: size(context).width * numD05,
+                          color: Colors.green,
+                        ),
                         SizedBox(width: size(context).width * numD01),
                         Expanded(
                           child: CommonText(
@@ -877,14 +1106,16 @@ class SkillTreeScreen extends StatelessWidget {
                             fontSize: size(context).width * numD04,
                           ),
                         ),
-                      ]
-                  ),
-                  SizedBox(height: size(context).width * numD02),
-                  Row(
-                      children:[
-                        Icon(Icons.error_outline,
-                            size: size(context).width * numD05,
-                            color: Colors.black),
+                      ],
+                    ),
+                    SizedBox(height: size(context).width * numD02),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: size(context).width * numD05,
+                          color: Colors.black,
+                        ),
                         SizedBox(width: size(context).width * numD01),
                         Expanded(
                           child: CommonText(
@@ -893,75 +1124,78 @@ class SkillTreeScreen extends StatelessWidget {
                             fontSize: size(context).width * numD04,
                           ),
                         ),
-                      ]
-                  ),
-                  SizedBox(height: size(context).width * numD02),
-                ],
+                      ],
+                    ),
+                    SizedBox(height: size(context).width * numD02),
+                  ],
+                ),
               ),
-            ),
 
-            SizedBox(height: size(context).width * numD04),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-
-                Expanded(
-                  child: commonOutlinedButton(onTap: (){},
+              SizedBox(height: size(context).width * numD04),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: commonOutlinedButton(
+                      onTap: () {},
                       borderColor: CommonColors.buttonColor,
                       buttonHeight: size(context).width * numD13,
                       radius: numD03,
-                      size: size(context), buttonText: CommonText(
-                    text: "Cancel",
-                    color: Colors.black,
-                  )),
-                ),
-                SizedBox(width: size(context).width * numD04),
-                Expanded(
-                  child: commonShortButton(onTap: (){
-                    
-                  },
+                      size: size(context),
+                      buttonText: CommonText(text: "Cancel", color: Colors.black),
+                    ),
+                  ),
+                  SizedBox(width: size(context).width * numD04),
+                  Expanded(
+                    child: commonShortButton(
+                      onTap: () {},
                       radius: size(context).width * numD03,
                       buttonHeight: size(context).width * numD13,
-                      size: size(context), buttonText: "Unlock Trick"),
-                )
-
-              ],
-            ),
-
-
-            SizedBox(height: size(context).width * numD04),
-            CommonText(
-              text: "SP will be spent permanently. You can access tutorial and missions right away.",
-              color: Colors.grey,
-              fontSize: size(context).width * numD035,
-            ),
-            SizedBox(height: size(context).width * numD04),
-            Container(
-              decoration: commonOutlineDecoration(size(context).width * numD02, 1, Colors.grey.shade200),
-              padding: EdgeInsets.all(size(context).width * numD02),
-              child: Row(
-                children: [
-                  Icon(Icons.warning_amber,color: Colors.red,size: size(context).width * numD04),
-                  SizedBox(width: size(context).width * numD02),
-                  Expanded(
-                    child: CommonText(
-                      text: "Unlock failed. Your SP was not used. Try again in a moment.",
-                      color: Colors.red,
-                      fontSize: size(context).width * numD035,
+                      size: size(context),
+                      buttonText: "Unlock Trick",
                     ),
                   ),
                 ],
               ),
-            ),
-            SizedBox(height: size(context).width * numD1),
-          ],
-        ),
-      );
 
-
-
-    });
-
+              SizedBox(height: size(context).width * numD04),
+              CommonText(
+                text:
+                    "SP will be spent permanently. You can access tutorial and missions right away.",
+                color: Colors.grey,
+                fontSize: size(context).width * numD035,
+              ),
+              SizedBox(height: size(context).width * numD04),
+              Container(
+                decoration: commonOutlineDecoration(
+                  size(context).width * numD02,
+                  1,
+                  Colors.grey.shade200,
+                ),
+                padding: EdgeInsets.all(size(context).width * numD02),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.warning_amber,
+                      color: Colors.red,
+                      size: size(context).width * numD04,
+                    ),
+                    SizedBox(width: size(context).width * numD02),
+                    Expanded(
+                      child: CommonText(
+                        text: "Unlock failed. Your SP was not used. Try again in a moment.",
+                        color: Colors.red,
+                        fontSize: size(context).width * numD035,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: size(context).width * numD1),
+            ],
+          ),
+        );
+      },
+    );
   }
-
 }

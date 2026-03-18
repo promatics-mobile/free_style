@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
-import 'package:free_style/utils/common_widgets/common_button/common_short_button.dart';
 import 'package:free_style/utils/common_widgets/text_form_field/common_text_form_field.dart';
+import 'package:free_style/views/search_players/search_players_cubit.dart';
 
-import '../../generated/assets.dart';
 import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
 import '../../utils/common_decorations/common_decorations.dart';
 import '../../utils/common_widgets/common_image/common_image.dart';
+import '../../utils/common_widgets/common_refresh_indicator/common_refresh_indicator.dart';
 import '../../utils/common_widgets/common_text/common_text.dart';
 
 class SearchPlayersScreen extends StatelessWidget {
@@ -15,119 +16,147 @@ class SearchPlayersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CommonAppBar(title: "Search Players", showBack: true),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CommonTextFormField(
-              filled: true,
-              enableShadow: true,
-              hint: "Search Player",
-              keyboardType: TextInputType.text,
-              borderRadius: BorderRadius.circular(size(context).width * numD04),
-              prefixIcon: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: size(context).width * numD03,
-                ),
-                child: Icon(Icons.search, color: CommonColors.buttonColor),
-              ),
-              suffixIcon: Icon(Icons.cancel_outlined, color: Colors.black),
-            ),
-            SizedBox(height: size(context).width * numD02),
-            CommonText(
-              text: "Search Results",
-              fontWeight: FontWeight.bold,
-              fontSize: size(context).width * numD04,
-            ),
-            SizedBox(height: size(context).width * numD02),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 10,
-                padding: EdgeInsets.only(top: size(context).width * numD02),
-                itemBuilder: (context, idx) {
-                  return InkWell(
+    return BlocBuilder<SearchPlayersCubit, SearchPlayersState>(
+      builder: (context, state) {
+        var cubit = context.read<SearchPlayersCubit>();
+        return Scaffold(
+          appBar: CommonAppBar(title: "Search Players", showBack: true),
+          body: Padding(
+            padding: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CommonTextFormField(
+                  filled: true,
+                  controller: cubit.searchPlayerController,
+                  enableShadow: true,
+                  hint: "Search Player",
+                  keyboardType: TextInputType.text,
+                  borderRadius: BorderRadius.circular(size(context).width * numD04),
+                  prefixIcon: Container(
+                    padding: EdgeInsets.symmetric(horizontal: size(context).width * numD03),
+                    child: Icon(Icons.search, color: CommonColors.buttonColor),
+                  ),
+
+                  onChanged: (v) {
+                    cubit.callPlayerListApi(isRefresh: true);
+                  },
+                  suffixIcon: InkWell(
                     onTap: () {
-                      router.push(AppRouter.otherProfileScreen);
+                      cubit.searchPlayerController.clear();
+                      cubit.callPlayerListApi(isRefresh: true);
                     },
-                    child: Container(
-                      decoration: commonBgColorDecoration(
-                        size(context).width * numD04,
-                        Colors.white,
-                      ),
-                      padding: EdgeInsets.all(size(context).width * numD04),
-                      margin: EdgeInsets.symmetric(
-                        vertical: size(context).width * numD01,
-                      ),
+                    child: Icon(Icons.cancel_outlined, color: Colors.black),
+                  ),
+                ),
+                SizedBox(height: size(context).width * numD02),
+                CommonText(
+                  text: "Search Results",
+                  fontWeight: FontWeight.bold,
+                  fontSize: size(context).width * numD04,
+                ),
+                SizedBox(height: size(context).width * numD02),
+                Expanded(
+                  child: CommonRefreshIndicator(
+                    onRefresh: () async {
+                      cubit.callPlayerListApi(isRefresh: true);
+                    },
+                    onLoadMore: () async {
+                      cubit.callPlayerListApi();
+                    },
+                    child: ListView.builder(
+                      itemCount: state.userList.length,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      padding: EdgeInsets.only(top: size(context).width * numD02),
+                      itemBuilder: (context, idx) {
+                        final user = state.userList[idx];
 
-                      child: Row(
-                        children: [
-                          ClipOval(
-                            child: CommonImage(
-                              imagePath: Assets.assetsIcDummyUser2,
-                              width: size(context).width * numD1,
-                              height: size(context).width * numD1,
-                              isNetwork: false,
+                        return InkWell(
+                          onTap: () {
+                            router.push(AppRouter.otherProfileScreen, extra: {"userId": user.sId});
+
+                            debugPrint("userId:::: ${user.sId}");
+                          },
+                          child: Container(
+                            decoration: commonBgColorDecoration(
+                              size(context).width * numD04,
+                              Colors.white,
                             ),
-                          ),
-                          SizedBox(width: size(context).width * numD02),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CommonText(
-                                text: "@NeonNinja",
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                                fontSize: size(context).width * numD04,
-                              ),
-                              Container(
-                                decoration: commonBgColorDecoration(
-                                  size(context).width * numD04,
-                                  CommonColors.secondaryColor,
+                            padding: EdgeInsets.all(size(context).width * numD04),
+                            margin: EdgeInsets.symmetric(vertical: size(context).width * numD01),
+                            child: Row(
+                              children: [
+                                ClipOval(
+                                  child: CommonImage(
+                                    imagePath: user.avatar?.picture?.isNotEmpty == true
+                                        ? user.avatar!.picture!.first.fullPath ?? ""
+                                        : "",
+                                    width: size(context).width * numD1,
+                                    height: size(context).width * numD1,
+                                    isNetwork: true,
+                                  ),
                                 ),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: size(context).width * numD02,
+
+                                SizedBox(width: size(context).width * numD02),
+
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CommonText(
+                                      text: user.name ?? "",
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: size(context).width * numD04,
+                                    ),
+                                    Container(
+                                      decoration: commonBgColorDecoration(
+                                        size(context).width * numD04,
+                                        CommonColors.secondaryColor,
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: size(context).width * numD02,
+                                      ),
+                                      child: CommonText(
+                                        text: "SILVER ${user.level ?? 0}",
+                                        color: Colors.black,
+                                        fontSize: size(context).width * numD03,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                child: CommonText(
-                                  text: "SILVER 1",
+
+                                Spacer(),
+
+                                Icon(
+                                  Icons.arrow_forward_ios_outlined,
                                   color: Colors.black,
-                                  fontSize: size(context).width * numD03,
+                                  size: size(context).width * numD04,
                                 ),
-                              ),
-                            ],
-                          ),
-                          Spacer(),
-
-                          if (idx == 2)
-                            commonOutlinedButton(
-                              onTap: () {},
-                              size: size(context),
-                              borderColor: CommonColors.buttonColor,
-                              buttonHeight: size(context).width * numD10,
-                              buttonText: CommonText(
-                                text: "Requested",
-                                color: CommonColors.buttonColor,
-                              ),
-                            )
-                          else
-                            commonShortButton(
-                              onTap: () {},
-                              size: size(context),
-                              buttonHeight: size(context).width * numD10,
-                              buttonText: "Add",
+                                //
+                                // /// 🔥 Dynamic Button
+                                // commonShortButton(
+                                //   onTap: () {
+                                //     cubit.handleButtonTap(user);
+                                //   },
+                                //   size: size(context),
+                                //   buttonHeight:
+                                //   size(context).width * numD10,
+                                //   buttonText: cubit.getButtonText(user),
+                                // ),
+                              ],
                             ),
-                        ],
-                      ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

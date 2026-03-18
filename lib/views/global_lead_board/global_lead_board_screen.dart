@@ -255,7 +255,7 @@ class _GlobalLeadBoardScreenState extends State<GlobalLeadBoardScreen> {
         final player = players[index];
         return InkWell(
           onTap: (){
-            router.push(AppRouter.otherProfileScreen);
+            // router.push(AppRouter.otherProfileScreen);
           },
           child: Container(
             padding: EdgeInsets.all(size(context).width * numD04),

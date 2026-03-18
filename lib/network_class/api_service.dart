@@ -30,9 +30,12 @@ class DioNetworkCall {
   })
   async {
     try {
-      if (showLoader) {
-        ApiLoader.show();
-      }
+
+      WidgetsBinding.instance.addPostFrameCallback((_){
+        if (showLoader) {
+          ApiLoader.show();
+        }
+      });
 
       dynamic requestData = json;
 
