@@ -1,7 +1,6 @@
 
-// const devBaseUrl = "http.api.com";
-// const proBaseUrl = "https://betazone.promaticstechnologies.com/fs-api/";
 const baseUrl = "https://betazone.promaticstechnologies.com/fs-api/";
+const mediaBaseUrl = "https://passo-prom.s3.ap-south-1.amazonaws.com/freestyle";
 const headerKey = "Authorization";
 
 const createAccountUrl = "user/signup";
@@ -98,3 +97,21 @@ const getTiersReq = 30;
 
 const getSkillsUrl = "user/fetchskills";
 const getSkillsReq = 31;
+
+const getTutorialsListUrl = "user/fetchtutorials/";
+const getTutorialsListReq = 32;
+
+const getTutorialDetailsUrl = "user/fetchtutorial/";
+const getTutorialDetailsReq = 33;
+
+const uploadVideoUrl = "user/uploadmp4";
+const uploadVideoReq = 34;
+
+const submitSkillUrl = "user/submitskill";
+const submitSkillReq = 35;
+
+const unlockSkillUrl = "user/unlockaskill/";
+const unlockSkillReq = 36;
+
+const getSkillDetailsUrl = "user/fetchskilldetails/";
+const getSkillDetailsReq = 37;

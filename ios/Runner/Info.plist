@@ -75,6 +75,11 @@
     <string>The app uses device photos to pick and set as profile image.</string>
     <key>NSSpeechRecognitionUsageDescription</key>
     <string>Your app accesses speech recognition.</string>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+      <key>NSAllowsArbitraryLoads</key>
+      <true/>
+    </dict>
 
 </dict>
 </plist>

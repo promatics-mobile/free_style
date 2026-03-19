@@ -1,16 +1,15 @@
 import 'dart:async';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:free_style/utils/common_constants.dart';
+import 'package:free_style/utils/common_widgets/common_text/common_text.dart';
 
 class VideoRecorderWidget extends StatefulWidget {
   final Function(String path)? onVideoRecorded;
   final int maxDurationSecond;
 
-  const VideoRecorderWidget({
-    super.key,
-    this.onVideoRecorded,
-    required this.maxDurationSecond,
-  });
+  const VideoRecorderWidget({super.key, this.onVideoRecorded, required this.maxDurationSecond});
 
   @override
   State<VideoRecorderWidget> createState() => _VideoRecorderWidgetState();
@@ -36,10 +35,7 @@ class _VideoRecorderWidgetState extends State<VideoRecorderWidget> {
   Future<void> _initCamera() async {
     _cameras = await availableCameras();
 
-    _cameraController = CameraController(
-      _cameras![0],
-      ResolutionPreset.high,
-    );
+    _cameraController = CameraController(_cameras![0], ResolutionPreset.high);
 
     await _cameraController!.initialize();
     if (mounted) setState(() {});
@@ -88,14 +84,9 @@ class _VideoRecorderWidgetState extends State<VideoRecorderWidget> {
 
     final currentLens = _cameraController!.description.lensDirection;
 
-    final newCamera = _cameras!.firstWhere(
-          (camera) => camera.lensDirection != currentLens,
-    );
+    final newCamera = _cameras!.firstWhere((camera) => camera.lensDirection != currentLens);
 
-    _cameraController = CameraController(
-      newCamera,
-      ResolutionPreset.high,
-    );
+    _cameraController = CameraController(newCamera, ResolutionPreset.high);
 
     await _cameraController!.initialize();
     if (mounted) setState(() {});
@@ -110,8 +101,7 @@ class _VideoRecorderWidgetState extends State<VideoRecorderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (_cameraController == null ||
-        !_cameraController!.value.isInitialized) {
+    if (_cameraController == null || !_cameraController!.value.isInitialized) {
       return const Center(child: CircularProgressIndicator());
     }
 
@@ -129,57 +119,58 @@ class _VideoRecorderWidgetState extends State<VideoRecorderWidget> {
             value: progress,
             minHeight: 6,
             backgroundColor: Colors.white30,
-            valueColor:
-            const AlwaysStoppedAnimation<Color>(Colors.red),
+            valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
           ),
         ),
 
         /// 🎮 Controls
         Positioned(
-          bottom: 40,
-          left: 20,
-          right: 20,
+          bottom: size(context).width * numD05,
+          left: size(context).width * numD05,
+          right: size(context).width * numD05,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               /// 🔄 Switch Camera
               IconButton(
-                icon: const Icon(Icons.cameraswitch,
-                    color: Colors.white, size: 30),
+                icon: Icon(
+                  Icons.cameraswitch,
+                  color: Colors.white,
+                  size: size(context).width * numD07,
+                ),
                 onPressed: _switchCamera,
               ),
 
               /// 🔴 Record Button
-              GestureDetector(
-                onTap: () async {
-                  if (isRecording) {
-                    final file = await _stopRecording();
+              Expanded(
+                child: GestureDetector(
+                  onTap: () async {
+                    if (isRecording) {
+                      final file = await _stopRecording();
 
-                    if (file != null) {
-                      widget.onVideoRecorded?.call(file.path);
+                      if (file != null) {
+                        widget.onVideoRecorded?.call(file.path);
+                      }
+                    } else {
+                      await _startRecording();
                     }
-                  } else {
-                    await _startRecording();
-                  }
-                },
-                child: CircleAvatar(
-                  radius: 32,
-                  backgroundColor:
-                  isRecording ? Colors.red : Colors.white,
-                  child: isRecording
-                      ? const Icon(Icons.stop, color: Colors.white)
-                      : const Icon(Icons.fiber_manual_record,
-                      color: Colors.red),
+                  },
+                  child: CircleAvatar(
+                    radius: size(context).width * numD08,
+                    backgroundColor: isRecording ? Colors.red : Colors.white,
+                    child: isRecording
+                        ? const Icon(Icons.stop, color: Colors.white)
+                        : const Icon(Icons.fiber_manual_record, color: Colors.red),
+                  ),
                 ),
               ),
 
               /// ⏱ Timer
-              Text(
-                "$currentDuration s",
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
+              CommonText(
+                text: "$currentDuration s",
+                color: CommonColors.secondaryColor,
+                fontSize: size(context).width * numD05,
+                fontWeight: FontWeight.bold,
               ),
             ],
           ),

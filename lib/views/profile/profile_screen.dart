@@ -111,15 +111,78 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                     ],
                   ),
                   SizedBox(height: size(context).width * numD02),
-                  commonShortButton(
-                      onTap: () {
-                        router.push(AppRouter.inventoryScreen);
-                      },
-                      buttonColor: CommonColors.secondaryColor,
-                      buttonHeight: size(context).width * numD07,
-                      size: size(context),
-                      textColor: Colors.black,
-                      buttonText: "Inventory"),
+                  Row(
+                    mainAxisAlignment: .spaceBetween,
+                    children: [
+                      Container(
+                        decoration: commonBgColorDecoration(
+                          size(context).width * numD01,
+                          CommonColors.secondaryLightColor,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: size(context).width * numD02,
+                        ),
+                        height: size(context).width * numD07,
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.all(size(context).width * numD005),
+                              child: CommonImage(
+                                imagePath: Assets.iconsIcGoldCoin,
+                                height: size(context).width * numD04,
+                                width: size(context).width * numD04,
+                                isNetwork: false,
+                              ),
+                            ),
+                            CommonText(
+                              text: "${cubit.userModel!.wallet?.coins} C",
+                              fontSize: size(context).width * numD035,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      commonShortButton(
+                          onTap: () {
+                            router.push(AppRouter.inventoryScreen);
+                          },
+                          buttonColor: CommonColors.secondaryColor,
+                          buttonHeight: size(context).width * numD07,
+                          size: size(context),
+                          textColor: Colors.black,
+                          buttonText: "Inventory"),
+
+                      Container(
+                        decoration: commonBgColorDecoration(
+                          size(context).width * numD01,
+                          CommonColors.secondaryLightColor,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: size(context).width * numD02,
+                        ),
+                        height: size(context).width * numD07,
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.all(size(context).width * numD005),
+                              child: Icon(Icons.electric_bolt,
+                                color: CommonColors.secondaryColor,
+                                size: size(context).width * numD04,
+                              ),
+                            ),
+                            CommonText(
+                              text: "${cubit.userModel!.xp} XP",
+                              fontSize: size(context).width * numD035,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                   SizedBox(height: size(context).width * numD05),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart' as permission;
+import 'package:video_player/video_player.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../main.dart';
 import 'common_constants.dart';
@@ -908,4 +910,43 @@ int getRemainingCoins(int? walletCoins, int? price) {
   final itemPrice = price ?? 0;
   final remaining = coins - itemPrice;
   return remaining < 0 ? 0 : remaining;
+}
+
+
+Future<Duration> getVideoDuration(String url) async {
+  final controller = VideoPlayerController.networkUrl(Uri.parse(url));
+  await controller.initialize();
+  final duration = controller.value.duration;
+  await controller.dispose();
+  return duration;
+}
+
+String formatVideoDuration(Duration d) {
+  final hours = d.inHours;
+  final minutes = d.inMinutes.remainder(60);
+  final seconds = d.inSeconds.remainder(60);
+
+  if (hours > 0) {
+    /// 1:30:00 → 1 h 30 min
+    return "$hours h $minutes min";
+  } else if (minutes > 0) {
+    /// 0:20:00 → 20 min
+    return "$minutes min";
+  } else {
+    /// 0:30:00 → 30 sec
+    return "$seconds sec";
+  }
+}
+
+Future<File?> generateThumbnailFile(String videoPath) async {
+  final thumbnailPath = await VideoThumbnail.thumbnailFile(
+    video: videoPath,
+    imageFormat: ImageFormat.JPEG,
+    maxWidth: 300,
+    quality: 75,
+  );
+
+  if (thumbnailPath == null) return null;
+
+  return File(thumbnailPath);
 }

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
-import 'package:free_style/generated/assets.dart';
 import 'package:free_style/network_class/api_response.dart';
 import 'package:universal_stepper/universal_stepper.dart';
 
@@ -18,27 +17,6 @@ class SkillTreeCubit extends Cubit<SkillTreeState> implements NetworkResponse {
 
   bool isInverted = false;
   bool showGroundUnlock = false;
-
-  List<StepperData> lowerStepData = [
-    const StepperData(icon: Assets.iconsIcCheckNew, title: "Basic Touch Control", subtitle: ""),
-    const StepperData(icon: Assets.iconsIcCheckNew, title: "Crossover Control", subtitle: ""),
-    const StepperData(icon: Assets.iconsIcSteps, title: "Around the World (ATW)", subtitle: ""),
-  ];
-  List<StepperData> upperStepData = [
-    const StepperData(icon: Assets.iconsIcCheckNew, title: "Neck Stall", subtitle: ""),
-    const StepperData(icon: Assets.iconsIcFilterHori, title: "Head Stall (Selected)", subtitle: ""),
-    const StepperData(icon: Assets.iconsIcSteps, title: "Around the World (ATW)", subtitle: ""),
-  ];
-  List<StepperData> groundStepData = [
-    const StepperData(icon: Assets.iconsIcCheckNew, title: "Sole Roll", subtitle: ""),
-    const StepperData(icon: Assets.iconsIcClock, title: "Mouse Trap", subtitle: ""),
-    const StepperData(icon: Assets.iconsIcSteps, title: "Leg Circle (Selected)", subtitle: ""),
-  ];
-  List<StepperData> sitDownStepData = [
-    const StepperData(icon: Assets.iconsIcCheckNew, title: "Basic Sit", subtitle: ""),
-    const StepperData(icon: Assets.iconsIcCheckNew, title: "Shin Stall (Rejected)", subtitle: ""),
-    const StepperData(icon: Assets.iconsIcSteps, title: "Knee Akka", subtitle: ""),
-  ];
 
   SkillTreeCubit() : super(SkillTreeState(branchList: [], tierList: [], skillList: [])) {
     callBranchesApi();
@@ -81,15 +59,20 @@ class SkillTreeCubit extends Cubit<SkillTreeState> implements NetworkResponse {
     );
   }
 
+  void callUnlockSkillApi(String id) {
+    DioNetworkCall().callApiRequest(
+      networkResponse: this,
+      method: 'PATCH',
+      endUrl: unlockSkillUrl + id,
+      requestCode: unlockSkillReq,
+      showLoader: true,
+    );
+  }
+
   void callGetSkillsApi() {
     if (state.branchList.isEmpty || state.tierList.isEmpty) return;
-
     final branchId = state.branchList[currentTabIndex].id;
     final tierId = state.tierList[state.selectedTierIndex].id;
-
-
-
-
     DioNetworkCall().callApiRequest(
       networkResponse: this,
       method: 'GET',
@@ -140,6 +123,13 @@ class SkillTreeCubit extends Cubit<SkillTreeState> implements NetworkResponse {
 
           emit(state.copyWith(skillList: skills));
         }
+        break;
+
+      case unlockSkillReq:
+        var map = jsonDecode(response);
+        callGetSkillsApi();
+        emit(state.copyWith());
+
         break;
     }
   }

@@ -1,7 +1,11 @@
 import 'dart:async';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:free_style/utils/common_constants.dart';
+import 'package:free_style/utils/common_widgets/common_text/common_text.dart';
+import 'package:free_style/utils/common_widgets/loaders/common_loader.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class CommonVideoPlayer extends StatefulWidget {
   final String videoUrl;
@@ -101,104 +105,133 @@ class _CommonVideoPlayerState extends State<CommonVideoPlayer> {
   Widget build(BuildContext context) {
     if (_chewieController == null ||
         !_videoController.value.isInitialized) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: CommonLoader());
     }
 
-    return GestureDetector(
-      onTap: _toggleControls,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          /// 🎥 Video
-          AspectRatio(
-            aspectRatio: _videoController.value.aspectRatio,
-            child: Chewie(controller: _chewieController!),
-          ),
+    return VisibilityDetector(
+      key: Key(widget.videoUrl),
+      onVisibilityChanged: (info) {
+        final visiblePercentage = info.visibleFraction * 100;
 
-          /// 🎮 Controls Overlay
-          AnimatedOpacity(
-            opacity: _showControls ? 1 : 0,
-            duration: const Duration(milliseconds: 300),
-            child: Container(
-              color: Colors.black38,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  /// ⏪ Back
-                  Positioned(
-                    left: 20,
-                    child: IconButton(
-                      icon: const Icon(Icons.replay_10,
-                          color: Colors.white, size: 32),
-                      onPressed: _seekBackward,
-                    ),
-                  ),
+        if (visiblePercentage > 50) {
+          /// ▶️ PLAY when mostly visible
+          if (!_videoController.value.isPlaying) {
+            _videoController.play();
+          }
+        } else {
+          /// ⏸ PAUSE when not visible
+          if (_videoController.value.isPlaying) {
+            _videoController.pause();
+          }
+        }
+      },
+      child: GestureDetector(
+        onTap: _toggleControls,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            /// 🎥 Video
+            AspectRatio(
+              aspectRatio: _videoController.value.aspectRatio,
+              child: Chewie(controller: _chewieController!),
+            ),
 
-                  /// ▶️ Play / Pause
-                  GestureDetector(
-                    onTap: _togglePlay,
-                    child: Icon(
-                      _videoController.value.isPlaying
-                          ? Icons.pause_circle
-                          : Icons.play_circle,
-                      color: Colors.white,
-                      size: 70,
-                    ),
-                  ),
-
-                  /// ⏩ Forward
-                  Positioned(
-                    right: 20,
-                    child: IconButton(
-                      icon: const Icon(Icons.forward_10,
-                          color: Colors.white, size: 32),
-                      onPressed: _seekForward,
-                    ),
-                  ),
-
-                  /// ⏳ Bottom Progress + Time
-                  Positioned(
-                    bottom: 10,
-                    left: 10,
-                    right: 10,
-                    child: Column(
-                      children: [
-                        VideoProgressIndicator(
-                          _videoController,
-                          allowScrubbing: true,
-                          colors: const VideoProgressColors(
-                            playedColor: Colors.red,
-                            bufferedColor: Colors.white54,
-                            backgroundColor: Colors.white30,
-                          ),
+            /// 🎮 Controls Overlay
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              top: 0,
+              child: AnimatedOpacity(
+                opacity: _showControls ? 1 : 0,
+                duration: const Duration(milliseconds: 300),
+                child: Container(
+                  color: Colors.black38,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      /// ⏪ Back
+                      Positioned(
+                        left: size(context).width * numD04,
+                        child: IconButton(
+                          icon: Icon(Icons.replay_10,
+                              color: CommonColors.secondaryColor,
+                              size: size(context).width * numD1),
+                          onPressed: _seekBackward,
                         ),
-                        const SizedBox(height: 4),
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                      ),
+
+                      /// ▶️ Play / Pause
+                      GestureDetector(
+                        onTap: _togglePlay,
+                        child: Icon(
+                          _videoController.value.isPlaying
+                              ? Icons.pause_circle
+                              : Icons.play_circle,
+                          color: CommonColors.secondaryColor,
+                          size: size(context).width * numD18,
+                        ),
+                      ),
+
+                      /// ⏩ Forward
+                      Positioned(
+                        right: size(context).width * numD04,
+                        child: IconButton(
+                          icon: Icon(Icons.forward_10,
+                              color: CommonColors.secondaryColor,
+                              size: size(context).width * numD1),
+                          onPressed: _seekForward,
+                        ),
+                      ),
+
+                      /// ⏳ Bottom Progress + Time
+                      Positioned(
+                        bottom: size(context).width * numD04,
+                        left: size(context).width * numD04,
+                        right: size(context).width * numD04,
+                        child: Column(
                           children: [
-                            Text(
-                              _formatDuration(
-                                  _videoController.value.position),
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 12),
+                            VideoProgressIndicator(
+                              _videoController,
+                              allowScrubbing: true,
+                              colors:  VideoProgressColors(
+                                playedColor: CommonColors.secondaryColor,
+                                bufferedColor: Colors.white54,
+                                backgroundColor: Colors.white30,
+                              ),
                             ),
-                            Text(
-                              _formatDuration(
-                                  _videoController.value.duration),
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 12),
-                            ),
+                            SizedBox(height: size(context).width * numD02),
+                            Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                CommonText(
+                                  text: _formatDuration(
+                                      _videoController.value.position),
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: size(context).width * numD03,
+                                ),
+
+                                CommonText(
+                                  text: _formatDuration(
+                                      _videoController.value.duration),
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: size(context).width * numD03,
+                                ),
+                              ],
+                            )
                           ],
-                        )
-                      ],
-                    ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

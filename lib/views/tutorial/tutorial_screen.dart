@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:free_style/views/tutorial/tutorial_cubit.dart';
 
 import '../../generated/assets.dart';
 import '../../routes/route.dart';
@@ -19,7 +21,10 @@ class TutorialScreen extends StatelessWidget {
     return Scaffold(
       appBar: CommonAppBar(title: "Tutorials",
       ),
-      body: Padding(
+      body: BlocBuilder<TutorialCubit, TutorialState>(
+  builder: (context, state) {
+    var cubit = context.read<TutorialCubit>();
+    return Padding(
         padding: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
         child: Column(
           crossAxisAlignment: .start,
@@ -69,13 +74,15 @@ class TutorialScreen extends StatelessWidget {
                     fontWeight: .bold,),
                   SizedBox(height: size(context).width * numD02),
                   ListView.builder(
-                    itemCount: 1,
+                    itemCount: cubit.tutorialsList.length,
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, idx) {
+                      var item = cubit.tutorialsList[idx];
                       return InkWell(
                           onTap: (){
-                            router.push(AppRouter.tutorialDetailScreen);
+                            router.push(AppRouter.tutorialVideoDetailScreen,
+                                extra: {"id": item.id, "skill_id": cubit.skillId});
                           },
                           child: Container(
                             decoration: commonBgColorDecoration(size(context).width * numD03, CommonColors.themeDarkColor),
@@ -100,10 +107,10 @@ class TutorialScreen extends StatelessWidget {
                                     crossAxisAlignment: .start,
                                     children: [
                                       CommonText(
-                                        text: "Mastering the Basic Juggling Rythm",
+                                        text: item.displayTitle,
                                         fontSize: size(context).width * numD04,
                                       ), CommonText(
-                                        text: "Basics . In Progress",
+                                        text: "Basics",
                                         color: Colors.grey,
                                         fontSize: size(context).width * numD035,
                                       ),
@@ -117,7 +124,7 @@ class TutorialScreen extends StatelessWidget {
                     },
                   ),
 
-                  SizedBox(height: size(context).width * numD04),
+                 /* SizedBox(height: size(context).width * numD04),
                   CommonText(text:"Recommended for You",
                     fontSize: size(context).width * numD04,
                     fontWeight: .bold,),
@@ -171,14 +178,16 @@ class TutorialScreen extends StatelessWidget {
                           )
                       );
                     },
-                  ),
+                  ),*/
                 ],
               ),
             )),
 
           ],
         ),
-      ),
+      );
+  },
+),
     );
   }
 }

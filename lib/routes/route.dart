@@ -27,7 +27,6 @@ import 'package:free_style/views/match_making/match_making_screen.dart';
 import 'package:free_style/views/mission/mission_cubit.dart';
 import 'package:free_style/views/mission/preview_submission_screen.dart';
 import 'package:free_style/views/mission/record_video_screen.dart';
-import 'package:free_style/views/mission/submit_proof_screen.dart';
 import 'package:free_style/views/notifications/notification_cubit.dart';
 import 'package:free_style/views/notifications/notification_screen.dart';
 import 'package:free_style/views/otp_verification/otp_verification_cubit.dart';
@@ -50,6 +49,7 @@ import 'package:free_style/views/skill_tree/skill_tree_cubit.dart';
 import 'package:free_style/views/social/social_cubit.dart';
 import 'package:free_style/views/social/social_screen.dart';
 import 'package:free_style/views/splash/splash_cubit.dart';
+import 'package:free_style/views/submit_proof/submit_proof_screen.dart';
 import 'package:free_style/views/training/training_cubit.dart';
 import 'package:free_style/views/tutorial/tutorial_cubit.dart';
 import 'package:free_style/views/tutorial/tutorial_details.dart';
@@ -80,6 +80,7 @@ import '../views/skill_state/skill_state_cubit.dart';
 import '../views/skill_state/skill_state_screen.dart';
 import '../views/skill_tree/skill_tree_screen.dart';
 import '../views/splash/splash_screen.dart';
+import '../views/submit_proof/submit_proof_cubit.dart';
 import '../views/training/training_screen.dart';
 import '../views/tutorial/tutorial_screen.dart';
 import '../views/tutorial/tutorial_vdo_details/tutorial_video_details.dart';
@@ -408,7 +409,12 @@ final GoRouter router = GoRouter(
       path: AppRouter.tutorialScreen,
       name: AppRouter.tutorialScreen,
       builder: (context, state) {
-        return BlocProvider(create: (_) => TutorialCubit(), child: TutorialScreen());
+        var data = state.extra as Map;
+        var skillId = data['id'] ?? "";
+        return BlocProvider(
+          create: (_) => TutorialCubit(skillId: skillId),
+          child: TutorialScreen(),
+        );
       },
     ),
 
@@ -468,8 +474,11 @@ final GoRouter router = GoRouter(
       path: AppRouter.tutorialVideoDetailScreen,
       name: AppRouter.tutorialVideoDetailScreen,
       builder: (context, state) {
+        var data = state.extra as Map;
+        var tutorialId = data['id'] ?? "";
+        var skillId = data['skill_id'] ?? "";
         return BlocProvider(
-          create: (_) => TutorialVdoDetailCubit(),
+          create: (_) => TutorialVdoDetailCubit(tutorialId: tutorialId, skillId: skillId),
           child: const TutorialVideoDetailScreen(),
         );
       },
@@ -504,7 +513,9 @@ final GoRouter router = GoRouter(
       path: AppRouter.submitProofScreen,
       name: AppRouter.submitProofScreen,
       builder: (context, state) {
-        return SubmitProofScreen();
+        var data = state.extra as Map;
+        var id = data['id'] ?? "";
+        return BlocProvider(create: (context) => SubmitProofCubit(id: id), child: SubmitProofScreen());
       },
     ),
     GoRoute(

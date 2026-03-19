@@ -160,6 +160,7 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
               : CommonAppBar(
                   title: state.selectedTitle ?? "",
                   showBack: false,
+
                   actions: [
                     if (state.selectedIndex == 3)
                       IconButton(

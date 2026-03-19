@@ -154,6 +154,7 @@ class SkillModel {
   String? createdAt;
   String? updatedAt;
   int? v;
+  bool? isUnLocked = false;
 
   SkillModel({
     this.id,
@@ -170,6 +171,7 @@ class SkillModel {
     this.tutorials,
     this.createdAt,
     this.updatedAt,
+    this.isUnLocked,
     this.v,
   });
 
@@ -197,14 +199,15 @@ class SkillModel {
     }
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    isUnLocked = json['unlocked']??false;
     v = json['__v'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = id;
-    data['branch_id'] = branchId;
-    data['tier_id'] = tierId;
+    data['branch_id'] = branchId??"";
+    data['tier_id'] = tierId??"";
     if (prerequisite != null) {
       data['prerequisite'] = prerequisite!.toJson();
     }
@@ -220,8 +223,9 @@ class SkillModel {
     if (tutorials != null) {
       data['tutorials'] = tutorials;
     }
-    data['created_at'] = createdAt;
-    data['updated_at'] = updatedAt;
+    data['created_at'] = createdAt??"";
+    data['unlocked'] = isUnLocked;
+    data['updated_at'] = updatedAt??"";
     data['__v'] = v;
     return data;
   }

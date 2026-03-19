@@ -8,6 +8,7 @@ import 'package:free_style/utils/common_widgets/linear_progress_indicator/custom
 import '../../generated/assets.dart';
 import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
+import '../../utils/common_video_recorder/video_recorder_widget.dart';
 import '../../utils/common_widgets/common_button/common_button.dart';
 import '../../utils/common_widgets/common_image/common_image.dart';
 
@@ -20,7 +21,15 @@ class RecordVideoScreen extends StatelessWidget {
       body: SizedBox(
         height: size(context).height,
         width: size(context).width,
-        child: Stack(
+        child: true ?
+        VideoRecorderWidget(maxDurationSecond: 15,
+        onVideoRecorded:(file){
+          debugPrint("onVideoRecorded::$file");
+        },
+        )
+
+
+            :Stack(
           children: [
             CommonImage(
               imagePath: Assets.assetsDummyPlay2,
