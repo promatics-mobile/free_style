@@ -87,6 +87,7 @@ class _TutorialVideoDetailScreenState extends State<TutorialVideoDetailScreen> {
                                 size: size(context).width * numD05,
                               ),
                               SizedBox(width: size(context).width * numD01),
+                              cubit.tutorialModel!.internalUrl !=null?
                               FutureBuilder<Duration>(
                                 future: getVideoDuration(cubit.tutorialModel!.internalUrl!.getFileUrl(mediaBaseUrl),),
                                 builder: (context, snapshot) {
@@ -111,6 +112,11 @@ class _TutorialVideoDetailScreenState extends State<TutorialVideoDetailScreen> {
                                     color: Colors.grey,
                                   );
                                 },
+                              ) :
+                              CommonText(
+                                text: "N/A",
+                                fontSize: size(context).width * numD035,
+                                color: Colors.grey,
                               )
 
                             ],
@@ -270,9 +276,11 @@ class _TutorialVideoDetailScreenState extends State<TutorialVideoDetailScreen> {
                           Expanded(
                             child: CommonButton(
                               onTap: () {
-                                router.push(AppRouter.submitProofScreen,extra: {"id": cubit.skillId});
+                                router.push(AppRouter.submitProofScreen,extra: {"id": cubit.skillId,"type": "skill_tree"}).then((_){
+                                  cubit.callSkillDetailsApi(cubit.skillId);
+                                });
                               },
-                              text: "Go to missions",
+                              text: "Submit Proof",
                             ),
                           ),
                         ],

@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:free_style/utils/common_constants.dart';
 import 'package:free_style/utils/common_decorations/common_decorations.dart';
+import 'package:free_style/utils/common_methods.dart';
 import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
+import 'package:free_style/utils/common_widgets/common_refresh_indicator/common_refresh_indicator.dart';
 import 'package:free_style/utils/common_widgets/common_text/common_text.dart';
+import 'package:free_style/views/challenge_history/challenge_history_cubit.dart';
+
+import '../../generated/assets.dart';
+import '../../utils/common_widgets/common_image/common_image.dart';
+import '../dialy_challenge/daily_challenge_cubit.dart';
 
 class ChallengeHistoryScreen extends StatelessWidget {
   const ChallengeHistoryScreen({super.key});
@@ -12,34 +20,47 @@ class ChallengeHistoryScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: CommonColors.themeColor,
       appBar: const CommonAppBar(title: "Challenge History"),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(size(context).width * numD04),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildTodayChallenge(context),
-            SizedBox(height: size(context).width * numD05),
-            CommonText(
-              text: "Past Challenge",
-              fontSize: size(context).width * numD04,
-              fontWeight: FontWeight.bold,
+      body: BlocBuilder<ChallengeHistoryCubit, ChallengeHistoryState>(
+        builder: (context, state) {
+          var cubit = context.read<ChallengeHistoryCubit>();
+          return CommonRefreshIndicator(
+            onRefresh: () async {
+              cubit.callDailyChallengeHistoryApi(isRefresh: true);
+            },
+            onLoadMore: () async {
+              cubit.callDailyChallengeHistoryApi();
+            },
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(size(context).width * numD04),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if(cubit.currentChallengeModel !=null)
+                  _buildTodayChallenge(context,cubit),
+                  if(cubit.currentChallengeModel !=null)
+                  SizedBox(height: size(context).width * numD05),
+                  CommonText(
+                    text: "Past Challenge",
+                    fontSize: size(context).width * numD04,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  SizedBox(height: size(context).width * numD04),
+                  _buildPastChallengesList(context, cubit),
+                ],
+              ),
             ),
-            SizedBox(height: size(context).width * numD04),
-            _buildPastChallengesList(context),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildTodayChallenge(BuildContext context) {
+  Widget _buildTodayChallenge(BuildContext context, ChallengeHistoryCubit cubit) {
+    var statusUI = getStatusUI(cubit.currentChallengeModel!.submission!.status);
     return Container(
       width: size(context).width,
       padding: EdgeInsets.all(size(context).width * numD04),
-      decoration: commonBgColorDecoration(
-        size(context).width * numD04,
-        Colors.white,
-      ),
+      decoration: commonBgColorDecoration(size(context).width * numD04, Colors.white),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -63,14 +84,15 @@ class ChallengeHistoryScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
+
                     Icon(
-                      Icons.access_time,
+                      statusUI.icon,
                       size: size(context).width * numD035,
-                      color: Colors.orange,
+                      color: statusUI.iconColor,
                     ),
                     SizedBox(width: size(context).width * numD01),
                     CommonText(
-                      text: "In Review",
+                      text: cubit.currentChallengeModel!.submission!.status.toCapitalize(),
                       color: Colors.orange,
                       fontSize: size(context).width * numD03,
                       fontWeight: FontWeight.bold,
@@ -82,69 +104,89 @@ class ChallengeHistoryScreen extends StatelessWidget {
           ),
           SizedBox(height: size(context).width * numD02),
           CommonText(
-            text: "Technical Trio",
+            text: cubit.currentChallengeModel!.skills.first.name,
             color: Colors.black,
             fontSize: size(context).width * numD055,
             fontWeight: FontWeight.bold,
           ),
           SizedBox(height: size(context).width * numD02),
           Row(
+            mainAxisAlignment: .start,
+            crossAxisAlignment: .start,
             children: [
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: size(context).width * numD02,
-                  vertical: size(context).width * numD005,
-                ),
-                decoration: commonBgColorDecoration(
-                  size(context).width * numD01,
-                  const Color(0xFFF0F2FF),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.bolt,
-                      size: size(context).width * numD035,
-                      color: Colors.blue,
+              Column(
+                crossAxisAlignment: .start,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: size(context).width * numD02,
+                      vertical: size(context).width * numD005,
                     ),
-                    CommonText(
-                      text: "+150 XP",
-                      color: Colors.blue,
-                      fontSize: size(context).width * numD03,
-                      fontWeight: FontWeight.bold,
+                    decoration: commonBgColorDecoration(
+                      size(context).width * numD01,
+                      const Color(0xFFF0F2FF),
                     ),
-                  ],
-                ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.bolt, size: size(context).width * numD035, color: Colors.blue),
+                        CommonText(
+                          text: "+${cubit.currentChallengeModel!.rewards.xp} XP",
+                          color: Colors.blue,
+                          fontSize: size(context).width * numD03,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: size(context).width * numD02),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: size(context).width * numD02,
+                      vertical: size(context).width * numD005,
+                    ),
+                    decoration: commonBgColorDecoration(
+                      size(context).width * numD01,
+                      CommonColors.secondaryLightColor,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.all(size(context).width * numD005),
+                          child: CommonImage(
+                            imagePath: Assets.iconsIcGoldCoin,
+                            height: size(context).width * numD03,
+                            width: size(context).width * numD03,
+                            isNetwork: false,
+                          ),
+                        ),
+                        CommonText(
+                          text: "+${cubit.currentChallengeModel!.rewards.coin} Coins",
+                          color: Colors.black,
+                          fontSize: size(context).width * numD03,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
+
               SizedBox(width: size(context).width * numD02),
-              const CommonText(
-                text: "• Blue Tier Combo",
-                color: Colors.grey,
-              ),
+              CommonText(text: "• ${cubit.currentChallengeModel!.tier.name}",
+                  fontSize: size(context).width * numD03,
+                  color: Colors.grey),
             ],
           ),
           SizedBox(height: size(context).width * numD06),
-          _buildProgressStepper(context),
+          _buildProgressStepper(context,cubit),
           SizedBox(height: size(context).width * numD04),
-          Row(
-            children: [
-              Icon(
-                Icons.info_outline,
-                size: size(context).width * numD04,
-                color: Colors.grey,
-              ),
-              SizedBox(width: size(context).width * numD01),
-              const CommonText(
-                text: "Estimated review time: < 2 hours",
-                color: Colors.grey,
-              ),
-            ],
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildProgressStepper(BuildContext context) {
+  Widget _buildProgressStepper(BuildContext context, ChallengeHistoryCubit cubit) {
+    var status = cubit.currentChallengeModel!.submission!.status;
     return Column(
       children: [
         Row(
@@ -152,9 +194,13 @@ class ChallengeHistoryScreen extends StatelessWidget {
           children: [
             _buildStepIcon(context, Icons.check, Colors.green, true),
             Expanded(child: _buildConnector(context, true)),
-            _buildStepIcon(context, Icons.star_border, Colors.blue, false),
+            _buildStepIcon(context,
+                status == "review" ? Icons.check:
+                Icons.star_border, Colors.blue, false),
             Expanded(child: _buildConnector(context, false)),
-            _buildStepIcon(context, Icons.assignment_outlined, Colors.orange, false),
+            _buildStepIcon(context,
+                status == "approved" ?Icons.check:
+                Icons.assignment_outlined, Colors.orange, false),
           ],
         ),
         SizedBox(height: size(context).width * numD02),
@@ -206,65 +252,28 @@ class ChallengeHistoryScreen extends StatelessWidget {
   }
 
   Widget _buildConnector(BuildContext context, bool isActive) {
-    return Container(
-      height: 2,
-      color: isActive ? Colors.grey.shade300 : Colors.grey.shade200,
-    );
+    return Container(height: 2, color: isActive ? Colors.grey.shade300 : Colors.grey.shade200);
   }
 
-  Widget _buildPastChallengesList(BuildContext context) {
-    final List<Map<String, dynamic>> challenges = [
-      {
-        "date": "24",
-        "month": "OCT",
-        "title": "Around the World",
-        "xp": "Earned 50 XP",
-        "icon": Icons.check,
-        "iconColor": Colors.green,
-        "status": "success",
-      },
-      {
-        "date": "23",
-        "month": "OCT",
-        "title": "Around the World",
-        "xp": "No Reward",
-        "icon": Icons.close,
-        "iconColor": Colors.red,
-        "status": "failed",
-        "error": "Video was too dark. Please ensure good lighting.",
-      },
-      {
-        "date": "22",
-        "month": "OCT",
-        "title": "Header Stall",
-        "xp": "Missed",
-        "icon": Icons.remove,
-        "iconColor": Colors.grey,
-        "status": "missed",
-      },
-      {
-        "date": "21",
-        "month": "OCT",
-        "title": "Basic Juggling",
-        "xp": "Earned 30 XP",
-        "icon": Icons.check,
-        "iconColor": Colors.green,
-        "status": "success",
-      },
-    ];
+  Widget _buildPastChallengesList(BuildContext context, ChallengeHistoryCubit cubit) {
+
+    if(cubit.challengeHistoryList.isEmpty){
+      return SizedBox(
+          height: size(context).width,
+          width: size(context).width,
+          child: Center(child: CommonText(text: "No Data Found",)));
+    }
 
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: challenges.length,
+      itemCount: cubit.challengeHistoryList.length,
       separatorBuilder: (context, index) => SizedBox(height: size(context).width * numD04),
       itemBuilder: (context, index) {
-        final challenge = challenges[index];
+        final item = cubit.challengeHistoryList[index];
+        final statusUI = getStatusUI(item.status);
         return Container(
-          decoration: commonBgColorDecoration(
-            size(context).width * numD04,
-            Colors.white,
-          ),
+          decoration: commonBgColorDecoration(size(context).width * numD04, Colors.white),
           child: Column(
             children: [
               Padding(
@@ -274,13 +283,14 @@ class ChallengeHistoryScreen extends StatelessWidget {
                     Column(
                       children: [
                         CommonText(
-                          text: challenge["date"],
+                          text: cubit.getDay(item.createdAt),
                           color: Colors.black,
                           fontSize: size(context).width * numD05,
                           fontWeight: FontWeight.bold,
                         ),
+
                         CommonText(
-                          text: challenge["month"],
+                          text: cubit.getMonthShort(item.createdAt),
                           color: Colors.black,
                           fontSize: size(context).width * numD03,
                           fontWeight: FontWeight.bold,
@@ -293,51 +303,52 @@ class ChallengeHistoryScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CommonText(
-                            text: challenge["title"],
+                            text: item.type,
                             color: Colors.black,
                             fontSize: size(context).width * numD045,
                             fontWeight: FontWeight.bold,
                           ),
                           CommonText(
-                            text: challenge["xp"],
-                            color: challenge["status"] == "failed" ? Colors.red : Colors.grey,
+                            text: item.status.toCapitalize(),
+                            color: item.status == "failed" ? Colors.red : Colors.grey,
                             fontSize: size(context).width * numD035,
                           ),
                         ],
                       ),
                     ),
+
                     CircleAvatar(
                       radius: size(context).width * numD04,
-                      backgroundColor: challenge["iconColor"].withOpacity(0.1),
+                      backgroundColor: statusUI.bgColor,
                       child: Icon(
-                        challenge["icon"],
-                        color: challenge["iconColor"],
+                        statusUI.icon,
+                        color: statusUI.iconColor,
                         size: size(context).width * numD05,
                       ),
                     ),
                   ],
                 ),
               ),
-              if (challenge["error"] != null)
+              if (item.adminFeedback.toString().isNotEmpty)
                 Container(
                   margin: EdgeInsets.all(size(context).width * numD02),
                   padding: EdgeInsets.all(size(context).width * numD03),
                   decoration: commonBgColorDecoration(
                     size(context).width * numD02,
-                    const Color(0xFFFFF1F0),
+                    statusUI.bgColor,
                   ),
                   child: Row(
                     children: [
                       Icon(
-                        Icons.info_outline,
-                        color: Colors.red,
+                        statusUI.icon,
+                        color: statusUI.iconColor,
                         size: size(context).width * numD05,
                       ),
                       SizedBox(width: size(context).width * numD02),
                       Expanded(
                         child: CommonText(
-                          text: challenge["error"],
-                          color: Colors.red,
+                          text: item.adminFeedback,
+                          color: statusUI.iconColor,
                           fontSize: size(context).width * numD03,
                         ),
                       ),

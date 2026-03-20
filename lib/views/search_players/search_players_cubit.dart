@@ -72,6 +72,7 @@ class SearchPlayersCubit extends Cubit<SearchPlayersState> implements NetworkRes
   }
 
   void callPlayerListApi({bool isRefresh = false, bool isShowLoader = false}) {
+    debugPrint("Here:::$isLastPage $isLoadMore $isLoading");
     if (isRefresh) {
       offset = 0;
       isLastPage = false;
@@ -119,15 +120,10 @@ class SearchPlayersCubit extends Cubit<SearchPlayersState> implements NetworkRes
               .where((user) => user.sId != currentUserId)
               .toList();
 
-          if (newPlayers.length < limit) {
-            isLastPage = true;
-          }
-
-          final updatedList = [...state.userList, ...newPlayers];
-
+          state.userList.addAll(newPlayers);
           offset += newPlayers.length;
 
-          emit(state.copyWith(userList: updatedList));
+          emit(state.copyWith(userList: state.userList));
         }
 
         break;

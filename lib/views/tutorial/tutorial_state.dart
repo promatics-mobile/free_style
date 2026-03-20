@@ -36,7 +36,7 @@ class TutorialModel {
       externalUrl: json['externel_url'] ?? '',
       internalUrl: json['internal_url'] != null
           ? InternalMediaModel.fromJson(json['internal_url'])
-          : json['internal_url'] ?? "",
+          : null,
       steps: (json['steps'] as List<dynamic>? ?? []).map((e) => StepModel.fromJson(e)).toList(),
       isActive: json['is_active'] ?? false,
       createdAt: DateTime.tryParse(json['created_at'] ?? '') ?? DateTime.now(),

@@ -13,6 +13,7 @@ class SearchPlayersState {
 
 class PlayerModel {
   String? sId;
+  String? relationId;
   String? name;
   String? userName;
   int? xp;
@@ -44,8 +45,9 @@ class PlayerModel {
     this.playerRanking,
   });
 
-  PlayerModel.fromJson(Map<String, dynamic> json) {
+  PlayerModel.fromJson(Map<String, dynamic> json, {String? rId}) {
     sId = json['_id'];
+    relationId = rId??"";
     name = json['name'];
     userName = json['user_name'];
     xp = json['xp'];
@@ -75,6 +77,7 @@ class PlayerModel {
     data['user_name'] = userName;
     data['xp'] = xp;
     data['level'] = level;
+    data['relation_status'] = relationStatus;
     data['created_at'] = createdAt;
 
     // if (avatar != null) {
@@ -88,3 +91,5 @@ class PlayerModel {
     return data;
   }
 }
+
+

@@ -1,4 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:free_style/utils/common_widgets/loaders/common_loader.dart';
+import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../generated/assets.dart';
 import '../../routes/route.dart';
@@ -10,216 +15,234 @@ import '../../utils/common_widgets/common_image/common_image.dart';
 import '../../utils/common_widgets/common_text/common_text.dart';
 import '../../utils/common_widgets/linear_progress_indicator/custom_linear_progress.dart';
 
-class PreviewSubmissionScreen extends StatelessWidget {
-  const PreviewSubmissionScreen({super.key});
+class PreviewSubmissionScreen extends StatefulWidget {
+  final String videoPath;
+  final bool isNetwork;
+
+  const PreviewSubmissionScreen({super.key, required this.videoPath, this.isNetwork = false});
+
+  @override
+  State<PreviewSubmissionScreen> createState() => _PreviewSubmissionScreenState();
+}
+
+class _PreviewSubmissionScreenState extends State<PreviewSubmissionScreen> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = widget.isNetwork
+        ? VideoPlayerController.networkUrl(Uri.parse(widget.videoPath))
+        : VideoPlayerController.file(File(widget.videoPath));
+
+    _controller.initialize().then((_) {
+      setState(() {});
+    });
+
+    _controller.addListener(() {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  String format(Duration d) {
+    final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return "$m:$s";
+  }
 
   @override
   Widget build(BuildContext context) {
+    final width = size(context).width;
+
     return Scaffold(
-      body: SizedBox(
-        height: size(context).height,
-        width: size(context).width,
-        child: Stack(
-          children: [
-            CommonImage(
-              imagePath: Assets.assetsDummyPlay2,
-              width: size(context).width,
-              height: size(context).height,
-              isNetwork: false,
-              fit: BoxFit.cover,
-            ),
+      body: _controller.value.isInitialized
+          ? VisibilityDetector(
+              key: Key(widget.videoPath),
+              onVisibilityChanged: (info) {
+                final visiblePercentage = info.visibleFraction * 100;
 
-            Positioned(
-                left: size(context).width * numD04,
-                top: size(context).width * numD07,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                if (visiblePercentage > 50) {
+                  /// ▶️ PLAY when mostly visible
+                  if (!_controller.value.isPlaying) {
+                    _controller.play();
+                  }
+                } else {
+                  /// ⏸ PAUSE when not visible
+                  if (_controller.value.isPlaying) {
+                    _controller.pause();
+                  }
+                }
+              },
+              child: SizedBox(
+                height: size(context).height,
+                width: width,
+                child: Stack(
                   children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.arrow_back,color: Colors.white,),
-                          onPressed: () => router.pop(),
+                    /// 🎥 VIDEO BACKGROUND
+                    SizedBox.expand(
+                      child: FittedBox(
+                        fit: BoxFit.cover,
+                        child: SizedBox(
+                          width: _controller.value.size.width,
+                          height: _controller.value.size.height,
+                          child: VideoPlayer(_controller),
                         ),
-                        CommonText(text: "Preview Submission",
-                          fontSize: size(context).width * numD045,
-                          fontWeight: FontWeight.bold,),
-                      ],
-                    ),
-                    Container(
-                      decoration: commonBgColorDecoration(size(context).width * numD03, Colors.black38),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: size(context).width * numD03,
-                          vertical: size(context).width * numD01,
                       ),
-                      margin: EdgeInsets.only(left: size(context).width * numD03),
-                      child: Row(
+                    ),
+
+                    /// 🔝 TOP UI
+                    Positioned(
+                      left: width * numD04,
+                      top: width * numD07,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CircleAvatar(
-                            radius: size(context).width * numD012,
-                            backgroundColor: Colors.red,
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                                onPressed: () => router.pop(),
+                              ),
+                              CommonText(
+                                text: "Preview Submission",
+                                fontSize: width * numD045,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ],
                           ),
-                          CommonText(
-                            text:
-                            " Battle vs Kim Skatter ${CommonSymbol.dotSymbol} 14h 23m Left",
-                            fontSize: size(context).width * numD028,
-                            color: Colors.grey,
-                          ),
+                          /*Container(
+                            decoration: commonBgColorDecoration(width * numD03, Colors.black38),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: width * numD03,
+                              vertical: width * numD01,
+                            ),
+                            margin: EdgeInsets.only(left: width * numD03),
+                            child: Row(
+                              children: [
+                                CircleAvatar(radius: width * numD012, backgroundColor: Colors.red),
+                                CommonText(
+                                  text: " Battle vs Kim Skatter ${CommonSymbol.dotSymbol} 14h 23m Left",
+                                  fontSize: width * numD028,
+                                  color: Colors.grey,
+                                ),
+                              ],
+                            ),
+                          ),*/
                         ],
                       ),
                     ),
 
-
-                  ],
-                )),
-
-
-
-            /*Positioned(
-                right: size(context).width * numD04,
-                top: size(context).width * numD07,
-                child: IconButton(
-                  icon: const Icon(Icons.more_horiz_rounded,color: Colors.white,),
-                  onPressed: () => router.pop(),
-                )),*/
-
-
-
-            Center(
-              child: Container(
-                  width: size(context).width * numD15,
-                  height: size(context).width * numD15,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(size(context).width * numD1),
-                    gradient:  LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.grey.shade700,
-                        Color(0xFF1F1C3A),
-                        CommonColors.themeColor
-                      ],
-                      stops: const [
-                        0.0,
-                        0.8,
-                        1.0,
-                      ],
-                    ),
-                    border: Border.all(
-                      color: CommonColors.buttonColor.withValues(alpha: 0.5),
-                      width: 1,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: CommonColors.buttonColor.withValues(alpha: 0.3),
-                        blurRadius: 10,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
-                  padding: EdgeInsets.all(size(context).width * numD04),
-                  child: CommonImage(imagePath: Assets.iconsIcPlay,
-                    isNetwork: false,
-                  )
-              ),
-            ),
-
-            Positioned(
-                bottom: size(context).width * numD04,
-                left:size(context).width * numD04,
-                right: size(context).width * numD04,
-                child: Column(
-                  crossAxisAlignment: .start,
-                  children: [
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CommonText(text: "00:14",color: Colors.white,),
-                        CommonText(text: "00:30",color: Colors.white,),
-                      ],
-                    ),
-
-                    SizedBox(height: size(context).width * numD04),
-                    commonNormalLinearProgress(context: context, value: 0.4, bgColor: Colors.white, valueColor: CommonColors.buttonColor),
-                    SizedBox(height: size(context).width * numD04),
-
-                    Row(
-                      children: [
-                        Expanded(
-                            child: CommonGradientButton(text: "Retake", onTap: (){
-
-                              router.push(AppRouter.previewSubmissionScreen);
-
-                            })),
-                        SizedBox(width: size(context).width * numD04),
-
-                        Expanded(
-                            flex: 2,
-                            child: CommonButton(text: "Submit Video", onTap: (){
-                              router.pop();
-                            })),
-                      ],
-                    ),
-                    SizedBox(height: size(context).width * numD04),
-
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(size(context).width * numD03),
-                        gradient:  LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.grey.shade700,
-                            Color(0xFF1F1C3A),
-                            CommonColors.themeColor
-                          ],
-                          stops: const [
-                            0.0,
-                            0.8,
-                            1.0,
-                          ],
+                    /// ▶️ PLAY BUTTON
+                    if (!_controller.value.isPlaying)
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            _controller.play();
+                            setState(() {});
+                          },
+                          child: Container(
+                            width: width * numD15,
+                            height: width * numD15,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(width),
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.grey.shade700,
+                                  const Color(0xFF1F1C3A),
+                                  CommonColors.themeColor,
+                                ],
+                              ),
+                            ),
+                            padding: EdgeInsets.all(width * numD04),
+                            child: CommonImage(imagePath: Assets.iconsIcPlay, isNetwork: false)
+                          ),
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: CommonColors.buttonColor.withValues(alpha: 0.3),
-                            blurRadius: 10,
-                            spreadRadius: 1,
-                          ),
-                        ],
                       ),
-                      padding: EdgeInsets.all(size(context).width * numD02),
-                      child: Row(
-                        crossAxisAlignment: .start,
+
+                    /// ⏬ BOTTOM CONTROLS
+                    Positioned(
+                      bottom: width * numD04,
+                      left: width * numD04,
+                      right: width * numD04,
+                      child: Column(
                         children: [
-                          Icon(Icons.info_outline,color: Colors.white),
-                          SizedBox(
-                            width: size(context).width * numD02,
+                          /// ⏱ TIME
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CommonText(
+                                text: format(_controller.value.position),
+                                color: Colors.white,
+                              ),
+                              CommonText(
+                                text: format(_controller.value.duration),
+                                color: Colors.white,
+                              ),
+                            ],
                           ),
 
-                          Expanded(
-                            child: CommonText(
-                              text: "Submitting will lock in your attempt. Ensure your trick is completely visible within the 15-second limit.",
-                              fontSize:
-                              size(context).width * numD035,
+                          SizedBox(height: width * numD04),
+
+                          /// 📊 PROGRESS
+                          commonNormalLinearProgress(
+                            context: context,
+                            value: _controller.value.duration.inSeconds == 0
+                                ? 0
+                                : _controller.value.position.inSeconds /
+                                      _controller.value.duration.inSeconds,
+                            bgColor: Colors.white,
+                            valueColor: CommonColors.buttonColor,
+                          ),
+
+                          SizedBox(height: width * numD04),
+
+
+                          /// ℹ️ INFO BOX
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(width * numD03),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.grey.shade700,
+                                  const Color(0xFF1F1C3A),
+                                  CommonColors.themeColor,
+                                ],
+                              ),
+                            ),
+                            padding: EdgeInsets.all(width * numD02),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(Icons.info_outline, color: Colors.white),
+                                SizedBox(width: width * numD02),
+                                Expanded(
+                                  child: CommonText(
+                                    text:
+                                        "Ensure your trick is completely visible without any cuts.",
+                                    fontSize: width * numD035,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: size(context).width * numD04),
-
-
-
-
-
-
                   ],
-                )),
-          ],
-        ),
-      ),
+                ),
+              ),
+            )
+          : const Center(child: CommonLoader()),
     );
   }
 }

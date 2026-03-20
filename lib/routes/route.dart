@@ -5,6 +5,7 @@ import 'package:free_style/views/battle_victory/battle_victory_screen.dart';
 import 'package:free_style/views/battles/battles_cubit.dart';
 import 'package:free_style/views/battles/battles_screen.dart';
 import 'package:free_style/views/challenge_approved/challenge_approved_screen.dart';
+import 'package:free_style/views/challenge_history/challenge_history_cubit.dart';
 import 'package:free_style/views/challenge_history/challenge_history_screen.dart';
 import 'package:free_style/views/chat_conversation/conversation_cubit.dart';
 import 'package:free_style/views/chat_conversation/conversation_screen.dart';
@@ -458,7 +459,12 @@ final GoRouter router = GoRouter(
       path: AppRouter.dailyChallenge,
       name: AppRouter.dailyChallenge,
       builder: (context, state) {
-        return BlocProvider(create: (_) => DailyChallengeCubit(), child: DailyChallengeScreen());
+        var data = state.extra as Map;
+        var id = data['id'] ?? "";
+        return BlocProvider(
+          create: (_) => DailyChallengeCubit(id: id),
+          child: DailyChallengeScreen(),
+        );
       },
     ),
     GoRoute(
@@ -489,7 +495,10 @@ final GoRouter router = GoRouter(
       path: AppRouter.challengeHistoryScreen,
       name: AppRouter.challengeHistoryScreen,
       builder: (context, state) {
-        return ChallengeHistoryScreen();
+        return BlocProvider(
+          create: (context) => ChallengeHistoryCubit(),
+          child: ChallengeHistoryScreen(),
+        );
       },
     ),
     GoRoute(
@@ -515,7 +524,11 @@ final GoRouter router = GoRouter(
       builder: (context, state) {
         var data = state.extra as Map;
         var id = data['id'] ?? "";
-        return BlocProvider(create: (context) => SubmitProofCubit(id: id), child: SubmitProofScreen());
+        var type = data['type'] ?? "";
+        return BlocProvider(
+          create: (context) => SubmitProofCubit(id: id, type: type),
+          child: SubmitProofScreen(),
+        );
       },
     ),
     GoRoute(
@@ -523,7 +536,10 @@ final GoRouter router = GoRouter(
       path: AppRouter.previewSubmissionScreen,
       name: AppRouter.previewSubmissionScreen,
       builder: (context, state) {
-        return PreviewSubmissionScreen();
+        var data = state.extra as Map;
+        var videoPath = data['videoPath'] ?? "";
+        var isNetwork = data['isNetwork'] ?? "";
+        return PreviewSubmissionScreen(videoPath: videoPath, isNetwork: isNetwork);
       },
     ),
 

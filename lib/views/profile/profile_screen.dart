@@ -90,12 +90,19 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                       )
                     ],
                   ),
-                  SizedBox(height: size(context).width * numD02),
+
                   CommonText(
                     text: cubit.userModel!.name ?? "",
                     fontWeight: FontWeight.bold,
                     fontSize: size(context).width * numD05,
                   ),
+                  CommonText(
+                    text: cubit.userModel!.userName ?? "",
+                    fontWeight: FontWeight.w400,
+                    fontSize: size(context).width * numD03,
+                  ),
+                  SizedBox(height: size(context).width * numD01),
+
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -183,7 +190,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                       ),
                     ],
                   ),
-                  SizedBox(height: size(context).width * numD05),
+                  SizedBox(height: size(context).width * numD03),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -192,7 +199,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                       _buildStatColumn(cubit.userModel!.battles.toString(), "BATTLES"),
                     ],
                   ),
-                  SizedBox(height: size(context).width * numD05),
+                  SizedBox(height: size(context).width * numD04),
                   Container(
                       decoration: commonBgColorDecoration(
                           size(context).width * numD04, CommonColors.secondaryColor),

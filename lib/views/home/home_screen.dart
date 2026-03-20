@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:free_style/generated/assets.dart';
 import 'package:free_style/utils/common_constants.dart';
 import 'package:free_style/utils/common_decorations/common_decorations.dart';
+import 'package:free_style/utils/common_methods.dart';
 import 'package:free_style/utils/common_widgets/common_image/common_image.dart';
 import 'package:free_style/utils/common_widgets/common_text/common_text.dart';
 import 'package:free_style/utils/common_widgets/loaders/common_loader.dart';
@@ -11,8 +12,21 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../../routes/route.dart';
 import '../../utils/common_widgets/linear_progress_indicator/custom_linear_progress.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<HomeCubit>().callGetDailyChallengeApi();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -85,60 +99,84 @@ class HomeScreen extends StatelessWidget {
             ),
             SizedBox(height: size(context).width * numD04,),
 
+            if(cubit.currentChallengeModel !=null)
             CommonText(text: "Live Activity",
               fontWeight: FontWeight.bold,
               fontSize: size(context).width * numD04,),
             SizedBox(height: size(context).width * numD04,),
+            if(cubit.currentChallengeModel !=null)
             SizedBox(
-              height: size(context).width * numD28,
+              height: size(context).width * numD30,
               width: size(context).width,
-              child: ListView.builder(
-                  itemCount: 3,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context,idx){
+              child: InkWell(
+                onTap: (){
+                  router.push(AppRouter.dailyChallenge,
+                      extra: {"id":cubit.currentChallengeModel!.id});
+                },
+                child: Container(
+                  decoration: commonBgColorDecoration(size(context).width * numD03, Colors.orange.shade50,),
+                  width: size(context).width/1.5,
+                  padding: EdgeInsets.all(size(context).width * numD04),
+                  margin: EdgeInsets.symmetric(horizontal: size(context).width * numD02),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: .spaceBetween,
+                        children: [
+                          CommonText(text:"Daily Goal",
+                            color: Colors.grey,
+                            fontSize: size(context).width * numD035,),
+                          CommonImage(imagePath: Assets.iconsIcSuitcase,
+                            width: size(context).width * numD05,
+                            height: size(context).width * numD05,
+                            isNetwork: false,),
+                        ],
+                      ),
+                      Spacer(),
+                      StreamBuilder<int>(
+                        stream: cubit.timerStream(),
+                        builder: (context, snapshot) {
+                          final challenge = cubit.currentChallengeModel;
+                          if (challenge == null) return SizedBox();
+                          return CommonText(
+                            text: "Ends in ${formatRemaining(challenge.remainingTime)}",
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                            fontSize: size(context).width * numD04,
+                          );
+                        },
+                      ),
 
-                return InkWell(
-                  onTap: (){
-                    router.push(AppRouter.dailyChallenge);
-                  },
-                  child: Container(
-                    decoration: commonBgColorDecoration(size(context).width * numD03, Colors.orange.shade50,),
-                    width: size(context).width/1.5,
-                    padding: EdgeInsets.all(size(context).width * numD04),
-                    margin: EdgeInsets.symmetric(horizontal: size(context).width * numD02),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      SizedBox(height: size(context).width * numD01),
+                      commonNormalLinearProgress(
+                          context: context,
+                          value: 0.8,
+                          bgColor: Colors.grey,
+                          valueColor: CommonColors.buttonColor),
+
+                      SizedBox(height: size(context).width * numD02),
+                      if(cubit.currentChallengeModel!.submission != null)
                         Row(
-                          mainAxisAlignment: .spaceBetween,
                           children: [
-                            CommonText(text:"Daily Goal",
-                              color: Colors.grey,
+                            CommonText(text:"Review Status: ",
+                              color: Colors.black,
                               fontSize: size(context).width * numD035,),
-                            CommonImage(imagePath: Assets.iconsIcSuitcase,
-                              width: size(context).width * numD05,
-                              height: size(context).width * numD05,
-                              isNetwork: false,),
+                            Container(
+                              decoration: commonBgColorDecoration(size(context).width * numD02, CommonColors.secondaryColor),
+                              padding: EdgeInsets.symmetric(horizontal: size(context).width * numD02),
+                              child:  CommonText(text: cubit.currentChallengeModel!.submission!.status.toCapitalize(),
+                                  color: Colors.black,
+                                  fontSize:size(context).width * numD03),
+                            ),
                           ],
                         ),
-                        Spacer(),
-                        CommonText(text:"Ends in 4h 20m",
-                          color:Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontSize: size(context).width * numD04,),
-                        SizedBox(height: size(context).width * numD01),
-                        commonNormalLinearProgress(
-                            context: context,
-                            value: 0.8,
-                            bgColor: Colors.grey,
-                            valueColor: CommonColors.buttonColor),
 
-                      ],
-                    ),
-
+                    ],
                   ),
-                );
-              }),
+
+                ),
+              ),
             ),
             SizedBox(height: size(context).width * numD04,),
             CommonText(text: "Menu",

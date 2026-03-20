@@ -115,3 +115,15 @@ const unlockSkillReq = 36;
 
 const getSkillDetailsUrl = "user/fetchskilldetails/";
 const getSkillDetailsReq = 37;
+
+const getDailyChallengeUrl = "user/dashboard";
+const getDailyChallengeReq = 38;
+
+const dailyChallengeDetailsUrl = "user/challenge/";
+const dailyChallengeDetailsReq = 39;
+
+const submitDailyChallengeUrl = "user/submit-challenge";
+const submitDailyChallengeReq = 40;
+
+const dailyChallengeHistoryListUrl = "user/challenge-submissions";
+const dailyChallengeHistoryListReq = 41;

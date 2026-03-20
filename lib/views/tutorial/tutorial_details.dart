@@ -174,7 +174,7 @@ class TutorialDetailScreen extends StatelessWidget {
 
                             return InkWell(
                               onTap: (){
-                                router.push(AppRouter.dailyChallenge);
+                                //router.push(AppRouter.dailyChallenge);
                               },
                               child: Container(
                                 decoration: commonBgColorDecoration(size(context).width * numD03, Colors.orange.shade50,),
@@ -272,7 +272,7 @@ class TutorialDetailScreen extends StatelessWidget {
 
                     SizedBox(height: size(context).width * numD15),
                     CommonButton(onTap: (){
-                      router.push(AppRouter.tutorialVideoDetailScreen);
+                      //router.push(AppRouter.tutorialVideoDetailScreen);
 
                     }, text: "Start Tutorial"),
                     SizedBox(height: size(context).width * numD15),

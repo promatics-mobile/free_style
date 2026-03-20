@@ -28,19 +28,6 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
     SocialModel(name: "@Kim_skater", level: "Blue Tier 1", message: "Wants to battle!"),
   ];
 
-  List<SocialModel> pendingRequests = [
-    SocialModel(name: "@NeonNinja", level: "SILVER 1", message: ""),
-    SocialModel(name: "@Cryptoking", level: "GOLD 2", message: ""),
-  ];
-
-  List<SocialModel> myFriends = [
-    SocialModel(name: "@QueenBee", level: "GOLD 1", message: ""),
-    SocialModel(name: "@ViperStrike", level: "BRONZE 3", message: ""),
-    SocialModel(name: "@ShadowStriker", level: "PLATINUM 1", message: ""),
-    SocialModel(name: "@TrickMaster", level: "GOLD 1", message: ""),
-    SocialModel(name: "@SkatyCat", level: "SILVER 2", message: ""),
-  ];
-
   void acceptChallenge(int index) {
     incomingChallenges.removeAt(index);
     emit(state.copyWith());
@@ -48,22 +35,6 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
 
   void cancelChallenge(int index) {
     incomingChallenges.removeAt(index);
-    emit(state.copyWith());
-  }
-
-  void acceptRequest(int index) {
-    var user = pendingRequests.removeAt(index);
-    myFriends.add(user);
-    emit(state.copyWith());
-  }
-
-  void rejectRequest(int index) {
-    pendingRequests.removeAt(index);
-    emit(state.copyWith());
-  }
-
-  void removeFriend(int index) {
-    myFriends.removeAt(index);
     emit(state.copyWith());
   }
 
@@ -132,6 +103,7 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
     isLoadMore = false;
     switch (requestCode) {
       case getFriendListReq:
+        //log(response);
         var map = jsonDecode(response);
 
         if (map["success"] == true) {
@@ -140,7 +112,7 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
           final currentUserId = sharedPreferences.getString(PreferenceKeys.userIdKey) ?? "";
 
           final List<PlayerModel> friends = (data["friends"] as List? ?? [])
-              .map((e) => PlayerModel.fromJson(e["friend"]))
+              .map((e) => PlayerModel.fromJson(e["friend"], rId: e["_id"]))
               .where((user) => user.sId != currentUserId)
               .toList();
 
@@ -148,11 +120,6 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
               (data["pending_requests"] as List? ?? [])
                   .map((e) => PendingRequestModel.fromJson(e))
                   .toList();
-
-          /// ✅ Sent Requests (optional if you want later)
-          final List<PlayerModel> sentRequests = (data["sent_requests"] as List? ?? [])
-              .map((e) => PlayerModel.fromJson(e["recipient"]))
-              .toList();
 
           emit(state.copyWith(myFriends: friends, pendingRequests: pendingRequests));
         }

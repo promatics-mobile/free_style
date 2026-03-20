@@ -25,6 +25,7 @@ class RecordVideoScreen extends StatelessWidget {
         VideoRecorderWidget(maxDurationSecond: 15,
         onVideoRecorded:(file){
           debugPrint("onVideoRecorded::$file");
+          router.pop({"path" : file});
         },
         )
 

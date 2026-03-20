@@ -14,10 +14,8 @@ import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
 import '../../utils/common_decorations/common_decorations.dart';
 import '../../utils/common_widgets/app_bars/common_app_bar.dart';
-import '../../utils/common_widgets/common_button/common_short_button.dart';
 import '../../utils/common_widgets/common_image/common_image.dart';
 import '../../utils/common_widgets/common_text/common_text.dart';
-import '../../utils/common_widgets/linear_progress_indicator/custom_linear_progress.dart';
 
 class SubmitProofScreen extends StatelessWidget {
   const SubmitProofScreen({super.key});
@@ -25,12 +23,14 @@ class SubmitProofScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: "Submit Proof", actions: [
-        /*IconButton(onPressed: (){
+      appBar: CommonAppBar(
+        title: "Submit Proof",
+        actions: [
+          /*IconButton(onPressed: (){
           router.push(AppRouter.challengeHistoryScreen);
         }, icon: Icon(Icons.history,color: Colors.white,))*/
-
-      ],),
+        ],
+      ),
       body: BlocBuilder<SubmitProofCubit, SubmitProofState>(
         builder: (context, state) {
           var cubit = context.read<SubmitProofCubit>();
@@ -86,120 +86,138 @@ class SubmitProofScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: size(context).width * numD02),*/
-                CommonText(
-                  text: "Mission",
-                  color: Colors.grey,
-                  fontSize: size(context).width * numD035,
-                ),
-                SizedBox(height: size(context).width * numD02),
-                CommonText(
-                  text: "ATW Endurance",
-                  fontWeight: .bold,
-                  fontSize:
-                  size(context).width * numD04,
-                ),
 
-                CommonText(
-                  text: "Requirement: 20 consecutive Around the worlds",
-                  fontSize:
-                  size(context).width * numD035,
-                ),
+                if(cubit.missionName.isNotEmpty)...[
+                  CommonText(
+                    text: "Mission",
+                    color: Colors.grey,
+                    fontSize: size(context).width * numD035,
+                  ),
+                  SizedBox(height: size(context).width * numD02),
+                  CommonText(
+                    text: cubit.missionName,
+                    fontWeight: .bold,
+                    fontSize: size(context).width * numD04,
+                  ),
+
+                  CommonText(
+                    text: "Requirement: 20 consecutive Around the worlds",
+                    fontSize: size(context).width * numD035,
+                  ),
+                ],
+
                 SizedBox(height: size(context).width * numD04),
 
                 Stack(
                   alignment: Alignment.center,
                   children: [
-
-                    cubit.previewVideoThumbnailPath.isEmpty ?
-                    DottedBorder(
-                        options: RoundedRectDottedBorderOptions(color: Colors.white,
-                          radius: Radius.circular(size(context).width * numD02),),
-                        child: SizedBox(
-                          width: size(context).width,
-                          height: size(context).width / 4,
-                          child: Center(child: CommonText(text:"Select / Record a video")),)) :
-                    ClipRRect(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(size(context).width * numD02),
-                      ),
-                      child: Image.file(
-                        File(cubit.previewVideoThumbnailPath),
-                        width: size(context).width,
-                        height: size(context).width / 4,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    if(cubit.previewVideoThumbnailPath.isNotEmpty)
-                    Container(
-                        width: size(context).width * numD15,
-                        height: size(context).width * numD15,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(size(context).width * numD1),
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.grey.shade700,
-                              Color(0xFF1F1C3A),
-                              CommonColors.themeColor
-                            ],
-                            stops: const [
-                              0.0,
-                              0.8,
-                              1.0,
-                            ],
-                          ),
-                          border: Border.all(
-                            color: CommonColors.buttonColor.withValues(alpha: 0.5),
-                            width: 1,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: CommonColors.buttonColor.withValues(alpha: 0.3),
-                              blurRadius: 10,
-                              spreadRadius: 1,
+                    cubit.previewVideoThumbnailPath.isEmpty
+                        ? DottedBorder(
+                            options: RoundedRectDottedBorderOptions(
+                              color: Colors.white,
+                              radius: Radius.circular(size(context).width * numD02),
                             ),
-                          ],
+                            child: SizedBox(
+                              width: size(context).width,
+                              height: size(context).width / 4,
+                              child: Center(child: CommonText(text: "Select / Record a video")),
+                            ),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(size(context).width * numD02),
+                            ),
+                            child: Image.file(
+                              File(cubit.previewVideoThumbnailPath),
+                              width: size(context).width,
+                              height: size(context).width / 4,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                    if (cubit.previewVideoThumbnailPath.isNotEmpty)
+                      InkWell(
+                        onTap: (){
+                          router.push(AppRouter.previewSubmissionScreen,extra: {
+                            "videoPath":cubit.previewVideoPath,
+                            "isNetwork":false
+                          });
+                        },
+                        child: Container(
+                          width: size(context).width * numD15,
+                          height: size(context).width * numD15,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(size(context).width * numD1),
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.grey.shade700,
+                                Color(0xFF1F1C3A),
+                                CommonColors.themeColor,
+                              ],
+                              stops: const [0.0, 0.8, 1.0],
+                            ),
+                            border: Border.all(
+                              color: CommonColors.buttonColor.withValues(alpha: 0.5),
+                              width: 1,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: CommonColors.buttonColor.withValues(alpha: 0.3),
+                                blurRadius: 10,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
+                          padding: EdgeInsets.all(size(context).width * numD04),
+                          child: CommonImage(imagePath: Assets.iconsIcPlay, isNetwork: false),
                         ),
-                        padding: EdgeInsets.all(size(context).width * numD04),
-                        child: CommonImage(imagePath: Assets.iconsIcPlay,
-                          isNetwork: false,
-                        )
-                    ),
+                      ),
                   ],
                 ),
                 SizedBox(height: size(context).width * numD04),
                 Row(
                   children: [
-                    Expanded(child: CommonButton(onTap: () {
-                      router.push(AppRouter.recordVideoScreen);
-                    }, text: "Record")),
-                    SizedBox(width: size(context).width * numD04,),
-                    Expanded(child: CommonGradientButton(onTap: () {
-                      pickImageOrVideo(isMultiSelect: false, fileType: FileType.video).then((file) {
-                        debugPrint("pickedVideo::${file?.paths.first}");
+                    Expanded(
+                      child: CommonButton(
+                        onTap: () {
+                          router.push(AppRouter.recordVideoScreen).then((map) {
+                            if (map != null) {
+                              var videoFile = (map as Map)['path'];
+                              debugPrint("videoFilePath::$videoFile");
+                              cubit.onAddVideoForPreview(videoFile.toString());
+                            }
+                          });
+                        },
+                        text: "Record",
+                      ),
+                    ),
+                    SizedBox(width: size(context).width * numD04),
+                    Expanded(
+                      child: CommonGradientButton(
+                        onTap: () {
+                          pickImageOrVideo(isMultiSelect: false, fileType: FileType.video).then((
+                            file,
+                          ) {
+                            debugPrint("pickedVideo::${file?.paths.first}");
 
-                        if (file != null) {
-                          cubit.onAddVideoForPreview(file.paths.first.toString());
-                        }
-                      });
-                    }, text: "Upload File")),
+                            if (file != null) {
+                              cubit.onAddVideoForPreview(file.paths.first.toString());
+                            }
+                          });
+                        },
+                        text: "Upload File",
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: size(context).width * numD04),
 
                 Container(
-                  decoration: commonBgColorDecoration(
-                    size(context).width * numD03,
-                    Colors.white,
-                  ),
-                  padding: EdgeInsets.all(
-                    size(context).width * numD02,
-                  ),
-                  margin: EdgeInsets.only(
-                    bottom: size(context).width * numD02,
-                  ),
+                  decoration: commonBgColorDecoration(size(context).width * numD03, Colors.white),
+                  padding: EdgeInsets.all(size(context).width * numD02),
+                  margin: EdgeInsets.only(bottom: size(context).width * numD02),
 
                   child: Column(
                     children: [
@@ -208,7 +226,7 @@ class SubmitProofScreen extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.info_outlined, color: Colors.black,),
+                              Icon(Icons.info_outlined, color: Colors.black),
                               SizedBox(width: size(context).width * numD02),
                               CommonText(
                                 text: "Submission Rules",
@@ -220,42 +238,39 @@ class SubmitProofScreen extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              Icon(Icons.check, color: Colors.black,),
+                              Icon(Icons.check, color: Colors.black),
                               SizedBox(width: size(context).width * numD02),
                               Expanded(
                                 child: CommonText(
                                   text: "Ensure your entire body is visible in the frame.",
                                   color: Colors.black,
-                                  fontSize:
-                                  size(context).width * numD035,
+                                  fontSize: size(context).width * numD035,
                                 ),
                               ),
                             ],
                           ),
                           Row(
                             children: [
-                              Icon(Icons.check, color: Colors.black,),
+                              Icon(Icons.check, color: Colors.black),
                               SizedBox(width: size(context).width * numD02),
                               Expanded(
                                 child: CommonText(
                                   text: "Video must be continuous (no cuts).",
                                   color: Colors.black,
-                                  fontSize:
-                                  size(context).width * numD035,
+                                  fontSize: size(context).width * numD035,
                                 ),
                               ),
                             ],
                           ),
                           Row(
                             children: [
-                              Icon(Icons.check, color: Colors.black,),
+                              Icon(Icons.check, color: Colors.black),
                               SizedBox(width: size(context).width * numD02),
                               Expanded(
                                 child: CommonText(
                                   text: "Max length: 15 seconds.",
                                   color: Colors.black,
-                                  fontSize:
-                                  size(context).width * numD035,
+                                  fontSize: size(context).width * numD035,
                                 ),
                               ),
                             ],
@@ -264,12 +279,12 @@ class SubmitProofScreen extends StatelessWidget {
                       ),
                       SizedBox(height: size(context).width * numD02),
                       CommonText(
-                        text: "Complete 20 consecutive Around the Worlds without dropping the ball.",
+                        text:
+                            "Complete 20 consecutive Around the Worlds without dropping the ball.",
                         fontSize: size(context).width * numD035,
                         color: Colors.black,
                       ),
                       SizedBox(height: size(context).width * numD02),
-
                     ],
                   ),
                 ),
@@ -278,18 +293,45 @@ class SubmitProofScreen extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                        flex: 2,
-                        child: CommonButton(onTap: () {
-                          router.push(AppRouter.recordVideoScreen);
-                        }, text: "Submit For Review")),
+                      flex: 2,
+                      child: CommonButton(
+                        onTap: () {
+                          if (cubit.previewVideoPath.isNotEmpty) {
+                            switch (cubit.type){
+                              case "skill_tree":
+                                cubit.callSubmitMarkWatchedApi();
+                                break;
+                              case "daily_challenge":
+                                cubit.callSubmitChallengeApi();
+                                break;
+                              default:{
+                                cubit.callSubmitMarkWatchedApi();
+                              }
+                            }
+
+
+                          } else {
+                            showToast(
+                              isError: true,
+                              message: "Please select / Record video to continue.",
+                            );
+                          }
+                        },
+                        text: "Submit For Review",
+                      ),
+                    ),
                     SizedBox(width: size(context).width * numD04),
-                    Expanded(child: CommonGradientButton(onTap: () {
-                      router.pop();
-                    }, text: "Cancel")),
+                    Expanded(
+                      child: CommonGradientButton(
+                        onTap: () {
+                          router.pop();
+                        },
+                        text: "Cancel",
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: size(context).width * numD04),
-
               ],
             ),
           );

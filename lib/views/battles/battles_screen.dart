@@ -97,7 +97,7 @@ class BattlesScreen extends StatelessWidget {
             CommonGradientButton(
               text: "Start Training Mode",
               onTap: () {
-                router.push(AppRouter.trainingScreen);
+                //router.push(AppRouter.trainingScreen);
               },
             ),
           ],

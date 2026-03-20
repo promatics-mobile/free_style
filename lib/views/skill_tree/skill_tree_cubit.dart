@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:free_style/network_class/api_response.dart';
+import 'package:free_style/views/tutorial/tutorial_cubit.dart';
 import 'package:universal_stepper/universal_stepper.dart';
 
 import '../../network_class/api_service.dart';

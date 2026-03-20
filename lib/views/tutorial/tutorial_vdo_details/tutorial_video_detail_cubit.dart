@@ -45,16 +45,7 @@ class TutorialVdoDetailCubit extends Cubit<TutorialVdoDetailState> implements Ne
     );
   }
 
-  void callUploadVideoApi() {
-    DioNetworkCall().callApiRequest(
-      endUrl: uploadVideoUrl,
-      method: "POST",
-      fileKey: "video",
-      requestCode: getTutorialDetailsReq,
-      networkResponse: this,
-      showLoader: true,
-    );
-  }
+
 
   void callSubmitMarkWatchedApi() {
     DioNetworkCall().callApiRequest(

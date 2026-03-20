@@ -335,7 +335,7 @@ class TrainingScreen extends StatelessWidget {
 
                     IconButton(
                       onPressed: () {
-                        router.push(AppRouter.tutorialVideoDetailScreen);
+                        //router.push(AppRouter.tutorialVideoDetailScreen);
                       },
                       icon: CommonImage(
                         imagePath: Assets.iconsIcPlay,

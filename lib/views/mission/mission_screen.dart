@@ -91,7 +91,7 @@ class MissionScreen extends StatelessWidget {
                         ][idx];
                         return InkWell(
                           onTap: () {
-                            router.push(AppRouter.tutorialDetailScreen);
+                            //router.push(AppRouter.tutorialDetailScreen);
                           },
                           child: Container(
                             decoration: commonBgColorDecoration(
@@ -213,7 +213,7 @@ class MissionScreen extends StatelessWidget {
                                     Expanded(
                                       child: commonShortButton(
                                         onTap: () {
-                                          router.push(AppRouter.submitProofScreen);
+                                          //router.push(AppRouter.submitProofScreen);
 
                                         },
                                         size: size(context),
