@@ -69,6 +69,7 @@ class OtpVerificationScreen extends StatelessWidget {
                     decoration: commonBgColorDecoration(size(context).width * numD02, Colors.white),
                     child: PinCodeTextField(
                       autovalidateMode: AutovalidateMode.onUserInteraction,
+
                       controller: cubit.otpController,
                       autoFocus: false,
                       useHapticFeedback: true,

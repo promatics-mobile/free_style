@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "746052498782",
+    "project_id": "freestyle-academy-app",
+    "storage_bucket": "freestyle-academy-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746052498782:android:74f5c2d1c944c5bdf9cbcf",
+        "android_client_info": {
+          "package_name": "com.freestyle"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBMBaIuRBmS8yJDZeqB4T86Tq56kyYHvI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -247,7 +247,8 @@ class _TutorialVideoDetailScreenState extends State<TutorialVideoDetailScreen> {
                         text:
                         cubit.submissionStatus  == "not_submitted" ?
                         "Mark this tutorial as watched to unlock the rewards and xp." :
-                        "Your mark completed request is already submitted to admin.",
+                        //"Your mark completed request is already submitted to admin.",
+                        "",
                         color: Colors.grey,
                         fontSize: size(context).width * numD035,
                       ),

@@ -20,21 +20,19 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
   bool isLoading = false;
   bool isLastPage = false;
 
-  SocialCubit() : super(SocialState(myFriends: [], pendingRequests: [])) {
+  SocialCubit() : super(SocialState(myFriends: [], pendingRequests: [],battleRequests: [])) {
     callFriendListApi(isShowLoader: true);
   }
 
-  List<SocialModel> incomingChallenges = [
-    SocialModel(name: "@Kim_skater", level: "Blue Tier 1", message: "Wants to battle!"),
-  ];
+
 
   void acceptChallenge(int index) {
-    incomingChallenges.removeAt(index);
+    state.battleRequests.removeAt(index);
     emit(state.copyWith());
   }
 
   void cancelChallenge(int index) {
-    incomingChallenges.removeAt(index);
+    state.battleRequests.removeAt(index);
     emit(state.copyWith());
   }
 
@@ -121,7 +119,14 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
                   .map((e) => PendingRequestModel.fromJson(e))
                   .toList();
 
-          emit(state.copyWith(myFriends: friends, pendingRequests: pendingRequests));
+          final List<BattleRequestModel> battleRequestList =
+          (data["incoming_challenges"] as List? ?? [])
+              .map((e) => BattleRequestModel.fromJson(e))
+              .toList();
+
+          emit(state.copyWith(myFriends: friends,
+              battleRequests: battleRequestList,
+              pendingRequests: pendingRequests));
         }
 
         break;
@@ -168,10 +173,4 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
   }
 }
 
-class SocialModel {
-  final String name;
-  final String level;
-  final String message;
 
-  SocialModel({required this.name, required this.level, required this.message});
-}

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:free_style/views/battle_details/battle_details_cubit.dart';
+import 'package:free_style/views/battle_details/battle_details_screen.dart';
 import 'package:free_style/views/battle_victory/battle_victory_cubit.dart';
 import 'package:free_style/views/battle_victory/battle_victory_screen.dart';
 import 'package:free_style/views/battles/battles_cubit.dart';
@@ -136,6 +138,7 @@ class AppRouter {
   static const String globalLeadBoardScreen = "/global_lead_board_screen";
   static const String emailMobileVerificationScreen = "/email_mobile_verification_screen";
   static const String conversationScreen = "/conversation_screen";
+  static const String battleDetailsScreen = "/battle_details_screen";
 }
 
 final GoRouter router = GoRouter(
@@ -604,6 +607,17 @@ final GoRouter router = GoRouter(
       name: AppRouter.conversationScreen,
       builder: (context, state) {
         return BlocProvider(create: (_) => ConversationCubit(), child: const ConversationScreen());
+      },
+    ), GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: AppRouter.battleDetailsScreen,
+      name: AppRouter.battleDetailsScreen,
+      builder: (context, state) {
+        var data = state.extra as Map;
+        var id = data['id'] ?? "";
+        return BlocProvider(create: (_) =>
+            BattleDetailsCubit(id: id),
+            child: const BattleDetailsScreen());
       },
     ),
   ],

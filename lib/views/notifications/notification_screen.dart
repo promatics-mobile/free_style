@@ -52,13 +52,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         ),
                         SizedBox(height: size(context).width * numD01),
                         CommonText(
-                          text: notification.description,
+                          text: notification.note,
                           fontSize: size(context).width * numD035,
                           color: Colors.white.withOpacity(0.7),
                         ),
                         SizedBox(height: size(context).width * numD02),
                         CommonText(
-                          text: notification.timeAgo,
+                          text: notification.tAgo,
                           fontSize: size(context).width * numD03,
                           color: Colors.grey,
                         ),

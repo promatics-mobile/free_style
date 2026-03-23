@@ -198,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: (){
                       switch (item.title){
                         case "Battle Arena":
-                          router.push(AppRouter.matchMakingScreen);
+                          router.push(AppRouter.battleScreen);
                           break;
                           case "Training":
                             router.push(AppRouter.trainingScreen);

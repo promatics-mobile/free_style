@@ -127,3 +127,30 @@ const submitDailyChallengeReq = 40;
 
 const dailyChallengeHistoryListUrl = "user/challenge-submissions";
 const dailyChallengeHistoryListReq = 41;
+
+const battlesListUrl = "user/fetchbattles";
+const battlesListReq = 42;
+
+const battleDetailsUrl = "user/battledetail/";
+const battleDetailsReq = 43;
+
+const createBattleUrl = "user/createbattle";
+const createBattleReq = 44;
+
+const battleSubmissionUrl = "user/battlesubmission";
+const battleSubmissionReq = 45;
+
+const battleHistoryUrl = "user/battlehistory";
+const battleHistoryReq = 46;
+
+const acceptBattleRequestUrl = "user/acceptBattleRequest";
+const acceptBattleRequestReq = 47;
+
+const addFcmUrl = "user/add-fcm";
+const addFcmReq = 48;
+
+const removeFcmUrl = "user/remove-fcm";
+const removeFcmReq = 49;
+
+const notificationListUrl = "user/notifications";
+const notificationListReq = 50;

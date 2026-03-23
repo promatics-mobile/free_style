@@ -28,6 +28,7 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_){
       context.read<DashboardCubit>().callGetProfileApi();
+      context.read<DashboardCubit>().getDeviceId();
     });
     super.initState();
   }

@@ -3,20 +3,22 @@ part of 'social_cubit.dart';
 class SocialState {
   List<PlayerModel> myFriends;
   List<PendingRequestModel> pendingRequests;
+  List<BattleRequestModel> battleRequests;
 
   String text;
 
-  SocialState({required this.myFriends, required this.pendingRequests, this.text = ""});
+  SocialState({required this.myFriends, required this.pendingRequests,  required this.battleRequests, this.text = ""});
 
   SocialState copyWith({
     List<PlayerModel>? myFriends,
     List<PendingRequestModel>? pendingRequests,
+    List<BattleRequestModel>? battleRequests,
     String? text,
   }) {
     return SocialState(
       myFriends: myFriends ?? this.myFriends,
       pendingRequests: pendingRequests ?? this.pendingRequests,
-
+      battleRequests: battleRequests ?? this.battleRequests,
       text: text ?? this.text,
     );
   }
@@ -65,4 +67,30 @@ class PendingRequestModel {
 
     return data;
   }
+}
+
+class BattleRequestModel {
+  String? id;
+  String? name;
+  String? userName;
+  String? userImage;
+  String? battleId;
+
+
+  BattleRequestModel({
+    this.id,
+    this.name,
+    this.userName,
+    this.userImage,
+    this.battleId,
+  });
+
+  BattleRequestModel.fromJson(Map<String, dynamic> json) {
+    id = json['sender']['_id'];
+    name = json['sender']['name']??"";
+    userName = json['sender']['user_name']??"";
+    userImage = json['sender']['user_image']??"";
+    battleId = json['sender']['user_battle']??"";
+  }
+
 }

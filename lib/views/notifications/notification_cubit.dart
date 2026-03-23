@@ -1,85 +1,86 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:free_style/network_class/api_response.dart';
+import 'package:free_style/network_class/api_service.dart';
+import 'package:free_style/utils/common_methods.dart';
+
+import '../../network_class/web_urls.dart';
 
 part 'notification_state.dart';
 
-class NotificationsCubit extends Cubit<NotificationsState> {
-  NotificationsCubit() : super(NotificationsState(selectedTabIndex: 0));
+class NotificationsCubit extends Cubit<NotificationsState> implements NetworkResponse {
+  int offset = 0;
+  List<NotificationModel> notificationsList = [];
 
-  List<NotificationModel> notificationsList = [
-    NotificationModel(
-      title: "Battle Victory!",
-      description: "You successfully defeated @ShadowStriker in the arena. +50 RP earned.",
-      timeAgo: "2h ago",
-      icon: Icons.emoji_events_outlined,
-      type: "battles",
-    ),
-    NotificationModel(
-      title: "Challenge Approved!",
-      description: "Your submission for 'Technical Trio' has been verified. Rewards added.",
-      timeAgo: "3h ago",
-      icon: Icons.check_circle_outline,
-      type: "challenges",
-    ),
-    NotificationModel(
-      title: "New Friend Request",
-      description: "@NeonNinja wants to connect with you. Tap to accept.",
-      timeAgo: "5h ago",
-      icon: Icons.person_add_outlined,
-      type: "social",
-    ),
-    NotificationModel(
-      title: "Daily Mission Update",
-      description: "New daily tasks are available! Complete them to earn extra XP.",
-      timeAgo: "Yesterday",
-      icon: Icons.assignment_outlined,
-      type: "missions",
-    ),
-    NotificationModel(
-      title: "Promotion!",
-      description: "Congratulations! You've climbed the ranks to Gold League II.",
-      timeAgo: "1d ago",
-      icon: Icons.trending_up,
-      type: "league",
-    ),
-    NotificationModel(
-      title: "Battle Request",
-      description: "@Cryptoking has challenged you to a 1v1 match in the Sector 7.",
-      timeAgo: "2d ago",
-      icon: Icons.sports_kabaddi_outlined,
-      type: "battles",
-    ),
-    NotificationModel(
-      title: "Shop Reward",
-      description: "You've earned a discount coupon for the 'Classic Sphere' ball.",
-      timeAgo: "3d ago",
-      icon: Icons.local_offer_outlined,
-      type: "rewards",
-    ),
-  ];
+  NotificationsCubit() : super(NotificationsState(selectedTabIndex: 0)){
+    callNotificationApi(true, offset);
+  }
 
+  void onRefresh() async {
+    await Future.delayed(const Duration(milliseconds: 1000));
+    offset = 0;
+    callNotificationApi(false, 0);
+  }
 
+  void onLoadData() async {
+    await Future.delayed(const Duration(milliseconds: 1000));
+    offset += 15;
+    callNotificationApi(false, offset);
+  }
+
+  void callNotificationApi(bool showLoader, int offset) {
+    DioNetworkCall().callApiRequest(
+      networkResponse: this,
+      endUrl: notificationListUrl,
+      requestCode: notificationListReq,
+      method: 'GET',
+    );
+  }
+
+  @override
+  void onApiError({required int requestCode, required String response}) {
+    try {
+      switch (requestCode) {
+        case notificationListReq:
+          debugPrint("notificationListReq:::Error::");
+          break;
+      }
+    } catch (e, stacktrace) {
+      debugPrint("ApiException::$e");
+      debugPrint('Stacktrace:: ${stacktrace.toString()}');
+    }
+  }
+
+  @override
+  void onResponse({required int requestCode, required String response}) {
+    try {
+      switch (requestCode) {
+        case notificationListReq:
+          var data = jsonDecode(response);
+          if (data['notifications'] != null) {
+            var sList = data['notifications'] as List;
+            var list = sList.map((e) => NotificationModel.fromJson(e)).toList();
+            debugPrint("nList:: ${list.length}");
+
+            if (offset == 0) {
+              notificationsList = [];
+              notificationsList.addAll(list);
+              emit(state.copyWith());
+            } else {
+              notificationsList.addAll(list);
+              emit(state.copyWith());
+            }
+          }
+
+          break;
+      }
+    } catch (e, stacktrace) {
+      debugPrint("ApiException::$e");
+      debugPrint('Stacktrace:: ${stacktrace.toString()}');
+    }
+  }
 }
 
 
-
-
-class NotificationModel {
-  final String title;
-  final String description;
-  final String timeAgo;
-  final IconData icon;
-  final bool isViewed;
-  final String actionLabel;
-  final String type;
-
-  NotificationModel({
-    required this.title,
-    required this.description,
-    required this.timeAgo,
-    required this.icon,
-    this.isViewed = false,
-    this.actionLabel = "View",
-    required this.type,
-  });
-}

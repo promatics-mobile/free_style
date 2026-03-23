@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:free_style/main.dart';
@@ -17,6 +20,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsCubit, SettingsState>(
       builder: (context, state) {
+        var cubitData = context.read<SettingsCubit>();
         return Scaffold(
           appBar: CommonAppBar(title: "Settings", showBack: true),
           body: SingleChildScrollView(
@@ -200,10 +204,23 @@ class SettingsScreen extends StatelessWidget {
                       context: context,
                       heading: "Logout",
                       subTitle: "Are you sure you want to logout?",
-                      onFirstButtonTap: () {
-                        sharedPreferences.clear();
-                        context.read<DashboardCubit>().onTapBottomBar(0);
-                        router.go(AppRouter.walkThroughScreen);
+                      onFirstButtonTap: () async{
+                        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+                        if (Platform.isAndroid) {
+                          AndroidDeviceInfo androidInfo =
+                              await deviceInfo.androidInfo;
+                          debugPrint('Running on ${androidInfo.id}');
+                          cubitData.callRemoveDeviceApi(androidInfo.id);
+                        } else if (Platform.isIOS) {
+                          IosDeviceInfo iosInfo =
+                              await deviceInfo.iosInfo;
+                          debugPrint(
+                              'Running on ${iosInfo.identifierForVendor}');
+                          cubitData.callRemoveDeviceApi(
+                            iosInfo.identifierForVendor ?? "",
+                          );
+                        }
                       },
                       onSecondButtonTap: () {
                         router.pop();
@@ -232,10 +249,24 @@ class SettingsScreen extends StatelessWidget {
                       context: context,
                       heading: "Delete Account",
                       subTitle: "Are you sure you want to delete your account?",
-                      onFirstButtonTap: () {
-                        sharedPreferences.clear();
-                        context.read<DashboardCubit>().onTapBottomBar(0);
-                        router.go(AppRouter.walkThroughScreen);
+                      onFirstButtonTap: () async{
+                        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+                        if (Platform.isAndroid) {
+                          AndroidDeviceInfo androidInfo =
+                          await deviceInfo.androidInfo;
+                          debugPrint('Running on ${androidInfo.id}');
+                          cubitData.callRemoveDeviceApi(androidInfo.id);
+                        } else if (Platform.isIOS) {
+                          IosDeviceInfo iosInfo =
+                          await deviceInfo.iosInfo;
+                          debugPrint(
+                              'Running on ${iosInfo.identifierForVendor}');
+                          cubitData.callRemoveDeviceApi(
+                            iosInfo.identifierForVendor ?? "",
+                          );
+                        }
+
                       },
                       onSecondButtonTap: () {
                         router.pop();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:free_style/utils/common_widgets/common_refresh_indicator/common_refresh_indicator.dart';
 import 'package:free_style/views/tutorial/tutorial_cubit.dart';
 
 import '../../generated/assets.dart';
@@ -29,7 +30,7 @@ class TutorialScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: .start,
           children: [
-            SizedBox(
+           /* SizedBox(
               height: size(context).width * numD09,
               width: size(context).width,
               child: ListView.builder(
@@ -62,10 +63,15 @@ class TutorialScreen extends StatelessWidget {
                   );
                 },
               ),
-            ),
+            ),*/
             SizedBox(height: size(context).width * numD04),
 
-            Expanded(child: SingleChildScrollView(
+            Expanded(child: CommonRefreshIndicator(
+              onRefresh: ()async{
+                if (cubit.skillId.isNotEmpty) {
+                  cubit.callTutorialListApi(cubit.skillId);
+                }
+              },
               child: Column(
                 crossAxisAlignment: .start,
                 children: [

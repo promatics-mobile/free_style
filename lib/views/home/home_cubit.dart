@@ -17,7 +17,8 @@ class HomeCubit extends Cubit<HomeState> implements NetworkResponse {
   HomeCubit() : super(HomeInitial());
   List<MenuItemModel> menuItemsList = [
     MenuItemModel(title: "Skill Tree", icon: Assets.iconsIcSkillTree),
-    /* MenuItemModel(title: "Battle Arena", icon: Assets.iconsIcBattle),
+    //MenuItemModel(title: "Battle Arena", icon: Assets.iconsIcBattle),
+    /*
     MenuItemModel(title: "Training", icon: Assets.iconsIcOutlineFootball),
     MenuItemModel(title: "Skill States", icon: Assets.iconsIcSkillState),
     MenuItemModel(title: "Tutorials", icon: Assets.iconsIcVideoRecord),
