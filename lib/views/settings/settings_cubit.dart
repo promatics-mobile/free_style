@@ -23,7 +23,7 @@ class SettingsCubit extends Cubit<SettingsState> implements NetworkResponse{
     DioNetworkCall().callApiRequest(
         networkResponse: this,
         endUrl: removeFcmUrl,
-        showLoader: false,
+        showLoader: true,
         json: {
           'device_id': deviceId,
         },
@@ -40,7 +40,6 @@ class SettingsCubit extends Cubit<SettingsState> implements NetworkResponse{
           var res = jsonDecode(response);
           sharedPreferences.clear().then((value) {
             router.go(AppRouter.walkThroughScreen);
-            navigatorKey.currentContext!.read<DashboardCubit>().onTapBottomBar(0);
           });
 
           break;
@@ -59,7 +58,6 @@ class SettingsCubit extends Cubit<SettingsState> implements NetworkResponse{
           debugPrint("removeFcmReqSuccess:: $response");
           sharedPreferences.clear().then((value) {
             router.go(AppRouter.walkThroughScreen);
-            navigatorKey.currentContext!.read<DashboardCubit>().onTapBottomBar(0);
           });
 
           break;

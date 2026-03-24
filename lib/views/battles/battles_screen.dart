@@ -29,7 +29,7 @@ class BattlesScreen extends StatelessWidget {
                 onRefresh: () async{
                   cubit.callBattleListApi();
                 },
-                child: ListView.builder(
+                child: ListView.separated(
                 shrinkWrap: true,
                 padding: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
                 physics: NeverScrollableScrollPhysics(),
@@ -107,7 +107,9 @@ class BattlesScreen extends StatelessWidget {
                       ),
                     ),
                   );
-                }));
+                }, separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(height: size(context).width * numD04);
+                },));
           },
         )
     );

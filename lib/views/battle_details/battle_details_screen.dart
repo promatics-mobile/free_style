@@ -35,6 +35,7 @@ class BattleDetailsScreen extends StatelessWidget {
           }
 
           return SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -58,6 +59,7 @@ class BattleDetailsScreen extends StatelessWidget {
                 CommonText(
                   text: cubit.battleModel!.battleName,
                   fontWeight: FontWeight.bold,
+                  textAlign: TextAlign.center,
                   fontSize: w * numD06,
                 ),
 
@@ -76,7 +78,6 @@ class BattleDetailsScreen extends StatelessWidget {
                 Container(
                   decoration: commonBgColorDecoration(w * numD03, CommonColors.secondaryColor),
                   padding: EdgeInsets.all(w * numD04),
-                  margin: EdgeInsets.symmetric(horizontal: w * numD02),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -158,21 +159,18 @@ class BattleDetailsScreen extends StatelessWidget {
                 SizedBox(height: w * numD25),
 
                 /// 🎮 CTA Buttons
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: w * numD04),
-                  child: CommonButton(
-                    text: "Start Battle",
-                    onTap: () {
-                      showInviteFriendBottomSheet(context, cubit, cubit.myFriendsList, (friend){
+                CommonButton(
+                  text: "Start Battle",
+                  onTap: () {
+                    showInviteFriendBottomSheet(context, cubit, cubit.myFriendsList, (friend){
 
-                        cubit.callStartBattleApi(cubit.battleModel!.id, friend.sId.toString());
-                      });
+                      cubit.callStartBattleApi(cubit.battleModel!.id, friend.sId.toString());
+                    });
 
 
 
 
-                    },
-                  ),
+                  },
                 ),
 
                 SizedBox(height: w * numD05),
@@ -192,7 +190,6 @@ class BattleDetailsScreen extends StatelessWidget {
 
     return  Container(
       padding: EdgeInsets.all(size(context).width * numD04),
-      margin: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
       decoration: commonOutlineDecoration(size(context).width * numD04, 1, CommonColors.secondaryColor),
       child: UniversalStepper(
         inverted: false,

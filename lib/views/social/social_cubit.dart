@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:free_style/views/profile_setup/cosmetics_model.dart';
 
 import '../../main.dart';
 import '../../network_class/api_response.dart';
 import '../../network_class/api_service.dart';
 import '../../network_class/web_urls.dart';
+import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
 import '../../utils/common_methods.dart';
 import '../search_players/search_players_cubit.dart';
@@ -15,6 +17,7 @@ part 'social_state.dart';
 class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
   int offset = 0;
   int limit = 10;
+  String referenceId = "";
 
   bool isLoadMore = false;
   bool isLoading = false;
@@ -85,6 +88,31 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
       requestCode: getFriendListReq,
       showLoader: isShowLoader,
       json: {},
+    );
+  }
+
+
+  void callAcceptBattleReqApi(String id, String refId) {
+    referenceId = refId;
+    emit(state.copyWith());
+
+    DioNetworkCall().callApiRequest(
+      networkResponse: this,
+      method: 'PATCH',
+      showLoader: true,
+      endUrl: "$acceptBattleRequestUrl$id",
+      requestCode: acceptBattleRequestReq,
+      json: {},
+    );
+  }
+
+  void callCancelBattleReqApi(String id) {
+    DioNetworkCall().callApiRequest(
+        endUrl: cancelBattleInviteUrl+id,
+        method: "POST",
+        requestCode: cancelBattleInviteReq,
+        networkResponse: this,
+        showLoader: true
     );
   }
 
@@ -166,6 +194,33 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
           callFriendListApi();
 
           emit(state.copyWith());
+        }
+
+        break;
+
+        case acceptBattleRequestReq:
+        var map = jsonDecode(response);
+
+        if (map["success"] == true) {
+          emit(state.copyWith());
+          router.push(
+            AppRouter.matchMakingScreen,
+            extra: {
+              "reference_id": referenceId,
+            },
+          );
+
+          showToast(isError: false, message: "Battle request accepted successfully.");
+        }
+
+        break;
+
+        case cancelBattleInviteReq:
+        var map = jsonDecode(response);
+
+        if (map["success"] == true) {
+          emit(state.copyWith());
+          showToast(isError: true, message: "Battle request cancelled successfully.");
         }
 
         break;

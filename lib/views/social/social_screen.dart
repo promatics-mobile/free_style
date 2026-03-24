@@ -86,9 +86,9 @@ class SocialScreen extends StatelessWidget {
                                           fontWeight: FontWeight.w400,
                                           fontSize: size(context).width * numD03,
                                         ),
-                                        SizedBox(height: size(context).width * numD02),
+                                        SizedBox(height: size(context).width * numD01),
                                         CommonText(
-                                          text: "Blue Tier ${CommonSymbol.dotSymbol} Want to battle!",
+                                          text: "Want's to battle with you !",
                                           color: Colors.grey,
                                           fontSize: size(context).width * numD03,
                                         ),
@@ -122,7 +122,11 @@ class SocialScreen extends StatelessWidget {
                                     Expanded(
                                       child: commonShortButton(
                                         onTap: () {
-                                          router.push(AppRouter.matchMakingScreen);
+                                          if(item.battleId!=null){
+                                            cubit.callAcceptBattleReqApi(item.battleId.toString(),item.referenceId.toString());
+                                          }
+
+
                                         },
                                         size: size(context),
                                         radius: size(context).width * numD03,
@@ -337,7 +341,7 @@ class SocialScreen extends StatelessWidget {
                                   ],
                                 ),
                                 const Spacer(),
-                                commonShortButton(
+                                /*commonShortButton(
                                   onTap: () {
                                     showToast(
                                       isError: false,
@@ -348,7 +352,7 @@ class SocialScreen extends StatelessWidget {
                                   radius: size(context).width * numD03,
                                   buttonHeight: size(context).width * numD10,
                                   buttonText: "Invite",
-                                ),
+                                ),*/
                                 IconButton(
                                   onPressed: () {
                                     debugPrint("${friend.toJson()}");
@@ -391,6 +395,22 @@ class SocialScreen extends StatelessWidget {
                     ),
                     SizedBox(height: size(context).width * numD04),
                   ],
+
+
+                  if(state.pendingRequests.isEmpty && state.myFriends.isEmpty) ...[
+                    SizedBox(height: size(context).height/3),
+                    Padding(
+                      padding: EdgeInsets.all(size(context).width * numD04),
+                      child: CommonText(text: "Your friend list is empty right now. Let's change that!\nUse the Add icon above to invite someone!",
+                      color: Colors.white,
+                        textAlign: TextAlign.center,
+                        fontSize: size(context).width * numD04,
+
+                      ),
+                    )
+                  ]
+
+
 
                 ],
               ),

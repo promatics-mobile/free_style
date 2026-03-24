@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:free_style/views/battle_details/battle_details_cubit.dart';
 import 'package:free_style/views/battle_details/battle_details_screen.dart';
+import 'package:free_style/views/battle_history/battle_history_cubit.dart';
 import 'package:free_style/views/battle_victory/battle_victory_cubit.dart';
 import 'package:free_style/views/battle_victory/battle_victory_screen.dart';
 import 'package:free_style/views/battles/battles_cubit.dart';
@@ -26,6 +27,7 @@ import 'package:free_style/views/league_ranking/league_ranking_cubit.dart';
 import 'package:free_style/views/league_ranking/league_ranking_screen.dart';
 import 'package:free_style/views/login/login_cubit.dart';
 import 'package:free_style/views/login/login_screen.dart';
+import 'package:free_style/views/match_making/match_making_cubit.dart';
 import 'package:free_style/views/match_making/match_making_screen.dart';
 import 'package:free_style/views/mission/mission_cubit.dart';
 import 'package:free_style/views/mission/preview_submission_screen.dart';
@@ -64,6 +66,7 @@ import 'package:free_style/views/walkthrough/walkthrough_screen.dart';
 import 'package:go_router/go_router.dart';
 
 import '../main.dart';
+import '../views/battle_history/battle_history_screen.dart';
 import '../views/change_password/change_password.dart';
 import '../views/change_password/change_password_cubit.dart';
 import '../views/cms/cms_cubit.dart';
@@ -139,6 +142,7 @@ class AppRouter {
   static const String emailMobileVerificationScreen = "/email_mobile_verification_screen";
   static const String conversationScreen = "/conversation_screen";
   static const String battleDetailsScreen = "/battle_details_screen";
+  static const String battleHistoryScreen = "/battle_history_screen";
 }
 
 final GoRouter router = GoRouter(
@@ -404,7 +408,9 @@ final GoRouter router = GoRouter(
       path: AppRouter.matchMakingScreen,
       name: AppRouter.matchMakingScreen,
       builder: (context, state) {
-        return MatchMakingScreen();
+        var data = state.extra as Map;
+        var id = data['reference_id'] ?? "";
+        return BlocProvider(create: (context) => MatchMakingCubit(referenceId : id), child: MatchMakingScreen());
       },
     ),
 
@@ -608,16 +614,29 @@ final GoRouter router = GoRouter(
       builder: (context, state) {
         return BlocProvider(create: (_) => ConversationCubit(), child: const ConversationScreen());
       },
-    ), GoRoute(
+    ),
+    GoRoute(
       parentNavigatorKey: navigatorKey,
       path: AppRouter.battleDetailsScreen,
       name: AppRouter.battleDetailsScreen,
       builder: (context, state) {
         var data = state.extra as Map;
         var id = data['id'] ?? "";
-        return BlocProvider(create: (_) =>
-            BattleDetailsCubit(id: id),
-            child: const BattleDetailsScreen());
+        return BlocProvider(
+          create: (_) => BattleDetailsCubit(id: id),
+          child: const BattleDetailsScreen(),
+        );
+      },
+    ), GoRoute(
+      parentNavigatorKey: navigatorKey,
+      path: AppRouter.battleHistoryScreen,
+      name: AppRouter.battleHistoryScreen,
+      builder: (context, state) {
+
+        return BlocProvider(
+          create: (_) => BattleHistoryCubit(),
+          child: const BattleHistoryScreen(),
+        );
       },
     ),
   ],

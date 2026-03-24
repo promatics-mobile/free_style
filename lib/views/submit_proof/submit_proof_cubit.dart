@@ -92,6 +92,20 @@ class SubmitProofCubit extends Cubit<SubmitProofState> implements NetworkRespons
     );
   }
 
+  void callSubmitBattleApi() {
+    DioNetworkCall().callApiRequest(
+      endUrl: battleSubmissionUrl,
+      method: "PATCH",
+      requestCode: battleSubmissionReq,
+      json: {
+        "ongoing_battle_id": id,
+        "file": videoSubmissionDetails,
+      },
+      networkResponse: this,
+      showLoader: true,
+    );
+  }
+
   @override
   void onApiError({required int requestCode, required String response}) {}
 
@@ -105,6 +119,11 @@ class SubmitProofCubit extends Cubit<SubmitProofState> implements NetworkRespons
 
         case submitDailyChallengeReq:
         showToast(isError: false, message: "Challenge submitted successfully");
+        router.pop();
+        break;
+
+        case battleSubmissionReq:
+        showToast(isError: false, message: "Battle video submitted successfully");
         router.pop();
         break;
 

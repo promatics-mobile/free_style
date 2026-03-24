@@ -293,7 +293,7 @@ class LogInScreen extends StatelessWidget {
 
                           SizedBox(height: size(context).width * numD1),
 
-                          Row(
+                          /*Row(
                             children: [
                               Expanded(
                                 child: Container(
@@ -366,7 +366,7 @@ class LogInScreen extends StatelessWidget {
                             ],
                           ),
 
-                          SizedBox(height: size(context).width * numD06),
+                          SizedBox(height: size(context).width * numD06),*/
                         ],
                       ),
                     ),

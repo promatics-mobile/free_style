@@ -7,7 +7,12 @@ class SocialState {
 
   String text;
 
-  SocialState({required this.myFriends, required this.pendingRequests,  required this.battleRequests, this.text = ""});
+  SocialState({
+    required this.myFriends,
+    required this.pendingRequests,
+    required this.battleRequests,
+    this.text = "",
+  });
 
   SocialState copyWith({
     List<PlayerModel>? myFriends,
@@ -43,9 +48,7 @@ class PendingRequestModel {
 
   PendingRequestModel.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
-    requester = json['requester'] != null
-        ? PlayerModel.fromJson(json['requester'])
-        : null;
+    requester = json['requester'] != null ? PlayerModel.fromJson(json['requester']) : null;
     status = json['status'];
     actionBy = json['action_by'];
     createdAt = json['created_at'];
@@ -75,22 +78,29 @@ class BattleRequestModel {
   String? userName;
   String? userImage;
   String? battleId;
+  String? referenceId;
 
-
-  BattleRequestModel({
-    this.id,
-    this.name,
-    this.userName,
-    this.userImage,
-    this.battleId,
-  });
+  BattleRequestModel({this.id, this.name, this.userName, this.userImage, this.battleId,this.referenceId});
 
   BattleRequestModel.fromJson(Map<String, dynamic> json) {
     id = json['sender']['_id'];
-    name = json['sender']['name']??"";
-    userName = json['sender']['user_name']??"";
-    userImage = json['sender']['user_image']??"";
-    battleId = json['sender']['user_battle']??"";
-  }
+    name = json['sender']['name'] ?? "";
+    userName = json['sender']['user_name'] ?? "";
 
+    if (json['sender']['avatar'] != null && json['sender']['avatar']['picture'] !=null) {
+      var list = json['sender']['avatar']['picture'] as List;
+
+      if (list.isNotEmpty) {
+        var picture = PictureItem.fromJson(list.first);
+        userImage = getFullFileUrl(
+          baseUrl: mediaBaseUrl,
+          path: picture.path ?? "",
+          filename: picture.filename ?? "",
+        );
+      }
+    }
+
+    battleId = json['_id'] ?? "";
+    referenceId = json['reference_id'] ?? "";
+  }
 }

@@ -397,7 +397,7 @@ class CreateAccountScreen extends StatelessWidget {
                     text: "Register",
                   ),
                   SizedBox(height: size(context).width * numD1),
-                  Row(
+                  /*Row(
                     children: [
                       Expanded(
                         child: Container(
@@ -466,7 +466,7 @@ class CreateAccountScreen extends StatelessWidget {
                       SizedBox(width: size(context).width * numD05),
                     ],
                   ),
-                  SizedBox(height: size(context).width * numD06),
+                  SizedBox(height: size(context).width * numD06),*/
                 ],
               ),
             ),

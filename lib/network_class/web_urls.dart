@@ -143,7 +143,7 @@ const battleSubmissionReq = 45;
 const battleHistoryUrl = "user/battlehistory";
 const battleHistoryReq = 46;
 
-const acceptBattleRequestUrl = "user/acceptBattleRequest";
+const acceptBattleRequestUrl = "user/acceptbattleinvite/";
 const acceptBattleRequestReq = 47;
 
 const addFcmUrl = "user/add-fcm";
@@ -154,3 +154,9 @@ const removeFcmReq = 49;
 
 const notificationListUrl = "user/notifications";
 const notificationListReq = 50;
+
+const cancelBattleInviteUrl = "user/cancelbattleinvite/";
+const cancelBattleInviteReq = 51;
+
+const ongoingBattleUrl = "user/fetchongoingbattle/";
+const ongoingBattleReq = 52;

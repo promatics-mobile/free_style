@@ -64,12 +64,14 @@ class BattleDetailsCubit extends Cubit<BattleDetailsState> implements NetworkRes
         requestCode: createBattleReq,
         json: {
           "battle_id": battleId,
-          "friends_id": friendId
+          "friend_id": friendId
         },
         networkResponse: this,
         showLoader: true
     );
   }
+
+
 
 
   @override

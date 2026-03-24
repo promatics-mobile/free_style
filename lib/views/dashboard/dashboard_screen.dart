@@ -29,6 +29,7 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
     WidgetsBinding.instance.addPostFrameCallback((_){
       context.read<DashboardCubit>().callGetProfileApi();
       context.read<DashboardCubit>().getDeviceId();
+      context.read<DashboardCubit>().onTapBottomBar(0);
     });
     super.initState();
   }
@@ -174,7 +175,7 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
                     if (state.selectedIndex == 1)
                       IconButton(
                         onPressed: () {
-                          router.push(AppRouter.challengeHistoryScreen);
+                          router.push(AppRouter.battleHistoryScreen);
                         },
                         icon: Icon(Icons.history, color: Colors.white),
                       ),

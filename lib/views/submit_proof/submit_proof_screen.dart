@@ -304,6 +304,9 @@ class SubmitProofScreen extends StatelessWidget {
                               case "daily_challenge":
                                 cubit.callSubmitChallengeApi();
                                 break;
+                              case "battle":
+                                cubit.callSubmitBattleApi();
+                                break;
                               default:{
                                 cubit.callSubmitMarkWatchedApi();
                               }

@@ -962,3 +962,9 @@ Future<File?> generateThumbnailFile(String videoPath) async {
 
   return File(thumbnailPath);
 }
+
+/// 🔹 Full URL (VERY USEFUL)
+String getFullFileUrl({required String baseUrl, required String path, required String filename}) {
+  return "$baseUrl/$path/$filename";
+}
+
