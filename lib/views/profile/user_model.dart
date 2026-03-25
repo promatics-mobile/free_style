@@ -1,3 +1,6 @@
+import 'package:free_style/views/global_lead_board/global_lead_board_cubit.dart';
+import 'package:free_style/views/home/home_cubit.dart';
+
 import '../profile_setup/cosmetics_model.dart';
 
 class UserModel {
@@ -8,7 +11,10 @@ class UserModel {
   bool? isEmailVerified=false;
   bool? isMobileVerified =false;
   Mobile? mobile;
+  LeagueModel? leagueModel;
+  TierModel? tierModel;
   int? xp;
+  int? rp;
   int? level;
   int? xpRequired;
   int? tricks;
@@ -28,7 +34,10 @@ class UserModel {
     this.isEmailVerified,
     this.isMobileVerified,
     this.mobile,
+    this.leagueModel,
+    this.tierModel,
     this.xp,
+    this.rp,
     this.level,
     this.xpRequired,
     this.tricks,
@@ -49,7 +58,10 @@ class UserModel {
     isEmailVerified = json['is_email_verified']??false;
     isMobileVerified = json['is_mobile_verified']??false;
     mobile = json['mobile'] != null ? Mobile.fromJson(json['mobile']) : null;
-    xp = json['xp'];
+    leagueModel = json['league_id'] != null ? LeagueModel.fromJson(json['league_id']) : null;
+    tierModel = json['tier'] != null ? TierModel.fromJson(json['tier']) : null;
+    xp = json['xp']??0;
+    rp = json['rp']??0;
     level = json['level'];
     xpRequired = json['xp_required'];
     tricks = json['tricks']??0;

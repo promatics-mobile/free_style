@@ -160,3 +160,18 @@ const cancelBattleInviteReq = 51;
 
 const ongoingBattleUrl = "user/fetchongoingbattle/";
 const ongoingBattleReq = 52;
+
+const myTutorialsUrl = "user/listtutorials";
+const myTutorialsReq = 53;
+
+const globalLeaderBoardListUrl = "user/leaderboard/global";
+const globalLeaderBoardListReq = 54;
+
+const leagueListUrl = "user/leagues";
+const leagueListReq = 55;
+
+const createRoomApiUrl = "user/create-room";
+const createRoomApiReq = 56;
+
+const sendNotificationUrl = "";
+const sendNotificationReq = 57;

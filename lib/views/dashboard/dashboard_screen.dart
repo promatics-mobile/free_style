@@ -9,6 +9,7 @@ import '../../generated/assets.dart';
 import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
 import '../../utils/common_decorations/common_decorations.dart';
+import '../../utils/common_methods.dart';
 import '../../utils/common_widgets/common_bottom_nav_bar/common_bottom_nav_bar.dart';
 import '../../utils/common_widgets/common_text/common_text.dart';
 import 'dashboard_cubit.dart';
@@ -54,13 +55,24 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
                           child: Row(
                             children: [
                               ClipOval(
-                                child: CommonImage(
-                                  width: size(context).width * numD13,
-                                  height: size(context).width * numD13,
-                                  imagePath:
-                                      sharedPreferences.getString(PreferenceKeys.avatarImageKey) ??
-                                      "",
-                                  isNetwork: true,
+                                child: Container(
+                                  color: CommonColors.secondaryColor,
+                                  padding: EdgeInsets.all(size(context).width * numD005),
+                                  child: ClipOval(
+                                    child: Container(
+                                      color: CommonColors.themeColor,
+                                      padding: EdgeInsets.all(size(context).width * numD005),
+                                      child: ClipOval(
+                                        child: CommonImage(
+                                          width: size(context).width * numD11,
+                                          height: size(context).width * numD11,
+                                          imagePath: sharedPreferences.getString(PreferenceKeys.avatarImageKey) ??
+                                              "",
+                                          isNetwork: true,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                               SizedBox(width: size(context).width * numD02),
@@ -78,45 +90,17 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
                                     children: [
                                       CircleAvatar(
                                         radius: size(context).width * numD012,
-                                        backgroundColor: Colors.red,
+                                        backgroundColor: CommonColors.secondaryColor,
                                       ),
                                       CommonText(
                                         text:
-                                            " Lvl ${cubitData.userModel != null ? cubitData.userModel!.level : ""} ${CommonSymbol.dotSymbol} Red Tier",
-                                        fontSize: size(context).width * numD028,
+                                            " Lvl ${cubitData.userModel != null ? cubitData.userModel!.level : ""} ${CommonSymbol.dotSymbol} ${cubitData.userModel!.tierModel!.name.toString().toCapitalize()} Tier",
+                                        fontSize: size(context).width * numD030,
                                         color: Colors.grey,
                                       ),
                                     ],
                                   ),
                                   SizedBox(height: size(context).width * numD005),
-                                  Container(
-                                    decoration: commonBgColorDecoration(
-                                      size(context).width * numD04,
-                                      CommonColors.secondaryLightColor,
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: size(context).width * numD02,
-                                    ),
-                                    height: size(context).width * numD05,
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.all(size(context).width * numD005),
-                                          child: CommonImage(
-                                            imagePath: Assets.iconsIcGoldCoin,
-                                            height: size(context).width * numD03,
-                                            width: size(context).width * numD03,
-                                            isNetwork: false,
-                                          ),
-                                        ),
-                                        CommonText(
-                                          text: "${cubitData.userModel!.wallet?.coins} C",
-                                          fontSize: size(context).width * numD03,
-                                          color: Colors.black,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
                                 ],
                               ),
                               SizedBox(width: size(context).width * numD02),
@@ -143,9 +127,9 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
                         router.push(AppRouter.globalLeadBoardScreen);
                       },
                       icon: CommonImage(
-                        imagePath: Assets.iconsIcLeadboard,
-                        height: size(context).width * numD06,
-                        width: size(context).width * numD06,
+                        imagePath: Assets.iconsIcLeaderBoard,
+                        height: size(context).width * numD075,
+                        width: size(context).width * numD075,
                         color: Colors.white,
                         isNetwork: false,
                       ),

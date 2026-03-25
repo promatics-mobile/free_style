@@ -12,7 +12,28 @@
           "package_name": "com.freestyle"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "746052498782-345t1tc7ugme06q1jlr96m7ojrkfkaki.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.freestyle",
+            "certificate_hash": "76800faec5f3ec980556b4133a2f97e9921d379e"
+          }
+        },
+        {
+          "client_id": "746052498782-441l0gc6p0j5sdg39jj4fu68iprfircn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.freestyle",
+            "certificate_hash": "2fb2f4d5cb943ce647817b687150648db4ba9e0b"
+          }
+        },
+        {
+          "client_id": "746052498782-c8k4jnkmq6qb0n62rogqge00ac1s7g7v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBBMBaIuRBmS8yJDZeqB4T86Tq56kyYHvI"
@@ -20,7 +41,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "746052498782-c8k4jnkmq6qb0n62rogqge00ac1s7g7v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "746052498782-tre6ue1sf9jgo28gk1jpbmq7726dvasf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.freestyle.pro"
+              }
+            }
+          ]
         }
       }
     }

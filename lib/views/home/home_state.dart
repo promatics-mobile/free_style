@@ -146,7 +146,7 @@ class TierModel {
       completionRewards: json['tier_completion_rewards'] != null
           ? Rewards.fromJson(json['tier_completion_rewards'])
           : null,
-      isActive: json['is_active'],
+      isActive: json['is_active']??false,
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:free_style/views/tutorial/tutorial_details.dart';
 import 'package:free_style/views/tutorial/tutorial_vdo_details/tutorial_video_detail_cubit.dart';
 import 'package:free_style/views/tutorial/tutorial_vdo_details/tutorial_video_detail_state.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../generated/assets.dart';
 import '../../../network_class/web_urls.dart';
@@ -134,7 +135,8 @@ class _TutorialVideoDetailScreenState extends State<TutorialVideoDetailScreen> {
                               ),
                               SizedBox(width: size(context).width * numD02),
                               CommonText(
-                                text: cubit.difficultyLevel.toCapitalize(),
+                                text: cubit.difficultyLevel.isNotEmpty? cubit.difficultyLevel.toCapitalize() :
+                                cubit.languageTag.toCapitalize(),
                                 fontSize: size(context).width * numD035,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.grey,
@@ -142,7 +144,7 @@ class _TutorialVideoDetailScreenState extends State<TutorialVideoDetailScreen> {
                             ],
                           ),
                         ),
-                        InkWell(
+                        /*InkWell(
                           onTap: () {
                             showToast(isError: false, message: "Saved successfully");
                             setState(() {});
@@ -153,7 +155,7 @@ class _TutorialVideoDetailScreenState extends State<TutorialVideoDetailScreen> {
                             size: size(context).width * numD05,
                           ),
                         ),
-                        SizedBox(width: size(context).width * numD04),
+                        SizedBox(width: size(context).width * numD04),*/
                       ],
                     ),
                     SizedBox(height: size(context).width * numD04),

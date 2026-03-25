@@ -61,6 +61,7 @@ class Assets {
   static const String iconsIcFilter = 'assets/icons/ic_filter.png';
   static const String iconsIcFilterHori = 'assets/icons/ic_filter_hori.png';
   static const String iconsIcFlame = 'assets/icons/ic_flame.png';
+  static const String iconsIcFlash = 'assets/icons/ic_flash.png';
   static const String iconsIcFootballBlack = 'assets/icons/ic_football_black.png';
   static const String iconsIcFootballWhite = 'assets/icons/ic_football_white.png';
   static const String iconsIcGoldCoin = 'assets/icons/ic_gold_coin.png';
@@ -72,12 +73,14 @@ class Assets {
   static const String iconsIcInfo = 'assets/icons/ic_info.png';
   static const String iconsIcInternet = 'assets/icons/ic_internet.png';
   static const String iconsIcLeadboard = 'assets/icons/ic_leadboard.png';
+  static const String iconsIcLeaderBoard = 'assets/icons/ic_leader_board.png';
   static const String iconsIcLikes = 'assets/icons/ic_likes.png';
   static const String iconsIcLocation = 'assets/icons/ic_location.png';
   static const String iconsIcLogout = 'assets/icons/ic_logout.png';
   static const String iconsIcMedicine = 'assets/icons/ic_medicine.png';
   static const String iconsIcMenu = 'assets/icons/ic_menu.png';
   static const String iconsIcMessage = 'assets/icons/ic_message.png';
+  static const String iconsIcMeter = 'assets/icons/ic_meter.png';
   static const String iconsIcMission = 'assets/icons/ic_mission.png';
   static const String iconsIcNotification = 'assets/icons/ic_notification.png';
   static const String iconsIcNotificationColor = 'assets/icons/ic_notification_color.png';

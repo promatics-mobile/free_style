@@ -15,7 +15,11 @@ class TutorialCubit extends Cubit<TutorialState> implements NetworkResponse {
   TutorialCubit({required this.skillId}) : super(TutorialInitial()) {
     if (skillId.isNotEmpty) {
       callTutorialListApi(skillId);
+    } else{
+      callMyTutorialListApi();
     }
+
+
   }
 
   void callTutorialListApi(String id) {
@@ -23,6 +27,16 @@ class TutorialCubit extends Cubit<TutorialState> implements NetworkResponse {
       endUrl: getTutorialsListUrl + id,
       method: "GET",
       requestCode: getTutorialsListReq,
+      networkResponse: this,
+      showLoader: true
+    );
+  }
+
+  void callMyTutorialListApi() {
+    DioNetworkCall().callApiRequest(
+      endUrl: myTutorialsUrl,
+      method: "GET",
+      requestCode: myTutorialsReq,
       networkResponse: this,
       showLoader: true
     );
@@ -38,6 +52,15 @@ class TutorialCubit extends Cubit<TutorialState> implements NetworkResponse {
         var data = jsonDecode(response);
         if (data['tutorials'] != null) {
           var list = data['tutorials']['tutorials'] as List;
+          tutorialsList = list.map((e) => TutorialModel.fromJson(e)).toList();
+        }
+        emit(TutorialInitial());
+        break;
+
+        case myTutorialsReq:
+        var data = jsonDecode(response);
+        if (data['tutorials'] != null) {
+          var list = data['tutorials'] as List;
           tutorialsList = list.map((e) => TutorialModel.fromJson(e)).toList();
         }
         emit(TutorialInitial());

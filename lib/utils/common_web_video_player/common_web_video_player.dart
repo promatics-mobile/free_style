@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:free_style/utils/common_widgets/loaders/common_loader.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class CommonWebVideoPlayer extends StatefulWidget {
   final String videoUrl;
@@ -11,18 +14,30 @@ class CommonWebVideoPlayer extends StatefulWidget {
 }
 
 class _CommonWebVideoPlayerState extends State<CommonWebVideoPlayer> {
-  late final WebViewController _controller;
+  WebViewController? _webController;
+  YoutubePlayerController? videoPlayerController;
+
+  bool get isYoutube =>
+      widget.videoUrl.contains("youtube.com") ||
+      widget.videoUrl.contains("youtu.be") ||
+      widget.videoUrl.contains("shorts");
 
   @override
   void initState() {
     super.initState();
 
-    final html = _buildHtml(widget.videoUrl);
-
-    _controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(Colors.black)
-      ..loadHtmlString(html);
+    if (isYoutube) {
+      videoPlayerController = YoutubePlayerController(
+        initialVideoId: YoutubePlayer.convertUrlToId(widget.videoUrl)!,
+        flags: YoutubePlayerFlags(autoPlay: true, mute: false, showLiveFullscreenButton: false),
+      );
+    } else {
+      final html = _buildHtml(widget.videoUrl);
+      _webController = WebViewController()
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..setBackgroundColor(Colors.black)
+        ..loadHtmlString(html);
+    }
   }
 
   String _buildHtml(String url) {
@@ -44,11 +59,6 @@ class _CommonWebVideoPlayerState extends State<CommonWebVideoPlayer> {
           width: 100%;
           height: 100%;
         }
-        iframe {
-          width: 100%;
-          height: 100%;
-          border: none;
-        }
       </style>
     </head>
     <body>
@@ -59,22 +69,7 @@ class _CommonWebVideoPlayerState extends State<CommonWebVideoPlayer> {
   }
 
   String _getVideoElement(String url) {
-    /// ✅ YouTube
-    if (url.contains("youtube.com") || url.contains("youtu.be")) {
-      final videoId = Uri.parse(url).queryParameters['v'] ??
-          Uri.parse(url).pathSegments.last;
-
-      return '''
-      <iframe 
-        src="https://www.youtube.com/embed/$videoId?autoplay=1&playsinline=1"
-        frameborder="0"
-        allow="autoplay; encrypted-media"
-        allowfullscreen>
-      </iframe>
-    ''';
-    }
-
-    /// ✅ Direct MP4 ONLY
+    /// ✅ MP4
     if (url.toLowerCase().endsWith(".mp4")) {
       return '''
       <video controls autoplay playsinline>
@@ -83,21 +78,85 @@ class _CommonWebVideoPlayerState extends State<CommonWebVideoPlayer> {
     ''';
     }
 
-    /// ❌ Fallback (IMPORTANT)
+    /// ✅ fallback iframe
     return '''
     <iframe 
       src="$url"
       frameborder="0"
+      allow="autoplay"
       allowfullscreen>
     </iframe>
-  ''';
+    ''';
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
+    videoPlayerController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  void deactivate() {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
+    videoPlayerController!.pause();
+    super.deactivate();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: WebViewWidget(controller: _controller),
-    );
+    /// ✅ YouTube Player
+    if (isYoutube && videoPlayerController != null) {
+      return YoutubePlayerBuilder(
+        player: YoutubePlayer(
+          controller: videoPlayerController!,
+          showVideoProgressIndicator: true,
+          progressIndicatorColor: Colors.yellow,
+          topActions: <Widget>[
+            const SizedBox(width: 8.0),
+            IconButton(
+              icon: Icon(Icons.arrow_back_ios, color: Colors.yellow),
+              onPressed: () {
+                SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+          onReady: () {},
+          onEnded: (data) {
+            SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+            SystemChrome.setEnabledSystemUIMode(
+              SystemUiMode.manual,
+              overlays: [SystemUiOverlay.top],
+            );
+            videoPlayerController!.reset();
+          },
+        ),
+        builder: (context, player) => Scaffold(
+          backgroundColor: Colors.black,
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios, color: Colors.orange),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          body: Center(child: player),
+        ),
+      );
+    }
+
+    /// ✅ WebView Player
+    if (_webController != null) {
+      return AspectRatio(
+        aspectRatio: 16 / 9,
+        child: WebViewWidget(controller: _webController!),
+      );
+    }
+
+    return const Center(child: CommonLoader());
   }
 }

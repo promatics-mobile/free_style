@@ -30,7 +30,7 @@ class TutorialScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: .start,
           children: [
-           /* SizedBox(
+            /* SizedBox(
               height: size(context).width * numD09,
               width: size(context).width,
               child: ListView.builder(
@@ -64,12 +64,12 @@ class TutorialScreen extends StatelessWidget {
                 },
               ),
             ),*/
-            SizedBox(height: size(context).width * numD04),
-
             Expanded(child: CommonRefreshIndicator(
-              onRefresh: ()async{
+              onRefresh: () async{
                 if (cubit.skillId.isNotEmpty) {
                   cubit.callTutorialListApi(cubit.skillId);
+                }else{
+                  cubit.callMyTutorialListApi();
                 }
               },
               child: Column(
@@ -99,11 +99,17 @@ class TutorialScreen extends StatelessWidget {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(size(context).width * numD02),
-                                  child: CommonImage(imagePath: Assets.assetsDummyPlay1,
-                                    width: size(context).width * numD20,
-                                    height: size(context).width * numD15,
-                                    fit: BoxFit.cover,
-                                    isNetwork: false,
+                                  child: Container(
+                                    decoration: commonBgColorDecoration(size(context).width * numD02,
+                                        CommonColors.secondaryColor),
+                                    padding: EdgeInsets.all(size(context).width * numD02),
+                                    child: CommonImage(imagePath: Assets.iconsIcVideoRecord,
+                                      width: size(context).width * numD1,
+                                      height: size(context).width * numD1,
+                                      fit: BoxFit.cover,
+                                      color: Colors.black,
+                                      isNetwork: false,
+                                    ),
                                   ),
                                 ),
                                 SizedBox(width: size(context).width * numD02),

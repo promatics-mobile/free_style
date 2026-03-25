@@ -157,6 +157,7 @@ class DailyChallengeScreen extends StatelessWidget {
                                   fontSize: size(context).width * numD04,
                                 ),
                                 SizedBox(height: size(context).width * numD01),
+                                if(skill.tutorials !=null)
                                 Column(
                                   children: List.generate(skill.tutorials!.length, (idx) {
                                     Map tutorial = skill.tutorials![idx] as Map;

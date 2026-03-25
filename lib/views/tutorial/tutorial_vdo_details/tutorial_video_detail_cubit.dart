@@ -14,6 +14,7 @@ class TutorialVdoDetailCubit extends Cubit<TutorialVdoDetailState> implements Ne
   String tutorialId = "";
   String skillId = "";
   String difficultyLevel = "";
+  String languageTag = "";
   String submissionStatus = "";
   bool isVidSubReq = false;
   TutorialModel? tutorialModel;
@@ -22,6 +23,8 @@ class TutorialVdoDetailCubit extends Cubit<TutorialVdoDetailState> implements Ne
     : super(TutorialVdoDetailState()) {
     if (tutorialId.isNotEmpty) {
       callTutorialDetailsApi(tutorialId);
+    }
+    if(skillId.isNotEmpty){
       callSkillDetailsApi(skillId);
     }
   }
@@ -68,6 +71,10 @@ class TutorialVdoDetailCubit extends Cubit<TutorialVdoDetailState> implements Ne
         var data = jsonDecode(response);
         if (data['tutorial'] != null) {
           tutorialModel = TutorialModel.fromJson(data['tutorial']);
+          if(tutorialModel !=null){
+            languageTag = tutorialModel!.languageTag.language;
+          }
+
         }
         emit(TutorialVdoDetailState());
         break;

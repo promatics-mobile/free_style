@@ -3,6 +3,7 @@ import 'package:free_style/utils/common_constants.dart';
 import 'package:free_style/utils/common_widgets/common_text/common_text.dart';
 
 import '../../../routes/route.dart';
+import '../../common_methods.dart';
 
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -27,7 +28,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: showBack
           ? IconButton(
         icon: const Icon(Icons.arrow_back,color: Colors.white,),
-        onPressed: () => router.pop(),
+        onPressed: () {
+          router.pop();},
       )
           : null,
       actions: actions,

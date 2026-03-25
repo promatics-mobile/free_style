@@ -223,13 +223,20 @@ class BattleHistoryScreen extends StatelessWidget {
 
   Widget _battleCard(BuildContext context, BattleHistoryModel item) {
 
-    final winner = item.winner;
-    final myId = sharedPreferences.getString(PreferenceKeys.userIdKey);
-    final isMe = winner!.id == myId;
+    bool? isMe;
+    String? avatar;
+    if(item.winner !=null){
+      final winner = item.winner!;
+      final myId = sharedPreferences.getString(PreferenceKeys.userIdKey);
+      isMe = winner.id == myId;
 
-    final avatar = winner.equipped?.avatar?.pictures.isNotEmpty == true
-        ? winner.equipped!.avatar!.pictures.first.getFileUrl(mediaBaseUrl) ?? ""
-        : "";
+      avatar = winner.equipped?.avatar?.pictures.isNotEmpty == true
+          ? winner.equipped!.avatar!.pictures.first.getFileUrl(mediaBaseUrl) ?? ""
+          : "";
+    }
+
+
+
 
     final isUser1 = item.user1!.id ==
             sharedPreferences.getString(PreferenceKeys.userIdKey);
@@ -327,6 +334,7 @@ class BattleHistoryScreen extends StatelessWidget {
                 fontSize: size(context).width * numD03,
               ),
 
+              if(isMe !=null)
               CommonText(
                 text: isMe ? "VICTORY" : "DEFEAT",
                 color: isMe ? Colors.green : Colors.red,
@@ -343,7 +351,20 @@ class BattleHistoryScreen extends StatelessWidget {
     return CircleAvatar(radius: 18, child: Text(name.isNotEmpty ? name[0] : ""));
   }
 
-  Widget _rewardItem(String title, int value, bool isWinner) {
+  Widget _rewardItem(String title, int value, bool? isWinner) {
+    if(isWinner == null){
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CommonText(text: "--", color:
+          Colors.black, fontWeight: FontWeight.bold),
+          CommonText(text: title,
+              fontWeight: FontWeight.bold,
+              color: Colors.black, fontSize: 12),
+        ],
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [

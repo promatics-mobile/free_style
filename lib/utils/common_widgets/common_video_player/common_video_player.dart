@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:free_style/utils/common_constants.dart';
 import 'package:free_style/utils/common_widgets/common_text/common_text.dart';
 import 'package:free_style/utils/common_widgets/loaders/common_loader.dart';
@@ -50,6 +51,48 @@ class _CommonVideoPlayerState extends State<CommonVideoPlayer> {
     });
   }
 
+  @override
+  void dispose() {
+    _hideTimer?.cancel();
+    _videoController.dispose();
+    _chewieController?.dispose();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.black,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
+    super.dispose();
+  }
+
+  @override
+  void deactivate() {
+    _hideTimer?.cancel();
+    _videoController.dispose();
+    _chewieController?.dispose();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.black,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
+    super.deactivate();
+  }
+
   /// ⏱ Auto-hide controls
   void _startHideTimer() {
     _hideTimer?.cancel();
@@ -91,14 +134,6 @@ class _CommonVideoPlayerState extends State<CommonVideoPlayer> {
     });
 
     _startHideTimer();
-  }
-
-  @override
-  void dispose() {
-    _hideTimer?.cancel();
-    _videoController.dispose();
-    _chewieController?.dispose();
-    super.dispose();
   }
 
   @override

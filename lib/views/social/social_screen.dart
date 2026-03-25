@@ -102,11 +102,8 @@ class SocialScreen extends StatelessWidget {
                                     Expanded(
                                       child: commonOutlinedButton(
                                         onTap: () {
-                                          cubit.cancelChallenge(idx);
-                                          showToast(
-                                            isError: true,
-                                            message: "Challenge cancelled",
-                                          );
+                                          cubit.callCancelBattleReqApi(item.battleId.toString());
+
                                         },
                                         size: size(context),
                                         radius: numD03,

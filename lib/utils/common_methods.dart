@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -6,14 +7,17 @@ import 'package:delightful_toast/delight_toast.dart';
 import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart' as permission;
 import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../main.dart';
 import 'common_constants.dart';
@@ -545,6 +549,25 @@ void hideKeyboard(BuildContext context) {
   FocusScope.of(context).requestFocus(FocusNode());
 }
 
+
+
+class Debouncer {
+  final int milliseconds;
+  Timer? _timer;
+
+  Debouncer({this.milliseconds = 500});
+
+  void run(VoidCallback action) {
+    _timer?.cancel();
+    _timer = Timer(Duration(milliseconds: milliseconds), action);
+  }
+
+  void dispose() {
+    _timer?.cancel();
+  }
+}
+
+
 void showToast({required bool isError, required String message}) async {
   DelightToastBar(
     autoDismiss: true,
@@ -920,6 +943,40 @@ Future<Duration> getVideoDuration(String url) async {
   await controller.dispose();
   return duration;
 }
+
+
+void setDeviceOrientation() {
+  SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.black,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ));
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+}
+
+
+String timeAgoFromString(String? lastSeenStr) {
+  if (lastSeenStr == null || lastSeenStr.isEmpty) return '';
+
+  try {
+    final lastSeen = DateTime.parse(lastSeenStr).toLocal();
+    final diff = DateTime.now().difference(lastSeen);
+
+    if (diff.inMinutes < 1) return "just now";
+    if (diff.inMinutes < 60) return "${diff.inMinutes} min ago";
+    if (diff.inHours < 24) return "${diff.inHours} hour${diff.inHours > 1 ? 's' : ''} ago";
+    return "${diff.inDays} day${diff.inDays > 1 ? 's' : ''} ago";
+  } catch (e) {
+    return '';
+  }
+}
+
 
 String formatVideoDuration(Duration d) {
   final hours = d.inHours;

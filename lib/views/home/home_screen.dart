@@ -11,6 +11,7 @@ import 'package:free_style/views/home/home_cubit.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../../routes/route.dart';
 import '../../utils/common_widgets/linear_progress_indicator/custom_linear_progress.dart';
+import '../dashboard/dashboard_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
             Container(
               decoration: commonBgColorDecoration(size(context).width * numD04, CommonColors.secondaryColor),
               padding: EdgeInsets.all(size(context).width * numD04),
@@ -52,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         CommonText(text: "CURRENT LEAGUE",
                           color: Colors.black,
                           fontSize: size(context).width * numD035,),
-                        CommonText(text: "Street Legend",
+                        CommonText(text: cubit.currentLeagueName.toCapitalize(),
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontSize: size(context).width * numD05,),
@@ -69,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               CommonText(text: "XP Progress",
                                 color: Colors.white,
                                 fontSize: size(context).width * numD03,),
-                              CommonText(text: "2450 / 3000",
+                              CommonText(text: "${cubit.minRp} / ${cubit.maxRp}",
                                 color: Colors.white,
                                 fontSize: size(context).width * numD03,),
                             ],
@@ -97,6 +99,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+            SizedBox(height: size(context).width * numD04,),
+
+
+            buildStatsCard(context, cubit),
+
             SizedBox(height: size(context).width * numD04,),
 
             if(cubit.currentChallengeModel !=null)
@@ -178,6 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            if(cubit.currentChallengeModel !=null)
             SizedBox(height: size(context).width * numD04,),
             CommonText(text: "Menu",
               fontWeight: FontWeight.bold,
@@ -210,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             router.push(AppRouter.skillStateScreen);
                           break;
                           case "Tutorials":
-                            router.push(AppRouter.tutorialScreen);
+                            router.push(AppRouter.tutorialScreen, extra: {"id": ""});
                           break;
                           case "Missions":
                             router.push(AppRouter.missionScreen);
@@ -251,5 +259,85 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   },
 );
+  }
+
+  Widget buildStatsCard(BuildContext context, HomeCubit cubit) {
+    var dCubit = context.watch<DashboardCubit>();
+
+    if(dCubit.userModel ==null){
+      return Container();
+    }
+    return Container(
+      decoration: commonBgColorDecoration(size(context).width * numD04,
+          CommonColors.secondaryLightColor),
+      padding: EdgeInsets.all(size(context).width * numD04),
+      width: size(context).width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildStatItem(
+            context,
+            title: "Coins",
+            value: dCubit.userModel!.wallet!.coins.toString(),
+            image: Assets.iconsIcGoldCoin,
+          ),
+          _buildStatItem(
+            context,
+            title: "XP",
+            value: dCubit.userModel!.xp.toString(),
+            image: Assets.iconsIcMeter,
+          ),
+          _buildStatItem(
+            context,
+            title: "RP",
+            value: dCubit.userModel!.rp.toString(),
+            image: Assets.iconsIcFlash,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatItem(
+      BuildContext context, {
+        required String title,
+        required String value,
+        required String image,
+      }) {
+    final width = size(context).width;
+
+    return Expanded(
+      child: Column(
+        children: [
+
+          Container(
+            decoration: commonCircularFill(color: Colors.white),
+            padding: EdgeInsets.all( width * numD02),
+            child: CommonImage(imagePath: image,
+              height: width * numD1,
+              width: width * numD1,
+              isNetwork: false,),
+          ),
+
+
+          SizedBox(height: width * numD01),
+
+          CommonText(
+            text: value,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+            fontSize: width * numD04,
+          ),
+
+          SizedBox(height: width * numD005),
+
+          CommonText(
+            text: title.toUpperCase(),
+            color: Colors.black,
+            fontSize: width * numD03,
+          ),
+        ],
+      ),
+    );
   }
 }

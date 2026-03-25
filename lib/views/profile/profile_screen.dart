@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:free_style/utils/common_methods.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_short_button.dart';
 import 'package:free_style/utils/common_widgets/linear_progress_indicator/custom_linear_progress.dart';
 import 'package:free_style/views/profile/profile_cubit.dart';
@@ -35,12 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
           }
 
           return CommonSliverTabBar(
-            tabs: const [
-              "Battles",
-              "Achievements",
-              "Promotions",
-              "History",
-            ],
+            tabs: const ["Battles", "Achievements", "Promotions", "History"],
             flexibleSpace: FlexibleSpaceBar(
               background: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                     children: [
                       ClipOval(
                         child: Container(
-                          color: Colors.red,
+                          color: CommonColors.secondaryColor,
                           padding: EdgeInsets.all(size(context).width * numD005),
                           child: ClipOval(
                             child: Container(
@@ -57,8 +53,9 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                               padding: EdgeInsets.all(size(context).width * numD005),
                               child: ClipOval(
                                 child: CommonImage(
-                                  imagePath: sharedPreferences.getString(
-                                      PreferenceKeys.avatarImageKey) ?? "",
+                                  imagePath:
+                                      sharedPreferences.getString(PreferenceKeys.avatarImageKey) ??
+                                      "",
                                   height: size(context).width * numD25,
                                   width: size(context).width * numD25,
                                   isNetwork: true,
@@ -74,20 +71,22 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                         left: 0,
                         child: Container(
                           decoration: commonBgColorDecoration(
-                              size(context).width * numD04, CommonColors.secondaryColor),
+                            size(context).width * numD04,
+                            CommonColors.secondaryColor,
+                          ),
                           padding: EdgeInsets.symmetric(
                             horizontal: size(context).width * numD02,
                             vertical: size(context).width * numD005,
                           ),
                           child: CommonText(
-                            text: "Gold League",
+                            text: cubit.userModel!.leagueModel!.name.toString().toCapitalize(),
                             fontWeight: FontWeight.bold,
                             fontSize: size(context).width * numD03,
                             color: Colors.black,
                             textAlign: TextAlign.center,
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
 
@@ -108,87 +107,26 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                     children: [
                       CircleAvatar(
                         radius: size(context).width * numD012,
-                        backgroundColor: Colors.red,
+                        backgroundColor:  CommonColors.secondaryColor,
                       ),
                       CommonText(
-                        text: " Lvl ${cubit.userModel!.level} ${CommonSymbol.dotSymbol} Red Tier",
+                        text:
+                            " Lvl ${cubit.userModel!.level} ${CommonSymbol.dotSymbol} ${cubit.userModel!.tierModel!.name.toString().toCapitalize()} Tier",
                         fontSize: size(context).width * numD03,
                         color: Colors.grey,
                       ),
                     ],
                   ),
                   SizedBox(height: size(context).width * numD02),
-                  Row(
-                    mainAxisAlignment: .spaceBetween,
-                    children: [
-                      Container(
-                        decoration: commonBgColorDecoration(
-                          size(context).width * numD01,
-                          CommonColors.secondaryLightColor,
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: size(context).width * numD02,
-                        ),
-                        height: size(context).width * numD07,
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.all(size(context).width * numD005),
-                              child: CommonImage(
-                                imagePath: Assets.iconsIcGoldCoin,
-                                height: size(context).width * numD04,
-                                width: size(context).width * numD04,
-                                isNetwork: false,
-                              ),
-                            ),
-                            CommonText(
-                              text: "${cubit.userModel!.wallet?.coins} C",
-                              fontSize: size(context).width * numD035,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      commonShortButton(
-                          onTap: () {
-                            router.push(AppRouter.inventoryScreen);
-                          },
-                          buttonColor: CommonColors.secondaryColor,
-                          buttonHeight: size(context).width * numD07,
-                          size: size(context),
-                          textColor: Colors.black,
-                          buttonText: "Inventory"),
-
-                      Container(
-                        decoration: commonBgColorDecoration(
-                          size(context).width * numD01,
-                          CommonColors.secondaryLightColor,
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: size(context).width * numD02,
-                        ),
-                        height: size(context).width * numD07,
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.all(size(context).width * numD005),
-                              child: Icon(Icons.electric_bolt,
-                                color: CommonColors.secondaryColor,
-                                size: size(context).width * numD04,
-                              ),
-                            ),
-                            CommonText(
-                              text: "${cubit.userModel!.xp} XP",
-                              fontSize: size(context).width * numD035,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  commonShortButton(
+                    onTap: () {
+                      router.push(AppRouter.inventoryScreen);
+                    },
+                    buttonColor: CommonColors.secondaryColor,
+                    buttonHeight: size(context).width * numD07,
+                    size: size(context),
+                    textColor: Colors.black,
+                    buttonText: "Inventory",
                   ),
                   SizedBox(height: size(context).width * numD03),
                   Row(
@@ -201,66 +139,66 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                   ),
                   SizedBox(height: size(context).width * numD04),
                   Container(
-                      decoration: commonBgColorDecoration(
-                          size(context).width * numD04, CommonColors.secondaryColor),
-                      padding: EdgeInsets.all(size(context).width * numD04),
-                      width: size(context).width,
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    decoration: commonBgColorDecoration(
+                      size(context).width * numD04,
+                      CommonColors.secondaryColor,
+                    ),
+                    padding: EdgeInsets.all(size(context).width * numD04),
+                    width: size(context).width,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CommonText(
+                              text: "Level Progress",
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              fontSize: size(context).width * numD035,
+                            ),
+                            CommonText(
+                              text: "1,250/2,000 XP",
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              fontSize: size(context).width * numD035,
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: size(context).width * numD02),
+
+                        commonNormalLinearProgress(
+                          context: context,
+                          value: 0.6,
+                          bgColor: Colors.white.withValues(alpha: 0.3),
+                          valueColor: CommonColors.buttonColor,
+                        ),
+                        SizedBox(height: size(context).width * numD02),
+                        Container(
+                          decoration: commonBgColorDecoration(
+                            size(context).width * numD03,
+                            Colors.black,
+                          ),
+                          padding: EdgeInsets.all(size(context).width * numD02),
+                          child: Row(
                             children: [
-                              CommonText(
-                                text: "Level Progress",
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                                fontSize: size(context).width * numD035,
+                              Container(
+                                decoration: commonCircularFill(color: Colors.white),
+                                padding: EdgeInsets.all(size(context).width * numD01),
+                                child: Icon(
+                                  Icons.electric_bolt,
+                                  color: CommonColors.secondaryColor,
+                                ),
                               ),
-                              CommonText(
-                                text: "1,250/2,000 XP",
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                                fontSize: size(context).width * numD035,
-                              ),
+                              SizedBox(width: size(context).width * numD02),
+                              CommonText(text: "${cubit.userModel!.xp.toString()} XP Available"),
+                              Spacer(),
+                              Icon(Icons.keyboard_arrow_right_outlined, color: Colors.white),
                             ],
                           ),
-                          SizedBox(height: size(context).width * numD02),
-
-                          commonNormalLinearProgress(context: context, value: 0.6,
-                              bgColor: Colors.white.withValues(alpha: 0.3),
-                              valueColor: CommonColors.buttonColor),
-                          SizedBox(height: size(context).width * numD02),
-                          Container(
-                            decoration:
-                            commonBgColorDecoration(size(context).width * numD03, Colors.black),
-                            padding: EdgeInsets.all(
-                              size(context).width * numD02,
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                    decoration: commonCircularFill(color: Colors.white),
-                                    padding: EdgeInsets.all(size(context).width * numD01),
-                                    child: Icon(
-                                      Icons.electric_bolt,
-                                      color: CommonColors.secondaryColor,
-                                    )),
-                                SizedBox(
-                                  width: size(context).width * numD02,
-                                ),
-                                CommonText(
-                                  text: "${cubit.userModel!.xp.toString()} XP Available",
-                                ),
-                                Spacer(),
-                                Icon(
-                                  Icons.keyboard_arrow_right_outlined,
-                                  color: Colors.white,
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      )),
+                        ),
+                      ],
+                    ),
+                  ),
                   SizedBox(height: size(context).width * numD05),
                 ],
               ),
@@ -311,58 +249,58 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
       );
     }
     return ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: items.length,
-        padding: EdgeInsets.only(top: size(context).width * numD02),
-        itemBuilder: (context, idx) {
-          final item = items[idx];
-          return Container(
-            decoration: commonBgColorDecoration(size(context).width * numD04, Colors.white),
-            padding: EdgeInsets.all(size(context).width * numD04),
-            margin: EdgeInsets.symmetric(vertical: size(context).width * numD01),
-            child: Row(
-              children: [
-                CircleAvatar(
-                    backgroundColor: CommonColors.secondaryLightColor,
-                    radius: size(context).width * numD05,
-                    child: CommonImage(
-                      imagePath: tabIndex == 0
-                          ? Assets.iconsIcBattle
-                          : tabIndex == 1
-                          ? Assets.iconsIcTrophy
-                          : tabIndex == 2
-                          ? Assets.iconsIcBadge
-                          : Assets.iconsIcHistory,
-                      width: size(context).width * numD05,
-                      height: size(context).width * numD05,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: items.length,
+      padding: EdgeInsets.only(top: size(context).width * numD02),
+      itemBuilder: (context, idx) {
+        final item = items[idx];
+        return Container(
+          decoration: commonBgColorDecoration(size(context).width * numD04, Colors.white),
+          padding: EdgeInsets.all(size(context).width * numD04),
+          margin: EdgeInsets.symmetric(vertical: size(context).width * numD01),
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: CommonColors.secondaryLightColor,
+                radius: size(context).width * numD05,
+                child: CommonImage(
+                  imagePath: tabIndex == 0
+                      ? Assets.iconsIcBattle
+                      : tabIndex == 1
+                      ? Assets.iconsIcTrophy
+                      : tabIndex == 2
+                      ? Assets.iconsIcBadge
+                      : Assets.iconsIcHistory,
+                  width: size(context).width * numD05,
+                  height: size(context).width * numD05,
+                  color: Colors.black,
+                  isNetwork: false,
+                ),
+              ),
+              SizedBox(width: size(context).width * numD04),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CommonText(
+                      text: item.title,
                       color: Colors.black,
-                      isNetwork: false,
-                    )),
-                SizedBox(
-                  width: size(context).width * numD04,
+                      fontSize: size(context).width * numD035,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    CommonText(
+                      text: item.date,
+                      color: Colors.grey,
+                      fontSize: size(context).width * numD03,
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CommonText(
-                        text: item.title,
-                        color: Colors.black,
-                        fontSize: size(context).width * numD035,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      CommonText(
-                        text: item.date,
-                        color: Colors.grey,
-                        fontSize: size(context).width * numD03,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

@@ -274,6 +274,7 @@ class MatchMakingScreen extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.all(size(context).width * numD04),
+      margin: EdgeInsets.only(bottom: size(context).width * numD04),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(size(context).width * numD04),
         gradient: LinearGradient(colors: [Colors.amber.shade200, Colors.orange.shade400]),

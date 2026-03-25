@@ -109,7 +109,7 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
   void callCancelBattleReqApi(String id) {
     DioNetworkCall().callApiRequest(
         endUrl: cancelBattleInviteUrl+id,
-        method: "POST",
+        method: "DELETE",
         requestCode: cancelBattleInviteReq,
         networkResponse: this,
         showLoader: true
@@ -219,9 +219,11 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
         var map = jsonDecode(response);
 
         if (map["success"] == true) {
-          emit(state.copyWith());
           showToast(isError: true, message: "Battle request cancelled successfully.");
+          emit(state.copyWith());
         }
+
+        callFriendListApi(isShowLoader: true);
 
         break;
     }

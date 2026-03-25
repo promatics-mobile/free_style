@@ -410,7 +410,10 @@ final GoRouter router = GoRouter(
       builder: (context, state) {
         var data = state.extra as Map;
         var id = data['reference_id'] ?? "";
-        return BlocProvider(create: (context) => MatchMakingCubit(referenceId : id), child: MatchMakingScreen());
+        return BlocProvider(
+          create: (context) => MatchMakingCubit(referenceId: id),
+          child: MatchMakingScreen(),
+        );
       },
     ),
 
@@ -612,7 +615,12 @@ final GoRouter router = GoRouter(
       path: AppRouter.conversationScreen,
       name: AppRouter.conversationScreen,
       builder: (context, state) {
-        return BlocProvider(create: (_) => ConversationCubit(), child: const ConversationScreen());
+        return ConversationScreen(
+          fullName: (state.extra as Map)["full_name"],
+          profileImage: (state.extra as Map)["profile_image"],
+          userId: (state.extra as Map)["user_id"],
+          roomId: (state.extra as Map)["room_id"],
+        );
       },
     ),
     GoRoute(
@@ -627,12 +635,12 @@ final GoRouter router = GoRouter(
           child: const BattleDetailsScreen(),
         );
       },
-    ), GoRoute(
+    ),
+    GoRoute(
       parentNavigatorKey: navigatorKey,
       path: AppRouter.battleHistoryScreen,
       name: AppRouter.battleHistoryScreen,
       builder: (context, state) {
-
         return BlocProvider(
           create: (_) => BattleHistoryCubit(),
           child: const BattleHistoryScreen(),

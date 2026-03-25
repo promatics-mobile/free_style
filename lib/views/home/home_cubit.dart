@@ -17,14 +17,20 @@ class HomeCubit extends Cubit<HomeState> implements NetworkResponse {
   HomeCubit() : super(HomeInitial());
   List<MenuItemModel> menuItemsList = [
     MenuItemModel(title: "Skill Tree", icon: Assets.iconsIcSkillTree),
+    MenuItemModel(title: "Tutorials", icon: Assets.iconsIcVideoRecord),
     //MenuItemModel(title: "Battle Arena", icon: Assets.iconsIcBattle),
     /*
     MenuItemModel(title: "Training", icon: Assets.iconsIcOutlineFootball),
     MenuItemModel(title: "Skill States", icon: Assets.iconsIcSkillState),
-    MenuItemModel(title: "Tutorials", icon: Assets.iconsIcVideoRecord),
+
     MenuItemModel(title: "Missions", icon: Assets.iconsIcOutlineFootball),*/
   ];
   CurrentChallengeModel? currentChallengeModel;
+
+  String currentLeagueName = "";
+  String currentRp = "";
+  String minRp = "";
+  String maxRp = "";
 
 
 
@@ -56,8 +62,16 @@ class HomeCubit extends Cubit<HomeState> implements NetworkResponse {
 
         log(response);
 
-        if (data['data']['current_challenge'] != null) {
-          currentChallengeModel = CurrentChallengeModel.fromJson(data['data']['current_challenge']);
+        if (data['current_challenge'] != null) {
+          currentChallengeModel = CurrentChallengeModel.fromJson(data['current_challenge']);
+        }
+
+        if(data['league_progress'] !=null){
+          currentLeagueName = data['league_progress']['current_league']['name']??"";
+          minRp = data['league_progress']['current_league']['min_rp'].toString();
+          maxRp = data['league_progress']['current_league']['max_rp'].toString();
+          currentRp = data['league_progress']['current_rp'].toString();
+
         }
 
         emit(HomeInitial());

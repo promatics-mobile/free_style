@@ -4,8 +4,11 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:free_style/network_class/api_response.dart';
 
+import '../../main.dart';
 import '../../network_class/api_service.dart';
 import '../../network_class/web_urls.dart';
+import '../../routes/route.dart';
+import '../../utils/common_constants.dart';
 import '../../utils/common_methods.dart';
 import '../search_players/search_players_cubit.dart';
 
@@ -83,6 +86,21 @@ class OtherProfileCubit extends Cubit<OtherProfileState> implements NetworkRespo
     );
   }
 
+  void callRoomIdApi() async {
+    Map<String, dynamic> map = {
+      "sender_id": sharedPreferences.getString(PreferenceKeys.userIdKey),
+      "receiver_id": state.user!.user!.sId,
+    };
+
+    DioNetworkCall().callApiRequest(
+        endUrl: createRoomApiUrl,
+        networkResponse: this,
+        requestCode: createRoomApiReq,
+        method: "POST",
+        showLoader: true,
+        json: map);
+  }
+
   @override
   void onApiError({required int requestCode, required String response}) {
     emit(state.copyWith());
@@ -138,6 +156,21 @@ class OtherProfileCubit extends Cubit<OtherProfileState> implements NetworkRespo
         }
 
         break;
+
+
+      case createRoomApiReq:
+        debugPrint("createRoomApiReq success: $response");
+        var data = jsonDecode(response);
+        var roomId = data["data"]["room_uuid"].toString();
+        debugPrint("roomId:::::$roomId");
+        router.push(AppRouter.conversationScreen,extra: {
+          "full_name": state.user!.user!.name,
+          "profile_image": state.user?.user?.avatar!.picture!.first.fullPath,
+          "user_id": state.user!.user!.sId,
+          "room_id":roomId});
+        break;
     }
   }
+
+
 }
