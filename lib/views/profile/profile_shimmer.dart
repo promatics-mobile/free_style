@@ -18,7 +18,7 @@ class ProfileShimmer extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: size(context).width * numD04),
+              SizedBox(height: size(context).width * numD05),
               // Profile Image Placeholder
               CircleAvatar(radius: size(context).width * numD12, backgroundColor: Colors.white),
               SizedBox(height: size(context).width * numD04),
@@ -79,30 +79,10 @@ class ProfileShimmer extends StatelessWidget {
                 decoration: commonBgColorDecoration(size(context).width * numD04, Colors.white),
               ),
               SizedBox(height: size(context).width * numD06),
-              // Tab Bar Placeholder
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(
-                  4,
-                  (index) => Container(
-                    width: size(context).width * numD20,
-                    height: size(context).width * numD08,
-                    decoration: commonBgColorDecoration(size(context).width * numD01, Colors.white),
-                  ),
-                ),
-              ),
-              SizedBox(height: size(context).width * numD04),
-              // List Items Placeholder
-              Column(
-                children: List.generate(
-                  5,
-                  (index) => Container(
-                    width: double.infinity,
-                    height: size(context).width * numD15,
-                    margin: EdgeInsets.only(bottom: size(context).width * numD02),
-                    decoration: commonBgColorDecoration(size(context).width * numD04, Colors.white),
-                  ),
-                ),
+              Container(
+                width: double.infinity,
+                height: size(context).width * numD30,
+                decoration: commonBgColorDecoration(size(context).width * numD04, Colors.white),
               ),
             ],
           ),

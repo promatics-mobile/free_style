@@ -92,6 +92,8 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
                                         radius: size(context).width * numD012,
                                         backgroundColor: CommonColors.secondaryColor,
                                       ),
+
+                                      if(cubitData.userModel!.tierModel !=null)
                                       CommonText(
                                         text:
                                             " Lvl ${cubitData.userModel != null ? cubitData.userModel!.level : ""} ${CommonSymbol.dotSymbol} ${cubitData.userModel!.tierModel!.name.toString().toCapitalize()} Tier",

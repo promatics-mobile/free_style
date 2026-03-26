@@ -164,7 +164,13 @@ class BattleDetailsScreen extends StatelessWidget {
                   onTap: () {
                     showInviteFriendBottomSheet(context, cubit, cubit.myFriendsList, (friend){
 
-                      cubit.callStartBattleApi(cubit.battleModel!.id, friend.sId.toString());
+                      if(friend == null){
+                        cubit.callStartBattleApi(cubit.battleModel!.id, "");
+                      }else{
+                        cubit.callStartBattleApi(cubit.battleModel!.id, friend.sId.toString());
+                      }
+
+
                     });
 
 
@@ -363,7 +369,7 @@ class BattleDetailsScreen extends StatelessWidget {
       BuildContext context,
       BattleDetailsCubit cubit,
       List<PlayerModel> friends,
-      Function(PlayerModel selectedFriend) onInvite,
+      Function(PlayerModel? selectedFriend) onInvite,
       ) {
     var w = size(context).width;
     showModalBottomSheet(
@@ -506,16 +512,40 @@ class BattleDetailsScreen extends StatelessWidget {
                 /// 🚀 Bottom Button
                 Padding(
                   padding: EdgeInsets.all(w * numD04),
-                  child: CommonButton(
-                    text: "Send Battle Invite",
-                    onTap:  () {
-                      if(cubit.selectedFriend == null){
-                        showToast(isError: true, message: "Please select a friend");
-                        return;
-                      }
-                      onInvite(cubit.selectedFriend!);
-                      Navigator.pop(context);
-                    },
+                  child: Row(
+                    mainAxisAlignment: .spaceBetween,
+                    children: [
+                      Expanded(
+                        child: CommonButton(
+                          text: "Friend Invite",
+                          onTap:  () {
+                            if(cubit.selectedFriend == null){
+                              showToast(isError: true, message: "Please select a friend");
+                              return;
+                            }
+                            onInvite(cubit.selectedFriend!);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                      SizedBox(width:  w * numD02,),
+                      CommonText(
+                        text: "OR",
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: w * numD03,
+                      ),
+                      SizedBox(width:  w * numD02,),
+                      Expanded(
+                        child: CommonButton(
+                          text: "Random Invite",
+                          onTap:  () {
+                            onInvite(null);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

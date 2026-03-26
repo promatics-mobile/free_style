@@ -26,18 +26,23 @@ class _CommonWebVideoPlayerState extends State<CommonWebVideoPlayer> {
   void initState() {
     super.initState();
 
-    if (isYoutube) {
-      videoPlayerController = YoutubePlayerController(
-        initialVideoId: YoutubePlayer.convertUrlToId(widget.videoUrl)!,
-        flags: YoutubePlayerFlags(autoPlay: true, mute: false, showLiveFullscreenButton: false),
-      );
-    } else {
-      final html = _buildHtml(widget.videoUrl);
-      _webController = WebViewController()
-        ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..setBackgroundColor(Colors.black)
-        ..loadHtmlString(html);
-    }
+    Future.delayed(Duration(seconds: 1),(){
+      if (isYoutube) {
+        videoPlayerController = YoutubePlayerController(
+          initialVideoId: YoutubePlayer.convertUrlToId(widget.videoUrl)!,
+          flags: YoutubePlayerFlags(autoPlay: true, mute: false, showLiveFullscreenButton: false),
+        );
+      } else {
+        final html = _buildHtml(widget.videoUrl);
+        _webController = WebViewController()
+          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+          ..setBackgroundColor(Colors.black)
+          ..loadHtmlString(html);
+      }
+      setState(() {});
+    });
+
+
   }
 
   String _buildHtml(String url) {

@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:free_style/network_class/api_response.dart';
+import 'package:free_style/views/global_lead_board/global_lead_board_cubit.dart';
+import 'package:free_style/views/home/home_cubit.dart';
 
 import '../../main.dart';
 import '../../network_class/api_service.dart';

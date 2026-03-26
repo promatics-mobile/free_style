@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +10,7 @@ import 'package:free_style/main.dart';
 import 'package:free_style/network_class/api_response.dart';
 import 'package:free_style/network_class/api_service.dart';
 import 'package:free_style/utils/common_constants.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../network_class/web_urls.dart';
 import '../../routes/route.dart';
@@ -20,7 +22,7 @@ class DashboardCubit extends Cubit<DashboardState> implements NetworkResponse {
 
   DashboardCubit(int value)
     : super(DashboardState(selectedIndex: 0, selectedTabIndex: 0, selectedTitle: "Home")) {
-    requestNotificationPermission();
+    _requestPlatformPermission();
     fireBaseMessaging();
   }
 
@@ -42,22 +44,34 @@ class DashboardCubit extends Cubit<DashboardState> implements NetworkResponse {
   }
 
   /// Request notification permission ::
-  Future<void> requestNotificationPermission() async {
+
+  Future<void> _requestPlatformPermission() async {
     if (Platform.isIOS) {
       await localNotification.flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(alert: true, badge: false, sound: true);
+          ?.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
     } else {
-      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-          FlutterLocalNotificationsPlugin();
-      flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      await localNotification.flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
           ?.requestNotificationsPermission();
     }
 
-    await FirebaseMessaging.instance.requestPermission();
+    await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+      provisional: false,
+      criticalAlert: true,
+    );
+
     debugPrint("::PermissionRequested::");
   }
+
 
   /// FireBase Notification Initialize
   Future<void> fireBaseMessaging() async {
@@ -75,7 +89,6 @@ class DashboardCubit extends Cubit<DashboardState> implements NetworkResponse {
           title: message.notification!.title.toString(),
           message: message.notification!.body.toString(),
           param: message.data,
-          type: message.data['type'] ?? "",
           id: message.notification.hashCode,
         );
       }

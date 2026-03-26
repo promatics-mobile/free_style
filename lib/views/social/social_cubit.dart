@@ -19,6 +19,7 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
   int limit = 10;
   String referenceId = "";
 
+  bool showShimmer = false;
   bool isLoadMore = false;
   bool isLoading = false;
   bool isLastPage = false;
@@ -70,11 +71,12 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
   }
 
   void callFriendListApi({bool isRefresh = false, bool isShowLoader = false}) {
+    showShimmer = isShowLoader;
     if (isRefresh) {
       offset = 0;
       isLastPage = false;
       state.myFriends.clear();
-      isLoading = true;
+      isLoading = isShowLoader;
     } else {
       if (isLastPage || isLoadMore || isLoading) return;
       isLoadMore = true;
@@ -86,7 +88,6 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
       method: 'GET',
       endUrl: getFriendListUrl,
       requestCode: getFriendListReq,
-      showLoader: isShowLoader,
       json: {},
     );
   }
@@ -127,6 +128,7 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
   void onResponse({required int requestCode, required String response}) {
     isLoading = false;
     isLoadMore = false;
+    showShimmer = false;
     switch (requestCode) {
       case getFriendListReq:
         //log(response);

@@ -166,52 +166,62 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> with TickerProv
                   ],
                 ),
                 SizedBox(height: size(context).width * numD05),
-                // Container(
-                //   decoration: commonBgColorDecoration(
-                //     size(context).width * numD04,
-                //     CommonColors.secondaryColor,
-                //   ),
-                //   padding: EdgeInsets.all(size(context).width * numD04),
-                //   width: size(context).width,
-                //   child: Column(
-                //     children: [
-                //       Container(
-                //         padding: EdgeInsets.all(size(context).width * numD02),
-                //         child: Row(
-                //           children: [
-                //             Container(
-                //               decoration: commonCircularFill(color: Colors.white),
-                //               padding: EdgeInsets.all(size(context).width * numD03),
-                //               child: CommonImage(
-                //                 imagePath: Assets.iconsIcTrophy,
-                //                 height: size(context).width * numD05,
-                //                 width: size(context).width * numD05,
-                //                 isNetwork: false,
-                //                 color: Colors.black,
-                //               ),
-                //             ),
-                //             SizedBox(width: size(context).width * numD02),
-                //             Column(
-                //               crossAxisAlignment: CrossAxisAlignment.start,
-                //               children: [
-                //                 CommonText(text: "Gold Div I", color: Colors.black),
-                //                 CommonText(
-                //                   text: "Gold Div I",
-                //                   color: Colors.grey,
-                //                   fontSize: size(context).width * numD03,
-                //                 ),
-                //               ],
-                //             ),
-                //             Spacer(),
-                //             Icon(Icons.keyboard_arrow_right_outlined, color: Colors.black),
-                //           ],
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
+                Container(
+                  decoration: commonBgColorDecoration(
+                    size(context).width * numD04,
+                    CommonColors.secondaryColor,
+                  ),
+                  padding: EdgeInsets.all(size(context).width * numD04),
+                  width: size(context).width,
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(size(context).width * numD02),
+                        child: Row(
+                          children: [
+                            Container(
+                              decoration: commonCircularFill(color: Colors.white),
+                              padding: EdgeInsets.all(size(context).width * numD03),
+                              child: CommonImage(
+                                imagePath: Assets.iconsIcTrophy,
+                                height: size(context).width * numD05,
+                                width: size(context).width * numD05,
+                                isNetwork: false,
+                                color: Colors.black,
+                              ),
+                            ),
+                            SizedBox(width: size(context).width * numD02),
+                            if(state.user?.user?.tierModel !=null && state.user?.user?.leagueModel !=null)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CommonText(text: state.user?.user?.tierModel!.name.toString().toCapitalize(),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                                CommonText(
+                                  text: state.user?.user?.leagueModel!.name.toString().toCapitalize(),
+                                  color: Colors.black,
+                                  fontSize: size(context).width * numD03,
+                                ),
+                              ],
+                            ),
+                            Spacer(),
+
+                            CommonText(
+                              text: "${state.user?.user?.xp!.toString().toCapitalize()} XP",
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: size(context).width * numD045,
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(height: size(context).width * numD04),
-                CommonText(text: "Battle Stats", fontWeight: FontWeight.bold),
+                CommonText(text: "Battle Statistics", fontWeight: FontWeight.bold),
                 SizedBox(height: size(context).width * numD04),
                 GridView.builder(
                   itemCount: statsList.length,

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -111,6 +112,7 @@ class OtherProfileCubit extends Cubit<OtherProfileState> implements NetworkRespo
     switch (requestCode) {
       case getOtherPlayerProfileReq:
         var map = jsonDecode(response);
+        log(response);
 
         if (map["success"] == true) {
           UserProfileModel userProfile = UserProfileModel.fromJson(map);

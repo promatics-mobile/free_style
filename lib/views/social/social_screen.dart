@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:free_style/utils/common_shimmers/common_shimmer.dart';
 import 'package:free_style/utils/common_widgets/common_button/common_short_button.dart';
 import 'package:free_style/utils/common_widgets/common_refresh_indicator/common_refresh_indicator.dart';
 import 'package:free_style/views/social/social_cubit.dart';
@@ -21,6 +22,11 @@ class SocialScreen extends StatelessWidget {
     return BlocBuilder<SocialCubit, SocialState>(
       builder: (context, state) {
         var cubit = context.read<SocialCubit>();
+        debugPrint("showShimmer:::${cubit.showShimmer}");
+        if(cubit.showShimmer){
+          return Material(child: VerticalListShimmer());
+        }
+
         return Scaffold(
           body: CommonRefreshIndicator(
             onRefresh: () async {

@@ -41,6 +41,26 @@ class HomeCubit extends Cubit<HomeState> implements NetworkResponse {
     }
   }
 
+  double calculateXpProgress({
+    required int xpGained,
+    required int xpRequired}) {
+    if (xpRequired == 0) return 0.0;
+    final progress = xpGained / xpRequired;
+
+    /// Clamp between 0.0 → 1.0
+    return progress.clamp(0.0, 1.0);
+  }
+
+  String getXpPercentage({
+    required int xpGained,
+    required int xpRequired,
+  }) {
+    if (xpRequired == 0) return "0%";
+
+    final percent = (xpGained / xpRequired) * 100;
+    return "${percent.clamp(0, 100).toStringAsFixed(0)}%";
+  }
+
   void callGetDailyChallengeApi() {
     DioNetworkCall().callApiRequest(
       query: {"current_time": DateTime.now().toUtc().toIso8601String()},
@@ -67,10 +87,12 @@ class HomeCubit extends Cubit<HomeState> implements NetworkResponse {
         }
 
         if(data['league_progress'] !=null){
-          currentLeagueName = data['league_progress']['current_league']['name']??"";
-          minRp = data['league_progress']['current_league']['min_rp'].toString();
-          maxRp = data['league_progress']['current_league']['max_rp'].toString();
-          currentRp = data['league_progress']['current_rp'].toString();
+          if(data['league_progress']['current_league'] !=null){
+            currentLeagueName = data['league_progress']['current_league']['name']??"";
+            minRp = data['league_progress']['current_league']['min_rp'].toString();
+            maxRp = data['league_progress']['current_league']['max_rp'].toString();
+            currentRp = data['league_progress']['current_rp'].toString();
+          }
 
         }
 

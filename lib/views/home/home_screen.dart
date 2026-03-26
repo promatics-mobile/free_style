@@ -68,10 +68,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           child: Column(
                             children: [
-                              CommonText(text: "XP Progress",
+                              CommonText(text: "RP Progress",
                                 color: Colors.white,
                                 fontSize: size(context).width * numD03,),
-                              CommonText(text: "${cubit.minRp} / ${cubit.maxRp}",
+                              CommonText(text: "${cubit.currentRp} / ${cubit.maxRp}",
                                 color: Colors.white,
                                 fontSize: size(context).width * numD03,),
                             ],
@@ -80,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
+                  if(cubit.currentRp.isNotEmpty && cubit.currentRp.toString() != "null")
                   SizedBox(
                     height: size(context).width * numD20,
                     width: size(context).width * numD20,
@@ -87,9 +88,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       radius: size(context).width * numD09,
                       lineWidth: size(context).width * numD015,
                       animation: true,
-                      percent: 0.85,
-                      center:  CommonText(
-                        text: "85%",
+                      percent: cubit.calculateXpProgress(
+                        xpGained: int.parse(cubit.currentRp),
+                        xpRequired: int.parse(cubit.maxRp),
+                      ),
+                      center: CommonText(
+                        text: cubit.getXpPercentage(
+                          xpGained: int.parse(cubit.currentRp),
+                          xpRequired: int.parse(cubit.maxRp),
+                        ),
                         color: Colors.black,
                       ),
                       circularStrokeCap: CircularStrokeCap.round,
@@ -285,13 +292,13 @@ class _HomeScreenState extends State<HomeScreen> {
             context,
             title: "XP",
             value: dCubit.userModel!.xp.toString(),
-            image: Assets.iconsIcMeter,
+            image: Assets.iconsIcXp,
           ),
           _buildStatItem(
             context,
             title: "RP",
             value: dCubit.userModel!.rp.toString(),
-            image: Assets.iconsIcFlash,
+            image: Assets.iconsIcRp,
           ),
         ],
       ),

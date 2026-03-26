@@ -12,18 +12,21 @@ part 'battles_state.dart';
 
 class BattlesCubit extends Cubit<BattlesState> implements NetworkResponse {
   List<BattleModel> battleList = [];
+  bool showShimmer = false;
 
   BattlesCubit() : super(BattlesInitial()){
     callBattleListApi();
   }
 
   void callBattleListApi() {
+    showShimmer = true;
+    emit(BattlesInitial());
     DioNetworkCall().callApiRequest(
         endUrl: battlesListUrl,
         method: "GET",
         requestCode: battlesListReq,
         networkResponse: this,
-        showLoader: true
+        //showLoader: true
     );
   }
 
@@ -33,6 +36,7 @@ class BattlesCubit extends Cubit<BattlesState> implements NetworkResponse {
 
   @override
   void onResponse({required int requestCode, required String response}) {
+    showShimmer = false;
     switch (requestCode) {
       case battlesListReq:
         var data = jsonDecode(response);

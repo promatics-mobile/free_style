@@ -58,14 +58,17 @@ class BattleDetailsCubit extends Cubit<BattleDetailsState> implements NetworkRes
   }
 
   void callStartBattleApi(String battleId, String friendId) {
+    Map<String,dynamic> jsonData = {"battle_id": battleId,};
+
+    if(friendId.isNotEmpty){
+      jsonData["friend_id"] = friendId;
+    }
+
     DioNetworkCall().callApiRequest(
         endUrl: createBattleUrl,
         method: "POST",
         requestCode: createBattleReq,
-        json: {
-          "battle_id": battleId,
-          "friend_id": friendId
-        },
+        json: jsonData,
         networkResponse: this,
         showLoader: true
     );

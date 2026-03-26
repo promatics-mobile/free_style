@@ -16,6 +16,7 @@ class UserModel {
   int? xp;
   int? rp;
   int? level;
+  int? xpGained;
   int? xpRequired;
   int? tricks;
   int? challenges;
@@ -40,6 +41,7 @@ class UserModel {
     this.rp,
     this.level,
     this.xpRequired,
+    this.xpGained,
     this.tricks,
     this.challenges,
     this.battles,
@@ -54,7 +56,7 @@ class UserModel {
     wallet = json['wallet'] != null ? Wallet.fromJson(json['wallet']) : null;
     id = json['_id'];
     name = json['name'];
-    email = json['email'];
+    email = json['email']??"";
     isEmailVerified = json['is_email_verified']??false;
     isMobileVerified = json['is_mobile_verified']??false;
     mobile = json['mobile'] != null ? Mobile.fromJson(json['mobile']) : null;
@@ -63,10 +65,11 @@ class UserModel {
     xp = json['xp']??0;
     rp = json['rp']??0;
     level = json['level'];
-    xpRequired = json['xp_required'];
+    xpRequired = json['xp_required']??0;
+    xpGained = json['xp_gained']??0;
     tricks = json['tricks']??0;
     challenges = json['challenges']??0;
-    battles = json['battles']??0;
+    battles = json['battles_won']??0;
     userName = json['user_name'];
     equipped =
     json['equipped'] != null ? Equipped.fromJson(json['equipped']) : null;

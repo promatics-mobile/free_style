@@ -35,6 +35,217 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
             return const ProfileShimmer();
           }
 
+          return SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: size(context).width * numD05),
+
+                Stack(
+                  children: [
+                    ClipOval(
+                      child: Container(
+                        color: CommonColors.secondaryColor,
+                        padding: EdgeInsets.all(size(context).width * numD005),
+                        child: ClipOval(
+                          child: Container(
+                            color: CommonColors.themeColor,
+                            padding: EdgeInsets.all(size(context).width * numD005),
+                            child: ClipOval(
+                              child: CommonImage(
+                                imagePath:
+                                    sharedPreferences.getString(PreferenceKeys.avatarImageKey) ??
+                                    "",
+                                height: size(context).width * numD25,
+                                width: size(context).width * numD25,
+                                isNetwork: true,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    if(cubit.userModel!.leagueModel !=null)
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      left: 0,
+                      child: Container(
+                        decoration: commonBgColorDecoration(
+                          size(context).width * numD04,
+                          CommonColors.secondaryColor,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: size(context).width * numD02,
+                          vertical: size(context).width * numD005,
+                        ),
+                        child: CommonText(
+                          text: cubit.userModel!.leagueModel!.name.toString().toCapitalize(),
+                          fontWeight: FontWeight.bold,
+                          fontSize: size(context).width * numD03,
+                          color: Colors.black,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                CommonText(
+                  text: cubit.userModel!.name ?? "",
+                  fontWeight: FontWeight.bold,
+                  fontSize: size(context).width * numD05,
+                ),
+                CommonText(
+                  text: cubit.userModel!.userName ?? "",
+                  fontWeight: FontWeight.w400,
+                  fontSize: size(context).width * numD03,
+                ),
+                SizedBox(height: size(context).width * numD01),
+
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircleAvatar(
+                      radius: size(context).width * numD012,
+                      backgroundColor: CommonColors.secondaryColor,
+                    ),
+                    if(cubit.userModel!.tierModel !=null)
+                    CommonText(
+                      text:
+                          " Lvl ${cubit.userModel!.level} ${CommonSymbol.dotSymbol} ${cubit.userModel!.tierModel!.name.toString().toCapitalize()} Tier",
+                      fontSize: size(context).width * numD03,
+                      color: Colors.grey,
+                    ),
+                  ],
+                ),
+                SizedBox(height: size(context).width * numD05),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildStatColumn(cubit.userModel!.tricks.toString(), "TRICKS"),
+                    _buildStatColumn(cubit.userModel!.challenges.toString(), "CHALLENGES"),
+                    _buildStatColumn(cubit.userModel!.battles.toString(), "BATTLES"),
+                  ],
+                ),
+                SizedBox(height: size(context).width * numD05),
+
+                /// Level Progress (Available)
+                if(cubit.userModel!.xpRequired.toString() != "-1")
+                Container(
+                  decoration: commonBgColorDecoration(
+                    size(context).width * numD04,
+                    CommonColors.secondaryColor,
+                  ),
+                  padding: EdgeInsets.all(size(context).width * numD04),
+                  width: size(context).width,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CommonText(
+                            text: "Level Progress",
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                            fontSize: size(context).width * numD035,
+                          ),
+                          CommonText(
+                            text:
+                                "${cubit.userModel!.xpGained.toString()}/${cubit.userModel!.xpRequired.toString()} XP",
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                            fontSize: size(context).width * numD035,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: size(context).width * numD02),
+
+                      commonNormalLinearProgress(
+                        context: context,
+                        value: cubit.calculateXpProgress(
+                          xpGained: cubit.userModel!.xpGained ?? 0,
+                          xpRequired: cubit.userModel!.xpRequired ?? 0,
+                        ),
+                        bgColor: Colors.white.withValues(alpha: 0.3),
+                        valueColor: CommonColors.buttonColor,
+                      ),
+                      SizedBox(height: size(context).width * numD02),
+                      Container(
+                        decoration: commonBgColorDecoration(
+                          size(context).width * numD03,
+                          Colors.black,
+                        ),
+                        padding: EdgeInsets.all(size(context).width * numD02),
+                        child: Row(
+                          children: [
+                            Container(
+                              decoration: commonCircularFill(color: Colors.white),
+                              padding: EdgeInsets.all(size(context).width * numD01),
+                              child: Icon(Icons.electric_bolt, color: CommonColors.secondaryColor),
+                            ),
+                            SizedBox(width: size(context).width * numD02),
+                            CommonText(text: "${cubit.userModel!.xp.toString()} XP Available"),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                /// Level Progress (Completed)
+                if(cubit.userModel!.xpRequired.toString() == "-1")
+                Container(
+                  decoration: commonBgColorDecoration(
+                    size(context).width * numD04,
+                    CommonColors.secondaryColor,
+                  ),
+                  padding: EdgeInsets.all(size(context).width * numD04),
+                  width: size(context).width,
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(size(context).width * numD02),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(size(context).width * numD02),
+                        ),
+                        child: Icon(Icons.verified, color: CommonColors.themeColor, size: size(context).width * numD05),
+                      ),
+                      SizedBox(width: size(context).width * numD02),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: .start,
+                          children: [
+                            CommonText(
+                              text: "Congratulations 🎉",
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: size(context).width * numD045,
+                            ),
+                            SizedBox(height: size(context).width * numD005),
+                            CommonText(
+                              text:
+                              "You’ve completed all available levels. New adventures are coming soon!",
+                              color: Colors.black,
+                              fontSize: size(context).width * numD03,
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: size(context).width * numD05),
+
+                /// Inventory
+                buildInventoryCard(context),
+                SizedBox(height: size(context).width * numD05),
+              ],
+            ),
+          );
+
           return CommonSliverTabBar(
             tabs: const ["Battles", "Achievements", "Promotions", "History"],
             flexibleSpace: FlexibleSpaceBar(
@@ -107,7 +318,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                     children: [
                       CircleAvatar(
                         radius: size(context).width * numD012,
-                        backgroundColor:  CommonColors.secondaryColor,
+                        backgroundColor: CommonColors.secondaryColor,
                       ),
                       CommonText(
                         text:
@@ -217,6 +428,102 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
             ],
           );
         },
+      ),
+    );
+  }
+
+  Widget buildInventoryCard(BuildContext context) {
+    final width = size(context).width;
+
+    return Container(
+      width: width,
+      padding: EdgeInsets.all(width * numD04),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(width * numD04),
+        gradient: LinearGradient(
+          colors: [CommonColors.secondaryColor, CommonColors.secondaryColor.withOpacity(0.85)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// 🔹 HEADER
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(width * numD02),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(width * numD02),
+                ),
+                child: Icon(Icons.inventory_2, color: CommonColors.themeColor, size: width * numD05),
+              ),
+              SizedBox(width: width * numD02),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CommonText(
+                      text: "Inventory",
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: width * numD045,
+                    ),
+                    SizedBox(height: width * numD005),
+                    CommonText(
+                      text:
+                          "Manage your premium and free avatars and balls. Equip them anytime from your inventory.",
+                      color: Colors.black,
+                      fontSize: width * numD03,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: width * numD04),
+
+          /// 🔹 ACTION BUTTON
+          Container(
+            width: width,
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(width * numD03),
+            ),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(width * numD03),
+              onTap: () {
+                router.push(AppRouter.inventoryScreen);
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: width * numD03, horizontal: width * numD04),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.inventory, color: Colors.white),
+                    SizedBox(width: width * numD02),
+                    CommonText(
+                      text: "View Inventory",
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: width * numD035,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

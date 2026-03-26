@@ -400,7 +400,7 @@ class _ConversationScreenState extends State<ConversationScreen> with WidgetsBin
                 icon: Container(
                   decoration: commonCircularFill(color: Colors.white),
                   padding: EdgeInsets.all(size(context).width * numD03),
-                  child: Icon(Icons.send, color: CommonColors.secondaryColor),
+                  child: Icon(Icons.send, color: CommonColors.themeColor),
                 ),
               ),
             ],

@@ -264,6 +264,27 @@ class ProfileCubit extends Cubit<ProfileState> implements NetworkResponse{
     callGetProfileApi();
   }
 
+
+  double calculateXpProgress({
+    required int xpGained,
+    required int xpRequired}) {
+    if (xpRequired == 0) return 0.0;
+    final progress = xpGained / xpRequired;
+
+    /// Clamp between 0.0 → 1.0
+    return progress.clamp(0.0, 1.0);
+  }
+
+  String getXpPercentage({
+    required int xpGained,
+    required int xpRequired,
+  }) {
+    if (xpRequired == 0) return "0%";
+
+    final percent = (xpGained / xpRequired) * 100;
+    return "${percent.clamp(0, 100).toStringAsFixed(0)}%";
+  }
+
   void onChangeTab(int index) {
     selectedTabIndex = index;
     emit(ProfileInitial());

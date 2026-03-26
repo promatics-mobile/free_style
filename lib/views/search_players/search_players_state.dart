@@ -26,6 +26,8 @@ class PlayerModel {
   int? battles;
   int? tricks;
   int? playerRanking;
+  TierModel? tierModel;
+  LeagueModel? leagueModel;
 
 
 
@@ -43,6 +45,8 @@ class PlayerModel {
     this.battles,
     this.tricks,
     this.playerRanking,
+    this.tierModel,
+    this.leagueModel,
   });
 
   PlayerModel.fromJson(Map<String, dynamic> json, {String? rId}) {
@@ -54,15 +58,20 @@ class PlayerModel {
     level = json['level'];
     createdAt = json['created_at'];
 
-    avatar =
-    json['avatar'] != null ? CosmeticItem.fromJson(json['avatar']) : null;
+    avatar = json['avatar'] != null ? CosmeticItem.fromJson(json['avatar']) : null;
+    ball = json['ball'] != null ? CosmeticItem.fromJson(json['ball']) : null;
 
-    ball =
-    json['ball'] != null ? CosmeticItem.fromJson(json['ball']) : null;
+    leagueModel = json['league_id'] != null
+        ? LeagueModel.fromJson(json['league_id'])
+        : null;
+
+    tierModel = json['tier'] != null ? TierModel.fromJson(json['tier']) : null;
 
     relationStatus = json['relation_status'] != null
         ? RelationStatus.fromJson(json['relation_status'])
         : null;
+
+
     battles = json['battles'];
     tricks = json['tricks'];
     playerRanking = json['player_ranking'];

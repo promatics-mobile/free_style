@@ -10,76 +10,107 @@ import '../../network_class/web_urls.dart';
 
 part 'notification_state.dart';
 
-class NotificationsCubit extends Cubit<NotificationsState> implements NetworkResponse {
+class NotificationsCubit extends Cubit<NotificationsState>
+    implements NetworkResponse {
   int offset = 0;
+  final int limit = 20;
+
+  bool isLastPage = false;
+  bool isLoading = false;
+  bool isLoadMore = false;
+
   List<NotificationModel> notificationsList = [];
 
-  NotificationsCubit() : super(NotificationsState(selectedTabIndex: 0)){
-    callNotificationApi(true, offset);
+  NotificationsCubit()
+      : super(NotificationsState(selectedTabIndex: 0)) {
+    fetchNotifications(isRefresh: true, showLoader: true);
   }
 
-  void onRefresh() async {
-    await Future.delayed(const Duration(milliseconds: 1000));
-    offset = 0;
-    callNotificationApi(false, 0);
+  /// 🔄 REFRESH
+  Future<void> onRefresh() async {
+    fetchNotifications(isRefresh: true);
   }
 
-  void onLoadData() async {
-    await Future.delayed(const Duration(milliseconds: 1000));
-    offset += 15;
-    callNotificationApi(false, offset);
+  /// ⬇️ LOAD MORE
+  Future<void> onLoadMore() async {
+    if (isLastPage || isLoadMore || isLoading) return;
+    isLoadMore = true;
+    fetchNotifications();
   }
 
-  void callNotificationApi(bool showLoader, int offset) {
+  /// 🚀 COMMON API METHOD
+  void fetchNotifications({
+    bool isRefresh = false,
+    bool showLoader = false,
+  }) {
+    if (isRefresh) {
+      offset = 0;
+      isLastPage = false;
+      notificationsList.clear();
+      isLoading = true;
+    }
+
     DioNetworkCall().callApiRequest(
       networkResponse: this,
       endUrl: notificationListUrl,
       requestCode: notificationListReq,
+      showLoader: showLoader,
+      query: {
+        "limit": limit,
+        "offset": offset,
+      },
       method: 'GET',
     );
   }
 
+
   @override
   void onApiError({required int requestCode, required String response}) {
-    try {
-      switch (requestCode) {
-        case notificationListReq:
-          debugPrint("notificationListReq:::Error::");
-          break;
-      }
-    } catch (e, stacktrace) {
-      debugPrint("ApiException::$e");
-      debugPrint('Stacktrace:: ${stacktrace.toString()}');
+    isLoading = false;
+    isLoadMore = false;
+
+    if (requestCode == notificationListReq) {
+      debugPrint("notificationListReq:::Error:: $response");
     }
+
+    emit(state.copyWith());
   }
+
 
   @override
   void onResponse({required int requestCode, required String response}) {
-    try {
-      switch (requestCode) {
-        case notificationListReq:
-          var data = jsonDecode(response);
-          if (data['notifications'] != null) {
-            var sList = data['notifications'] as List;
-            var list = sList.map((e) => NotificationModel.fromJson(e)).toList();
-            debugPrint("nList:: ${list.length}");
+    switch(requestCode){
+      case notificationListReq :
+        final data = jsonDecode(response);
 
-            if (offset == 0) {
-              notificationsList = [];
-              notificationsList.addAll(list);
-              emit(state.copyWith());
-            } else {
-              notificationsList.addAll(list);
-              emit(state.copyWith());
-            }
-          }
+        final List list = data['notifications'] ?? [];
+        final newList =
+        list.map((e) => NotificationModel.fromJson(e)).toList();
 
-          break;
-      }
-    } catch (e, stacktrace) {
-      debugPrint("ApiException::$e");
-      debugPrint('Stacktrace:: ${stacktrace.toString()}');
+        /// 🔚 CHECK LAST PAGE
+        if (newList.length < limit) {
+          isLastPage = true;
+        }
+
+        /// 🔄 UPDATE LIST
+        if (offset == 0) {
+          notificationsList = newList;
+        } else {
+          notificationsList.addAll(newList);
+        }
+
+        /// ⬆️ UPDATE OFFSET
+        offset += newList.length;
+
+        /// RESET FLAGS
+        isLoading = false;
+        isLoadMore = false;
+
+        emit(state.copyWith());
+        break;
+
     }
+
   }
 }
 

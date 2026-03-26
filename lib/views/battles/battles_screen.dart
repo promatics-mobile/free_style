@@ -12,6 +12,7 @@ import '../../generated/assets.dart';
 import '../../routes/route.dart';
 import '../../utils/common_constants.dart';
 import '../../utils/common_decorations/common_decorations.dart';
+import '../../utils/common_shimmers/common_shimmer.dart';
 import '../../utils/common_widgets/common_image/common_image.dart';
 import '../../utils/common_widgets/linear_progress_indicator/custom_linear_progress.dart';
 
@@ -25,11 +26,19 @@ class BattlesScreen extends StatelessWidget {
         body: BlocBuilder<BattlesCubit, BattlesState>(
           builder: (context, state) {
             var cubit = context.read<BattlesCubit>();
+
+            debugPrint("showShimmer:::${cubit.showShimmer}");
+            if(cubit.showShimmer){
+              return Material(child: VerticalListShimmer());
+            }
+
             return CommonRefreshIndicator(
                 onRefresh: () async{
                   cubit.callBattleListApi();
                 },
-                child: ListView.separated(
+                child:
+                cubit.battleList.isNotEmpty ?
+                ListView.separated(
                 shrinkWrap: true,
                 padding: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
                 physics: NeverScrollableScrollPhysics(),
@@ -109,7 +118,21 @@ class BattlesScreen extends StatelessWidget {
                   );
                 }, separatorBuilder: (BuildContext context, int index) {
                   return SizedBox(height: size(context).width * numD04);
-                },));
+                },) :
+                Column(
+                  children: [
+                    SizedBox(height: size(context).height/3),
+                    Padding(
+                      padding: EdgeInsets.all(size(context).width * numD04),
+                      child: CommonText(text: "No battles available right now. Stay tuned for upcoming battles!",
+                        color: Colors.white,
+                        textAlign: TextAlign.center,
+                        fontSize: size(context).width * numD04,
+
+                      ),
+                    ),
+                  ],
+                ));
           },
         )
     );

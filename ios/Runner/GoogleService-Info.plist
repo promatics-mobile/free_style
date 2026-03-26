@@ -32,5 +32,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:746052498782:ios:149db2446c8b7455f9cbcf</string>
+	<key>DATABASE_URL</key>
+	<string>https://freestyle-academy-app-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>
