@@ -173,7 +173,7 @@ Make sure to configure:
 
 ## 📄 License
 
-This project is proprietary and owned by Promatics Technologies.
+This project is proprietary and owned by **Promatics Technologies**.
 
 ---
 
@@ -185,4 +185,4 @@ Developed by **Rajan Prajapati** 🚀
 
 ## 📬 Contact
 
-For any queries or support, please contact the development team.
+For any queries or support, please contact **Promatics Technologies**.
