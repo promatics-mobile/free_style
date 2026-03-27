@@ -20,12 +20,13 @@ class ContactUsCubit extends Cubit<ContactUsState> implements NetworkResponse{
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController messageController = TextEditingController();
+  AdminModel? adminModel;
 
   ContactUsCubit() : super(ContactUsInitial()){
     nameController.text = sharedPreferences.getString(PreferenceKeys.fullNameKey)??"";
     emailController.text = sharedPreferences.getString(PreferenceKeys.emailKey)??"";
+    callGetAdminDetailsApi();
   }
-
 
 
   void callContactUsApi() {
@@ -39,6 +40,16 @@ class ContactUsCubit extends Cubit<ContactUsState> implements NetworkResponse{
         "name": nameController.text,
         "email": emailController.text,
         "description": messageController.text},
+    );
+  }
+
+  void callGetAdminDetailsApi() {
+    DioNetworkCall().callApiRequest(
+      endUrl: adminDetailsUrl,
+      method: "GET",
+      requestCode: adminDetailsReq,
+      networkResponse: this,
+      showLoader: true
     );
   }
 
@@ -58,6 +69,21 @@ class ContactUsCubit extends Cubit<ContactUsState> implements NetworkResponse{
         var data = jsonDecode(response) as Map;
         router.pop();
         showToast(isError: false, message: "Request submitted successfully");
+        break;
+
+        case adminDetailsReq:
+        var data = jsonDecode(response) as Map;
+
+        if(data['details'] != null){
+          var dList = data['details'] as List;
+
+         var list=dList.map((e)=> AdminModel.fromJson(e)).toList();
+         if(list.isNotEmpty){
+           adminModel = list.first;
+         }
+        }
+        emit(ContactUsInitial());
+
         break;
     }
   }

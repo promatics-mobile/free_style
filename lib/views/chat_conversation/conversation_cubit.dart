@@ -1,8 +1,10 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:free_style/network_class/api_response.dart';
+
 import '../../main.dart';
 import '../../network_class/api_service.dart';
 import '../../network_class/web_urls.dart';
@@ -17,19 +19,18 @@ class ConversationCubit extends Cubit<ConversationState> implements NetworkRespo
   Set<String> selectedMessageIds = {};
   bool isBlocked = false;
   bool isCurrentlyTyping = false;
+  bool isUserOnline = false;
   Timer? typingTimer;
 
   ConversationCubit(String roomId, String fullName, String profileImage, String userId)
-    : super(
-        ConversationState(
+    : super(ConversationState(
           subCollectionId: "",
           roomId: "",
           receiverId: "",
           receiverImage: "",
           receiverName: "",
           fileImage: "",
-        ),
-      ) {
+        )) {
     if (roomId.isNotEmpty) {
       messages = FirebaseFirestore.instance.collection('Chat').doc(roomId).collection('Messages');
       state.roomId = roomId;
@@ -123,7 +124,13 @@ class ConversationCubit extends Cubit<ConversationState> implements NetworkRespo
         'is_block': false,
       });
     }
-    //callSendNotificationApi(message, receiverId);
+
+    debugPrint("isUserOnline::$isUserOnline");
+    if(!isUserOnline){
+      callSendNotificationApi(message, receiverId,
+          sharedPreferences.getString(PreferenceKeys.userNameKey)??"Free style");
+    }
+
   }
 
   void debounceTypingStatus(String userId, String text) {
@@ -162,7 +169,6 @@ class ConversationCubit extends Cubit<ConversationState> implements NetworkRespo
     debugPrint("AfterReadMessages::${unreadMessages.size}");
   }
 
-
   Future<void> blockUserInChat(String roomId, String myId, bool isBlocked) async {
     await FirebaseFirestore.instance.collection('Chat').doc(roomId).set({
       'blocked_by.$myId': isBlocked,
@@ -170,29 +176,21 @@ class ConversationCubit extends Cubit<ConversationState> implements NetworkRespo
   }
 
   Stream<Map<String, bool>> streamBlockStatus(String roomId, String myId, String otherId) {
-    return FirebaseFirestore.instance
-        .collection("Chat")
-        .doc(roomId)
-        .snapshots()
-        .map((doc) {
+    return FirebaseFirestore.instance.collection("Chat").doc(roomId).snapshots().map((doc) {
       final data = doc.data();
 
       final blockedByMe = data?['blocked_by.$myId'] == true;
       final blockedByOther = data?['blocked_by.$otherId'] == true;
 
-      return {
-        "blockedByMe": blockedByMe,
-        "blockedByOther": blockedByOther,
-      };
+      return {"blockedByMe": blockedByMe, "blockedByOther": blockedByOther};
     });
   }
 
-  void callSendNotificationApi(String message, String receiverId) {
+  void callSendNotificationApi(String message, String receiverId, String senderName) {
     Map<String, String> map = {
       "receiver_id": receiverId,
       "message": message,
-      "title": "Free Style",
-      "type": "chat",
+      "title": senderName,
     };
     debugPrint("SendNotificationParams: $map");
     DioNetworkCall().callApiRequest(

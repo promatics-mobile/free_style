@@ -10,7 +10,6 @@ import '../../routes/route.dart';
 import '../../utils/common_alerts/common_alert_dialog.dart';
 import '../../utils/common_constants.dart';
 import '../../utils/common_decorations/common_decorations.dart';
-import '../../utils/common_methods.dart';
 import '../../utils/common_widgets/common_image/common_image.dart';
 import '../../utils/common_widgets/common_text/common_text.dart';
 
@@ -23,7 +22,7 @@ class SocialScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = context.read<SocialCubit>();
         debugPrint("showShimmer:::${cubit.showShimmer}");
-        if(cubit.showShimmer){
+        if (cubit.showShimmer) {
           return Material(child: VerticalListShimmer());
         }
 
@@ -38,7 +37,7 @@ class SocialScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   /// Pending Battle Requests::
-                  if(state.battleRequests.isNotEmpty)...[
+                  if (state.battleRequests.isNotEmpty) ...[
                     CommonText(
                       text: "Incoming Challenges (${state.battleRequests.length})",
                       fontWeight: FontWeight.bold,
@@ -54,9 +53,7 @@ class SocialScreen extends StatelessWidget {
                         final item = state.battleRequests[idx];
 
                         return InkWell(
-                          onTap: () {
-
-                          },
+                          onTap: () {},
                           child: Container(
                             decoration: commonBgColorDecoration(
                               size(context).width * numD04,
@@ -70,7 +67,7 @@ class SocialScreen extends StatelessWidget {
                                   children: [
                                     ClipOval(
                                       child: CommonImage(
-                                        imagePath: item.userImage??"",
+                                        imagePath: item.userImage ?? "",
                                         isNetwork: true,
                                         width: size(context).width * numD1,
                                         height: size(context).width * numD1,
@@ -109,7 +106,6 @@ class SocialScreen extends StatelessWidget {
                                       child: commonOutlinedButton(
                                         onTap: () {
                                           cubit.callCancelBattleReqApi(item.battleId.toString());
-
                                         },
                                         size: size(context),
                                         radius: numD03,
@@ -125,11 +121,12 @@ class SocialScreen extends StatelessWidget {
                                     Expanded(
                                       child: commonShortButton(
                                         onTap: () {
-                                          if(item.battleId!=null){
-                                            cubit.callAcceptBattleReqApi(item.battleId.toString(),item.referenceId.toString());
+                                          if (item.battleId != null) {
+                                            cubit.callAcceptBattleReqApi(
+                                              item.battleId.toString(),
+                                              item.referenceId.toString(),
+                                            );
                                           }
-
-
                                         },
                                         size: size(context),
                                         radius: size(context).width * numD03,
@@ -177,22 +174,14 @@ class SocialScreen extends StatelessWidget {
                               Colors.white,
                             ),
                             padding: EdgeInsets.all(size(context).width * numD04),
-                            margin: EdgeInsets.symmetric(
-                              vertical: size(context).width * numD01,
-                            ),
+                            margin: EdgeInsets.symmetric(vertical: size(context).width * numD01),
                             child: Row(
                               children: [
                                 ClipOval(
                                   child: CommonImage(
                                     imagePath:
                                         request.requester?.avatar?.picture?.isNotEmpty == true
-                                        ? request
-                                                  .requester
-                                                  ?.avatar!
-                                                  .picture!
-                                                  .first
-                                                  .fullPath ??
-                                              ""
+                                        ? request.requester?.avatar!.picture!.first.fullPath ?? ""
                                         : "",
                                     isNetwork: true,
                                     width: size(context).width * numD1,
@@ -295,9 +284,7 @@ class SocialScreen extends StatelessWidget {
                               Colors.white,
                             ),
                             padding: EdgeInsets.all(size(context).width * numD04),
-                            margin: EdgeInsets.symmetric(
-                              vertical: size(context).width * numD01,
-                            ),
+                            margin: EdgeInsets.symmetric(vertical: size(context).width * numD01),
                             child: Row(
                               children: [
                                 ClipOval(
@@ -344,23 +331,30 @@ class SocialScreen extends StatelessWidget {
                                   ],
                                 ),
                                 const Spacer(),
-                                /*commonShortButton(
-                                  onTap: () {
-                                    showToast(
-                                      isError: false,
-                                      message: "Invite sent to ${friend.name}",
-                                    );
+                                IconButton(
+                                  onPressed: () {
+                                    cubit.callRoomIdApi(friend);
                                   },
-                                  size: size(context),
-                                  radius: size(context).width * numD03,
-                                  buttonHeight: size(context).width * numD10,
-                                  buttonText: "Invite",
-                                ),*/
+                                  icon: Container(
+                                    decoration: commonOutlineDecoration(
+                                      size(context).width * numD02,
+                                      1,
+                                      Colors.green,
+                                    ),
+                                    padding: EdgeInsets.all(size(context).width * numD015),
+                                    child: CommonImage(
+                                      imagePath: Assets.iconsIcMessage,
+                                      color: Colors.green,
+                                      height: size(context).width * numD07,
+                                      width: size(context).width * numD07,
+                                      isNetwork: false,
+                                    ),
+                                  ),
+                                ),
                                 IconButton(
                                   onPressed: () {
                                     debugPrint("${friend.toJson()}");
                                     if (friend.relationId != null) {
-
                                       CommonAlertDialog.show(
                                         context: context,
                                         heading: "Remove",
@@ -373,8 +367,6 @@ class SocialScreen extends StatelessWidget {
                                           router.pop();
                                         },
                                       );
-
-
                                     }
                                   },
                                   icon: Container(
@@ -399,22 +391,19 @@ class SocialScreen extends StatelessWidget {
                     SizedBox(height: size(context).width * numD04),
                   ],
 
-
-                  if(state.pendingRequests.isEmpty && state.myFriends.isEmpty) ...[
-                    SizedBox(height: size(context).height/3),
+                  if (state.pendingRequests.isEmpty && state.myFriends.isEmpty) ...[
+                    SizedBox(height: size(context).height / 3),
                     Padding(
                       padding: EdgeInsets.all(size(context).width * numD04),
-                      child: CommonText(text: "Your friend list is empty right now. Let's change that!\nUse the Add icon above to invite someone!",
-                      color: Colors.white,
+                      child: CommonText(
+                        text:
+                            "Your friend list is empty right now. Let's change that!\nUse the Add icon above to invite someone!",
+                        color: Colors.white,
                         textAlign: TextAlign.center,
                         fontSize: size(context).width * numD04,
-
                       ),
-                    )
-                  ]
-
-
-
+                    ),
+                  ],
                 ],
               ),
             ),

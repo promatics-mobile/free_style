@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:free_style/views/profile_setup/cosmetics_model.dart';
 
 import '../../main.dart';
@@ -18,17 +19,16 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
   int offset = 0;
   int limit = 10;
   String referenceId = "";
+  PlayerModel? selectedFriend;
 
   bool showShimmer = false;
   bool isLoadMore = false;
   bool isLoading = false;
   bool isLastPage = false;
 
-  SocialCubit() : super(SocialState(myFriends: [], pendingRequests: [],battleRequests: [])) {
+  SocialCubit() : super(SocialState(myFriends: [], pendingRequests: [], battleRequests: [])) {
     callFriendListApi(isShowLoader: true);
   }
-
-
 
   void acceptChallenge(int index) {
     state.battleRequests.removeAt(index);
@@ -92,7 +92,6 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
     );
   }
 
-
   void callAcceptBattleReqApi(String id, String refId) {
     referenceId = refId;
     emit(state.copyWith());
@@ -109,11 +108,30 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
 
   void callCancelBattleReqApi(String id) {
     DioNetworkCall().callApiRequest(
-        endUrl: cancelBattleInviteUrl+id,
-        method: "DELETE",
-        requestCode: cancelBattleInviteReq,
-        networkResponse: this,
-        showLoader: true
+      endUrl: cancelBattleInviteUrl + id,
+      method: "DELETE",
+      requestCode: cancelBattleInviteReq,
+      networkResponse: this,
+      showLoader: true,
+    );
+  }
+
+  void callRoomIdApi(PlayerModel friend) async {
+    selectedFriend = friend;
+    emit(state.copyWith());
+
+    Map<String, dynamic> map = {
+      "sender_id": sharedPreferences.getString(PreferenceKeys.userIdKey),
+      "receiver_id": friend.sId,
+    };
+
+    DioNetworkCall().callApiRequest(
+      endUrl: createRoomApiUrl,
+      networkResponse: this,
+      requestCode: createRoomApiReq,
+      method: "POST",
+      showLoader: true,
+      json: map,
     );
   }
 
@@ -150,13 +168,17 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
                   .toList();
 
           final List<BattleRequestModel> battleRequestList =
-          (data["incoming_challenges"] as List? ?? [])
-              .map((e) => BattleRequestModel.fromJson(e))
-              .toList();
+              (data["incoming_challenges"] as List? ?? [])
+                  .map((e) => BattleRequestModel.fromJson(e))
+                  .toList();
 
-          emit(state.copyWith(myFriends: friends,
+          emit(
+            state.copyWith(
+              myFriends: friends,
               battleRequests: battleRequestList,
-              pendingRequests: pendingRequests));
+              pendingRequests: pendingRequests,
+            ),
+          );
         }
 
         break;
@@ -200,24 +222,19 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
 
         break;
 
-        case acceptBattleRequestReq:
+      case acceptBattleRequestReq:
         var map = jsonDecode(response);
 
         if (map["success"] == true) {
           emit(state.copyWith());
-          router.push(
-            AppRouter.matchMakingScreen,
-            extra: {
-              "reference_id": referenceId,
-            },
-          );
+          router.push(AppRouter.matchMakingScreen, extra: {"reference_id": referenceId});
 
           showToast(isError: false, message: "Battle request accepted successfully.");
         }
 
         break;
 
-        case cancelBattleInviteReq:
+      case cancelBattleInviteReq:
         var map = jsonDecode(response);
 
         if (map["success"] == true) {
@@ -228,8 +245,26 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
         callFriendListApi(isShowLoader: true);
 
         break;
+
+      case createRoomApiReq:
+        debugPrint("createRoomApiReq success: $response");
+        var data = jsonDecode(response);
+        var roomId = data["data"]["room_uuid"].toString();
+        debugPrint("roomId:::::$roomId");
+
+        if (selectedFriend != null) {
+          router.push(
+            AppRouter.conversationScreen,
+            extra: {
+              "full_name": selectedFriend!.name,
+              "profile_image": selectedFriend!.avatar!.picture!.first.fullPath,
+              "user_id": selectedFriend!.sId,
+              "room_id": roomId,
+            },
+          );
+        }
+
+        break;
     }
   }
 }
-
-

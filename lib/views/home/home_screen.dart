@@ -129,9 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 child: Container(
                   decoration: commonBgColorDecoration(size(context).width * numD03, Colors.orange.shade50,),
-                  width: size(context).width/1.5,
                   padding: EdgeInsets.all(size(context).width * numD04),
-                  margin: EdgeInsets.symmetric(horizontal: size(context).width * numD02),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -171,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       SizedBox(height: size(context).width * numD02),
                       if(cubit.currentChallengeModel!.submission != null)
-                        Row(
+                      Row(
                           children: [
                             CommonText(text:"Review Status: ",
                               color: Colors.black,

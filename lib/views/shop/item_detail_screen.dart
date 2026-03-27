@@ -202,7 +202,7 @@ class ItemDetailScreen extends StatelessWidget {
                         ),
                         SizedBox(height: size(context).width * numD02),
 
-                        Row(
+                      /*  Row(
                             mainAxisAlignment: .spaceBetween,
                             children: [
                               CommonText(
@@ -216,7 +216,7 @@ class ItemDetailScreen extends StatelessWidget {
                                 fontSize: size(context).width * numD04,
                               ),
                             ]
-                        ),
+                        ),*/
                       ],
                     ),
                   ),

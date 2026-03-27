@@ -16,9 +16,11 @@ var shellNavigatorKey = GlobalKey<NavigatorState>();
 LocalNotificationService localNotification = LocalNotificationService();
 late SharedPreferences sharedPreferences;
 
-
 @pragma('vm:entry-point')
 Future<void> backgroundHandler(RemoteMessage message) async {
+  sharedPreferences = await SharedPreferences.getInstance();
+  localNotification.init();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   debugPrint("Notification title BG : ${message.notification?.title.toString()}");
   debugPrint("Notification Body BG : ${message.notification?.body.toString()}");
   debugPrint("Notification Data BG : ${message.data}");

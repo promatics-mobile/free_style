@@ -140,57 +140,53 @@ class _ConversationScreenState extends State<ConversationScreen> with WidgetsBin
                               fontWeight: FontWeight.w500,
                               fontSize: size(context).width * numD04,
                             ),
-                            if(!blockedByOther)
-                            onlineOfflineWidget(context, cubitData),
+                            if (!blockedByOther) onlineOfflineWidget(context, cubitData),
                           ],
                         ),
                       ),
                     ],
                   ),
                   actions: [
-                    if(!blockedByOther)
-                    PopupMenuButton<String>(
-                      onSelected: (value) {},
-                      itemBuilder: (BuildContext context) => [
-                        PopupMenuItem(
-                          value: blockedByMe? "UnBlock": "Block",
-                          onTap: () {
-
-                            if(blockedByMe){
-                              cubitData.blockUserInChat(
-                                widget.roomId,
-                                sharedPreferences.getString(PreferenceKeys.userIdKey)!,
-                                false,
-                              );
-
-                            }else{
-                              cubitData.blockUserInChat(
-                                widget.roomId,
-                                sharedPreferences.getString(PreferenceKeys.userIdKey)!,
-                                true,
-                              );
-                            }
-
-                          },
-                          child: Row(
-                            children: [
-                              Icon(Icons.block, color: Colors.red),
-                              SizedBox(width: size(context).width * numD02),
-                              CommonText(
-                                text: blockedByMe? "UnBlock": "Block",
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                                fontSize: size(context).width * numD035,
-                              ),
-                            ],
+                    if (!blockedByOther)
+                      PopupMenuButton<String>(
+                        onSelected: (value) {},
+                        itemBuilder: (BuildContext context) => [
+                          PopupMenuItem(
+                            value: blockedByMe ? "UnBlock" : "Block",
+                            onTap: () {
+                              if (blockedByMe) {
+                                cubitData.blockUserInChat(
+                                  widget.roomId,
+                                  sharedPreferences.getString(PreferenceKeys.userIdKey)!,
+                                  false,
+                                );
+                              } else {
+                                cubitData.blockUserInChat(
+                                  widget.roomId,
+                                  sharedPreferences.getString(PreferenceKeys.userIdKey)!,
+                                  true,
+                                );
+                              }
+                            },
+                            child: Row(
+                              children: [
+                                Icon(Icons.block, color: Colors.red),
+                                SizedBox(width: size(context).width * numD02),
+                                CommonText(
+                                  text: blockedByMe ? "UnBlock" : "Block",
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: size(context).width * numD035,
+                                ),
+                              ],
+                            ),
                           ),
+                        ],
+                        icon: Container(
+                          padding: EdgeInsets.all(size(context).width * numD02),
+                          child: Icon(Icons.more_vert_sharp, color: CommonColors.secondaryColor),
                         ),
-                      ],
-                      icon: Container(
-                        padding: EdgeInsets.all(size(context).width * numD02),
-                        child: Icon(Icons.more_vert_sharp, color: CommonColors.secondaryColor),
                       ),
-                    ),
                   ],
                 ),
                 body: BlocBuilder<ConversationCubit, ConversationState>(
@@ -335,9 +331,12 @@ class _ConversationScreenState extends State<ConversationScreen> with WidgetsBin
           children: [
             Icon(Icons.block, size: size(context).width * numD20, color: Colors.red),
             SizedBox(height: size(context).width * numD05),
-            CommonText(text: message,
-                textAlign: TextAlign.center,
-                color: Colors.red, fontWeight: FontWeight.w500),
+            CommonText(
+              text: message,
+              textAlign: TextAlign.center,
+              color: Colors.red,
+              fontWeight: FontWeight.w500,
+            ),
 
             if (showUnblock) ...[
               SizedBox(height: size(context).width * numD04),
@@ -470,12 +469,15 @@ class _ConversationScreenState extends State<ConversationScreen> with WidgetsBin
         if (isOnline) {
           displayText = "Online";
           displayColor = Colors.green;
+          cubitData.isUserOnline = true;
         } else if (lastSeenRaw.isNotEmpty) {
           displayText = "Last seen ${timeAgoFromString(lastSeenRaw)}";
           displayColor = Colors.grey;
+          cubitData.isUserOnline = false;
         } else {
           displayText = "Offline";
           displayColor = Colors.grey;
+          cubitData.isUserOnline = false;
         }
 
         return CommonText(

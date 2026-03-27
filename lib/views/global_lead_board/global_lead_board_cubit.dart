@@ -44,6 +44,7 @@ class GlobalLeadBoardCubit extends Cubit<GlobalLeadBoardState> implements Networ
       e.isSelected = false;
     }
     sLeagueId = "";
+    searchController.clear();
     emit(GlobalLeadBoardInitial());
     callGlobalLeaderBoardApi(true);
   }

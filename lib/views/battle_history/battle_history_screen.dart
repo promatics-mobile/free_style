@@ -368,7 +368,9 @@ class BattleHistoryScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        CommonText(text: "${isWinner ? "+" : "-"} $value", color:
+        CommonText(text: value.toString().contains("-") ?
+        "${isWinner ? "+" : ""} $value":
+        "${isWinner ? "+" : "-"} $value", color:
         isWinner ? Colors.green : Colors.red, fontWeight: FontWeight.bold),
         CommonText(text: title,
             fontWeight: FontWeight.bold,

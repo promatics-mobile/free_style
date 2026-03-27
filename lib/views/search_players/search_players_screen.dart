@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:free_style/utils/common_methods.dart';
 import 'package:free_style/utils/common_widgets/app_bars/common_app_bar.dart';
 import 'package:free_style/utils/common_widgets/text_form_field/common_text_form_field.dart';
 import 'package:free_style/views/search_players/search_players_cubit.dart';
@@ -109,19 +110,51 @@ class SearchPlayersScreen extends StatelessWidget {
                                       fontWeight: FontWeight.w500,
                                       fontSize: size(context).width * numD04,
                                     ),
-                                    Container(
-                                      decoration: commonBgColorDecoration(
-                                        size(context).width * numD04,
-                                        CommonColors.secondaryColor,
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: size(context).width * numD02,
-                                      ),
-                                      child: CommonText(
-                                        text: "SILVER ${user.level ?? 0}",
-                                        color: Colors.black,
-                                        fontSize: size(context).width * numD03,
-                                      ),
+
+                                    if(user.userName !=null)
+                                    CommonText(
+                                      text: user.userName ?? "",
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: size(context).width * numD035,
+                                    ),
+                                    SizedBox(height: size(context).width * numD01),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          decoration: commonBgColorDecoration(
+                                            size(context).width * numD04,
+                                            CommonColors.secondaryColor,
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: size(context).width * numD02,
+                                          ),
+                                          child: CommonText(
+                                            text: "Level ${user.level ?? 0}",
+                                            color: Colors.black,
+                                            fontSize: size(context).width * numD03,
+                                          ),
+                                        ),
+
+                                        if(user.tierModel !=null)
+                                        SizedBox(width: size(context).width * numD02),
+
+                                        if(user.tierModel !=null)
+                                        Container(
+                                          decoration: commonBgColorDecoration(
+                                            size(context).width * numD04,
+                                            CommonColors.secondaryColor,
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: size(context).width * numD02,
+                                          ),
+                                          child: CommonText(
+                                            text: user.tierModel!.name.toString().toCapitalize(),
+                                            color: Colors.black,
+                                            fontSize: size(context).width * numD03,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),

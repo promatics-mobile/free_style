@@ -1,4 +1,3 @@
-
 const baseUrl = "https://betazone.promaticstechnologies.com/fs-api/";
 const mediaBaseUrl = "https://passo-prom.s3.ap-south-1.amazonaws.com/freestyle";
 const headerKey = "Authorization";
@@ -69,10 +68,8 @@ const getPlayersListingReq = 21;
 const getOtherPlayerProfileUrl = "user/players";
 const getOtherPlayerProfileReq = 22;
 
-
 const getFriendListUrl = "user/socials";
 const getFriendListReq = 23;
-
 
 const followUrl = "user/sendrequest";
 const followReq = 24;
@@ -173,5 +170,8 @@ const leagueListReq = 55;
 const createRoomApiUrl = "user/create-room";
 const createRoomApiReq = 56;
 
-const sendNotificationUrl = "";
+const sendNotificationUrl = "user/chat-notification";
 const sendNotificationReq = 57;
+
+const adminDetailsUrl = "user/admin/details";
+const adminDetailsReq = 58;
