@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "746052498782",
+    "firebase_url": "https://freestyle-academy-app-default-rtdb.firebaseio.com",
     "project_id": "freestyle-academy-app",
     "storage_bucket": "freestyle-academy-app.firebasestorage.app"
   },
@@ -27,6 +28,58 @@
           "android_info": {
             "package_name": "com.freestyle",
             "certificate_hash": "2fb2f4d5cb943ce647817b687150648db4ba9e0b"
+          }
+        },
+        {
+          "client_id": "746052498782-c8k4jnkmq6qb0n62rogqge00ac1s7g7v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBMBaIuRBmS8yJDZeqB4T86Tq56kyYHvI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "746052498782-c8k4jnkmq6qb0n62rogqge00ac1s7g7v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "746052498782-tre6ue1sf9jgo28gk1jpbmq7726dvasf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.freestyle.pro"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746052498782:android:7a1a117754409578f9cbcf",
+        "android_client_info": {
+          "package_name": "com.freestyle.pro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "746052498782-chgjvmepcqhbjk7991uhdmslkciijon3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.freestyle.pro",
+            "certificate_hash": "2fb2f4d5cb943ce647817b687150648db4ba9e0b"
+          }
+        },
+        {
+          "client_id": "746052498782-gb4eh1kh1av8cngivt9kfk1opp8j9job.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.freestyle.pro",
+            "certificate_hash": "76800faec5f3ec980556b4133a2f97e9921d379e"
           }
         },
         {

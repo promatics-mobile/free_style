@@ -68,14 +68,39 @@ class HorizontalListShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: itemCount,
-        separatorBuilder: (_, __) => SizedBox(width: 12),
-        itemBuilder: (_, __) =>
-            CommonShimmer(child: ShimmerCircle(radius: size(context).width * numD1)),
+    return Shimmer.fromColors(
+      baseColor: Colors.white.withValues(alpha: 0.1),
+      highlightColor: Colors.white.withValues(alpha: 0.2),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: size(context).width * numD04),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: size(context).width * numD20,
+              height: size(context).width * numD06,
+              decoration: commonBgColorDecoration(size(context).width * numD01, Colors.white),
+            ),
+            SizedBox(height: size(context).width * numD05),
+            Container(
+              height: size(context).width * numD20,
+              width: size(context).width,
+              child: Row(
+                children: List.generate(
+                  5, (index) =>  Container(
+                  width: size(context).width ,
+                  height: size(context).width * numD20,
+                  padding: EdgeInsets.all(size(context).width * numD04),
+                  margin: EdgeInsets.symmetric(
+                    vertical: size(context).width * numD01,
+                  ),
+                  decoration: commonBgColorDecoration(size(context).width * numD02, Colors.white),
+                ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

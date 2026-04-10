@@ -201,8 +201,7 @@ class _ConversationScreenState extends State<ConversationScreen> with WidgetsBin
                             Expanded(
                               child: StreamBuilder<QuerySnapshot>(
                                 stream: cubitData.streamFilteredMessages(widget.roomId),
-                                builder:
-                                    (BuildContext context, AsyncSnapshot<QuerySnapshot> snapShot) {
+                                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapShot) {
                                       if (snapShot.hasError) {
                                         return Center(
                                           child: CommonText(
@@ -248,10 +247,7 @@ class _ConversationScreenState extends State<ConversationScreen> with WidgetsBin
                                         itemBuilder: (context, index) {
                                           var document = snapShot.data!.docs[index];
 
-                                          return document.get('sender_id') !=
-                                                  sharedPreferences.getString(
-                                                    PreferenceKeys.userIdKey,
-                                                  )
+                                          return document.get('sender_id') != sharedPreferences.getString(PreferenceKeys.userIdKey,)
                                               ? leftTextWidget(context, document, cubitData)
                                               : rightTextWidget(context, document, cubitData);
                                         },

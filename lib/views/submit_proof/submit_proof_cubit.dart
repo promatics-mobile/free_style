@@ -61,6 +61,9 @@ class SubmitProofCubit extends Cubit<SubmitProofState> implements NetworkRespons
       requestCode: uploadVideoReq,
       networkResponse: this,
       showLoader: true,
+      onProgress: (value){
+        debugPrint("value::$value");
+      }
     );
   }
 

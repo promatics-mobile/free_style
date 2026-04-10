@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBBMBaIuRBmS8yJDZeqB4T86Tq56kyYHvI',
-    appId: '1:746052498782:android:74f5c2d1c944c5bdf9cbcf',
+    appId: '1:746052498782:android:7a1a117754409578f9cbcf',
     messagingSenderId: '746052498782',
     projectId: 'freestyle-academy-app',
     storageBucket: 'freestyle-academy-app.firebasestorage.app',
