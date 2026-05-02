@@ -153,6 +153,8 @@ class BattleHistoryScreen extends StatelessWidget {
   Widget _playerCard(BuildContext context, String label, User? user, String tier) {
     final isUserAvailable = user != null;
 
+    debugPrint("_PLayercard: ${user?.avatar??""}");
+
     return Column(
       children: [
         CircleAvatar(

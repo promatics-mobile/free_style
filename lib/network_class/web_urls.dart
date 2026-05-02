@@ -1,5 +1,9 @@
-const baseUrl = "https://betazone.promaticstechnologies.com/fs-api/";
-const mediaBaseUrl = "https://passo-prom.s3.ap-south-1.amazonaws.com/freestyle";
+//const baseUrl = "https://betazone.promaticstechnologies.com/fs-api/";
+//const mediaBaseUrl = "https://passo-prom.s3.ap-south-1.amazonaws.com/freestyle/";
+
+/// ::::::::::::: Live ::::::::::::::::
+const baseUrl = "https://api.emilwysockifreestyle.com/s1/";
+const mediaBaseUrl = "https://freestyle-data.s3.eu-central-1.amazonaws.com/freestyle/";
 const headerKey = "Authorization";
 
 const createAccountUrl = "user/signup";

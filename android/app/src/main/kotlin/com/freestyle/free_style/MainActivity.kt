@@ -1,4 +1,4 @@
-package com.freestyle
+package com.freestyle.pro
 
 import io.flutter.embedding.android.FlutterActivity
 

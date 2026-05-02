@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 /// ==============================================
 /// APP-NAME, FONTS
 /// ==============================================
-const String appName = "Free Style";
+const String appName = "Freestyle Academy";
 const String fontFamily = "Ubuntu";
 
 /// ==============================================

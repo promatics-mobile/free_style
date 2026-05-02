@@ -154,7 +154,7 @@ class _GlobalLeadBoardScreenState extends State<GlobalLeadBoardScreen> {
                       radius: size(context).width * numD065,
                       child:
                       player.avatar != null ?
-                      ClipOval(child: CommonImage(imagePath: player.avatar!.picture!.first.fullPath,
+                      ClipOval(child: CommonImage(imagePath: "$mediaBaseUrl${player.avatar!.picture!.first.path}/${player.avatar!.picture!.first.filename}",
                         isNetwork: true,)) :
                       Center(
                         child: Icon(

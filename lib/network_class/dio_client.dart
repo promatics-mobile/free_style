@@ -102,11 +102,9 @@ class DioClient {
 
           handler.next(options);
         },
-
         onResponse: (response, handler) {
           handler.next(response);
         },
-
         onError: (error, handler) async {
           debugPrint("❌ ERROR → ${error.message}");
 

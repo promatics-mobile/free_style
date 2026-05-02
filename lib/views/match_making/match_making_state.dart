@@ -131,7 +131,7 @@ class User {
       var iList = json["avatar"]['picture'] as List;
       if(iList.isNotEmpty){
         var iData = iList.first;
-        fullImagePath = "$mediaBaseUrl/${iData['path']}/${iData['filename']}";
+        fullImagePath = "$mediaBaseUrl${iData['path']}/${iData['filename']}";
       }
     }
 

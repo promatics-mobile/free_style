@@ -257,7 +257,9 @@ class SocialCubit extends Cubit<SocialState> implements NetworkResponse {
             AppRouter.conversationScreen,
             extra: {
               "full_name": selectedFriend!.name,
-              "profile_image": selectedFriend!.avatar!.picture!.first.fullPath,
+              "profile_image":
+              selectedFriend!.avatar!.picture!.isNotEmpty?
+              selectedFriend!.avatar!.picture!.first.fullPath :"",
               "user_id": selectedFriend!.sId,
               "room_id": roomId,
             },

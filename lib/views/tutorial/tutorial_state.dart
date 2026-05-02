@@ -142,6 +142,6 @@ class InternalMediaModel {
 
   /// 🔹 Full URL (VERY USEFUL)
   String getFileUrl(String baseUrl) {
-    return "$baseUrl/$path/$filename";
+    return "$baseUrl$path/$filename";
   }
 }

@@ -94,7 +94,9 @@ class MatchMakingScreen extends StatelessWidget {
                           Icon(Icons.watch_later_outlined, color: Colors.red),
                           SizedBox(width: size(context).width * numD01),
                           CommonText(
-                            text: _remainingTime(cubit.ongoingBattleModel!.updatedAt!),
+                            text:
+                            cubit.ongoingBattleModel!.winner == null ?
+                            _remainingTime(cubit.ongoingBattleModel!.updatedAt!) : "Battle Ended",
                             color: Colors.red,
                           ),
                         ],
@@ -182,6 +184,7 @@ class MatchMakingScreen extends StatelessWidget {
   Widget _playerCard(BuildContext context, String label, User? user, String tier) {
     final isUserAvailable = user != null;
 
+    debugPrint("_playerCard::${user?.equipped?.avatar!.pictures.first.getFileUrl(mediaBaseUrl)}");
     return Column(
       children: [
         CircleAvatar(

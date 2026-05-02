@@ -131,5 +131,5 @@ class PictureModel {
   }
 
   /// ✅ Helper for full image URL (optional)
-  String get fullPath => "$mediaBaseUrl/$path/$filename";
+  String get fullPath => "$mediaBaseUrl$path/$filename";
 }

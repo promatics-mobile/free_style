@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -179,6 +180,7 @@ class DashboardCubit extends Cubit<DashboardState> implements NetworkResponse {
     try {
       switch (requestCode) {
         case getProfileReq:
+          //log("getProfileReq:: $response");
           var map = jsonDecode(response);
           userModel = UserModel.fromJson(map['user']);
 

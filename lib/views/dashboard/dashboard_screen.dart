@@ -40,6 +40,7 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
     return BlocBuilder<DashboardCubit, DashboardState>(
       builder: (context, state) {
         var cubitData = context.read<DashboardCubit>();
+        debugPrint("${sharedPreferences.getString(PreferenceKeys.avatarImageKey)}");
         return Scaffold(
           appBar: state.selectedIndex == 0
               ? CustomAppBar(

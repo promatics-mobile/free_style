@@ -86,7 +86,7 @@ class BattleDetailsCubit extends Cubit<BattleDetailsState> implements NetworkRes
       case battleDetailsReq:
         var data = jsonDecode(response);
         if(data['battle'] !=null){
-          battleModel = BattleModel.fromJson(data['battle'] );
+           battleModel = BattleModel.fromJson(data['battle']);
         }
         emit(BattleDetailsInitial());
 

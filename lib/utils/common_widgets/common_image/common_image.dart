@@ -52,9 +52,8 @@ class CommonImage extends StatelessWidget {
     Widget imageWidget;
 
     if (isNetwork) {
-      // debugPrint("Path: $imagePath");
       imageWidget = Image.network(
-        imagePath,
+        Uri.encodeFull(imagePath),
         width: width,
         height: height,
         fit: fit,
@@ -69,17 +68,17 @@ class CommonImage extends StatelessWidget {
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
               );
-        },errorBuilder: (context, error, stackTrace) {
+        },
+        errorBuilder: (context, error, stackTrace) {
         return errorWidget ??
             Center(
               child: Icon(
                 Icons.account_circle_rounded,
-                color: CommonColors.secondaryLightColor,
-                size: (width != null && width!.isFinite) ? width :  size(context).width*numD06,
+                color: CommonColors.greyColor,
+                size: (width != null && width!.isFinite) ? width :  size(context).width*numD1,
               ),
             );
       },
-
       );
     } else {
       imageWidget = Image.asset(
@@ -97,7 +96,7 @@ class CommonImage extends StatelessWidget {
       );
     }
 
-    // Shape & decoration
+    /// Shape & decoration
     Widget decorated = Container(
       width: width,
       height: height,
@@ -116,11 +115,9 @@ class CommonImage extends StatelessWidget {
               : BorderRadius.zero,
           child: imageWidget),
     );
-
     if (onTap != null) {
       decorated = GestureDetector(onTap: onTap, child: decorated);
     }
-
     return decorated;
   }
 }

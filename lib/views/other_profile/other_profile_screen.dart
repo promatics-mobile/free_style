@@ -107,7 +107,9 @@ class _OtherProfileScreenState extends State<OtherProfileScreen> with TickerProv
                             vertical: size(context).width * numD005,
                           ),
                           child: CommonText(
-                            text: "#${state.user?.user?.playerRanking.toString()} Global",
+                            text:
+                            state.user == null ? "":
+                            "#${state.user?.user?.playerRanking.toString()} Global",
                             fontWeight: FontWeight.bold,
                             fontSize: size(context).width * numD03,
                             color: Colors.black,
